@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include head.html %}
+
+<body>
+  {% include header.html %}
+  <main>
+    <aside class="home-aside">
+      <picture>
+        <source srcset="/assets/img/profile.webp" type="image/webp">
+        <img src="/assets/img/profile.jpg" alt="George Black profile picture" type="image/jpeg"> 
+      </picture>
+      <div>
+      {{ content }} 
+      </div>       
+    </aside>
+    <h1>Recent Posts</h1>
+    {% for post in site.posts %}
+      {% if post.type != "link" %}
+      <article style="margin-bottom: 4em;">
+        <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+        <p class="subtitle">{{post.date | date: "%B %-d, %Y" }}</p>
+        {{ post.excerpt }}
+        <p><a href="{{ post.url }}">Read More &#8594;</a></p>
+      </article>
+      {% endif %}
+    {% endfor %}
+  </main>
+  {% include footer.html %}
+</body>
+
+</html>

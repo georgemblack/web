@@ -1,0 +1,9 @@
+pages:
+- title: Home
+  url: /
+- title: Links
+  url: /links/
+  new_window: false
+- title: Photos
+  url: https://photos.georgeblack.me
+  new_window: false

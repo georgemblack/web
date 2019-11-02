@@ -1,0 +1,20 @@
+name: 'George Black'
+description: 'Software engineer working in Chicago, with a small home on the internet.'
+author: 'George Black'
+author_email: 'contact@georgeblack.me'
+author_twitter: '@georgeblackme'
+url: 'https://georgeblack.me'
+timezone: 'America/Chicago'
+strict_front_matter: true
+production: false
+permalink: /:year/:title/
+excerpt_separator: <!--more-->
+markdown: CommonMark
+commonmark:
+  options: ['SMART', 'UNSAFE']
+sass:
+  style: 'compressed'
+plugins:
+  - jekyll-commonmark
+  - jekyll-feed
+  - jekyll-sitemap

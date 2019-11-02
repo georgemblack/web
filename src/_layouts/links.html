@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include head.html %}
+
+<body>
+  {% include header.html %}
+  <main>
+    <h1>Links</h1>
+    {{ content }}
+    {% for post in site.posts %}
+      {% if post.type == "link" %}
+      <article style="margin-bottom: 4em;">
+        <h2><a href="{{ post.link_url }}">{{ post.title }} &#8594;</a></h2>
+        <p class="subtitle">{{post.date | date: "%B %-d, %Y" }}</p>
+        {{ post.excerpt }}
+      </article>
+      {% endif %}
+    {% endfor %}
+  </main>
+  {% include footer.html %}
+</body>
+
+</html>

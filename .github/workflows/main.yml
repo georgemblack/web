@@ -12,8 +12,8 @@ jobs:
       with:
         awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
         awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        s3Uri: s3://georgeblack-web/test
-        localPath: ./src
+        s3Uri: s3://georgeblack/web/assets
+        localPath: ./src/_sites/assets
     - name: Deploy to Cloudflare Workers
       uses: cloudflare/wrangler-action@1.0.0
       with:
