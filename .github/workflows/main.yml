@@ -18,6 +18,13 @@ jobs:
       uses: ./.github/actions/jekyll-build
       with:
         sourceDirectory: src
+    - name: Upload Artifact
+      uses: ./.github/actions/s3-artifact-upload
+      with:
+        awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        s3Uri: s3://georgeblack/archive/web
+        localPath: ./src/_site
     - name: Deploy to Cloudflare Workers
       uses: cloudflare/wrangler-action@1.0.0
       with:
