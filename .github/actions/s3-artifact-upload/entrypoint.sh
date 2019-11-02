@@ -15,16 +15,13 @@ sanitize "${INPUT_AWSSECRETACCESSKEY}" "awsSecretAccessKey"
 sanitize "${INPUT_S3URI}" "s3Uri"
 sanitize "${INPUT_LOCALPATH}" "localPath"
 
-# Zip files with timestamp
+echo "Creating zip with files in ${INPUT_LOCALPATH}"
 TIMESTAMP=$(date +%Y-%m-%d)
-ARTIFACT_PATH=./${TIMESTAMP}.zip 
-echo TIMESTAMP
-echo ARTIFACT_PATH
-zip -r ${ARTIFACT_PATH} ${INPUT_LOCALPATH}/*
+ARTIFACT_NAME=${TIMESTAMP}.zip 
+zip -r ./${ARTIFACT_NAME} ${INPUT_LOCALPATH}/*
 
-# Upload to S3
-echo "Uploading ${ARTIFACT_PATH} to S3"
-AWS_ACCESS_KEY_ID=${INPUT_AWSACCESSKEYID} AWS_SECRET_ACCESS_KEY=${INPUT_AWSSECRETACCESSKEY} aws s3 sync ${ARTIFACT_PATH} ${INPUT_S3URI}
+echo "Uploading ${ARTIFACT_NAME} to S3"
+AWS_ACCESS_KEY_ID=${INPUT_AWSACCESSKEYID} AWS_SECRET_ACCESS_KEY=${INPUT_AWSSECRETACCESSKEY} aws s3 cp ./${ARTIFACT_NAME} ${INPUT_S3URI}/${ARTIFACT_NAME}
 
-# Remove zip
-rm ${ARTIFACT_PATH}
+echo "Deleting local ${ARTIFACT_NAME}"
+rm ./${ARTIFACT_NAME}
