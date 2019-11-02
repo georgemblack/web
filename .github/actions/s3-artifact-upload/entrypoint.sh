@@ -17,7 +17,7 @@ sanitize "${INPUT_LOCALPATH}" "localPath"
 
 # Zip files with timestamp
 TIMESTAMP=$(date +%Y-%m-%d)
-ARTIFACT_PATH=./$TIMESTAMP.zip 
+ARTIFACT_PATH=./${TIMESTAMP}.zip 
 zip -r ${ARTIFACT_PATH} ${INPUT_LOCALPATH}/*
 
 # Upload to S3
