@@ -1,0 +1,8 @@
+name: 'Jekyll Build'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+inputs:
+  sourceDirectory:
+    description: 'Directory in your GitHub workspace containing Jekyll site'
+    required: true

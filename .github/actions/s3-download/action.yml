@@ -1,0 +1,18 @@
+name: 'Download from S3'
+description: 'Simple download from S3'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+inputs:
+  awsAccessKeyId:
+    description: 'AWS access key ID'
+    required: true
+  awsSecretAccessKey:
+    description: 'AWS secret access key'
+    required: true
+  s3Uri:
+    description: 'The S3 URI to download from, i.e. s3://my-bucket/some-files'
+    required: true
+  localPath:
+    description: 'The local path to download to, i.e. /path/to/files'
+    required: true

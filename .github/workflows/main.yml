@@ -8,17 +8,16 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Download Assets from S3
-      uses: georgemblack/s3-download-action@1.0
+      uses: ./.github/actions/s3-download
       with:
         awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
         awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         s3Uri: s3://georgeblack/web/assets
         localPath: ./src/assets
     - name: Jekyll Build
-      uses: georgemblack/jekyll-build-action@1.0
+      uses: ./.github/actions/jekyll-build
       with:
         sourceDirectory: src
-        configPaths: _config.yml,_config_prod.yml
     - name: Deploy to Cloudflare Workers
       uses: cloudflare/wrangler-action@1.0.0
       with:
