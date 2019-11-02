@@ -14,6 +14,11 @@ jobs:
         awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         s3Uri: s3://georgeblack/web/assets
         localPath: ./src/_sites/assets
+    - name: Jekyll Build
+      uses: georgemblack/jekyll-build-action@1.0
+      with:
+        sourceDirectory: src
+        configPaths: _config.yml,_config_prod.yml
     - name: Deploy to Cloudflare Workers
       uses: cloudflare/wrangler-action@1.0.0
       with:
