@@ -1,0 +1,21 @@
+name: Build and Publish
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download Assets from S3
+      uses: georgemblack/s3-download-action@1.0
+      with:
+        awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        s3Uri: s3://georgeblack-web/test
+        localPath: ./src
+    - name: Deploy to Cloudflare Workers
+      uses: cloudflare/wrangler-action@1.0.0
+      with:
+        apiKey: ${{ secrets.CF_API_KEY }}
+        email: ${{ secrets.CF_EMAIL }}
