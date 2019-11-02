@@ -13,7 +13,7 @@ jobs:
         awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
         awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         s3Uri: s3://georgeblack/web/assets
-        localPath: ./src/_sites/assets
+        localPath: ./src/assets
     - name: Jekyll Build
       uses: georgemblack/jekyll-build-action@1.0
       with:
