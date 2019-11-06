@@ -16,6 +16,7 @@ sanitize "${INPUT_S3URI}" "s3Uri"
 sanitize "${INPUT_LOCALPATH}" "localPath"
 
 echo "Creating zip with files in ${INPUT_LOCALPATH}"
+export TZ="America/Chicago"
 TIMESTAMP=$(date +%Y-%m-%d)
 ARTIFACT_NAME=${TIMESTAMP}.zip
 cd ${INPUT_LOCALPATH}
