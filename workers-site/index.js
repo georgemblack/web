@@ -80,7 +80,7 @@ async function getAssetFromKV(event) {
  * If 404 page does not exist, return text response
  */
 async function getNotFoundResponse() {
-  const pathKey = JSON.parse(__STATIC_CONTENT_MANIFEST)["404.html"];
+  const pathKey = JSON.parse(__STATIC_CONTENT_MANIFEST)["404/index.html"];
   if (!pathKey) return new Response("404 not found", { status: 404 });
   const body = await __STATIC_CONTENT.get(pathKey, "arrayBuffer");
   return new Response(body, { status: 404 });
