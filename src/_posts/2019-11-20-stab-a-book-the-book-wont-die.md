@@ -6,7 +6,7 @@ link_url: https://craigmod.com/essays/media_accounting/
 published: true
 ---
 
-This is a wonderful essay written by [Craig Mod](https://craigmod.com) on the longstanding resiliency of books, and the "contracts" we enter into with different forms of media.
+This is a wonderful essay by [Craig Mod](https://craigmod.com) on the longstanding resiliency of books, and the "contracts" we subject ourselves to when engaging with them versus other media.
 
 One of the most damning quotes (at least for myself):
 
