@@ -2,8 +2,8 @@
 title: Gecgecgec
 layout: link
 type: link
-link_url: https://music.apple.com/us/album/gecgecgec/1465282616?i=1465282629
+link_url: https://100gecs.bandcamp.com/track/gecgecgec
 published: true
 ---
 
-Gecgecgecgecgecgecgec[gec](https://music.apple.com/us/album/gecgecgec/1465282616?i=1465282629)gecgec
+Gecgecgecgecgecgecgec[gec](https://100gecs.bandcamp.com/track/gecgecgec)gecgec
