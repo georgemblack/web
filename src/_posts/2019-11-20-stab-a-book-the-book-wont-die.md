@@ -1,6 +1,6 @@
 ---
 title: Stab a Book, the Book Won't Die
-layout: post
+layout: link
 type: link
 link_url: https://craigmod.com/essays/media_accounting/
 published: true

@@ -1,6 +1,6 @@
 ---
 title: Gecgecgec
-layout: post
+layout: link
 type: link
 link_url: https://music.apple.com/us/album/gecgecgec/1465282616?i=1465282629
 published: true
