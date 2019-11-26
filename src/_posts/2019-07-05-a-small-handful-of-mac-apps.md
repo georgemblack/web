@@ -1,6 +1,6 @@
 ---
 title: A Small Handful of Mac Apps
-date: 2019-07-05 06:00:00
+date: 2019-07-05 18:00:00
 layout: post
 published: true
 ---
