@@ -13,4 +13,6 @@ I love anything involving teaching, training, tutoring, leading, sharing, and sp
 Need to get in touch? Send a message to [contact@georgeblack.me](mailto:contact@georgeblack.me).
 
 ## Links
+* [GitHub](https://github.com/georgemblack)
+* [Twitter](https://twitter.com/georgeblackm)
 * [Feed](https://georgeblack.me/feed.xml)
