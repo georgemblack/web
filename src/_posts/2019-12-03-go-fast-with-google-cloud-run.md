@@ -86,7 +86,7 @@ gcloud run deploy my-service \
 	--image gcr.io/my-project/my-image:1.0.0
 ```
 
-## Finding its Role
+## Finding Its Role
 
 Cloud Run (*fully managed*) can't handle much custom configuration – but I don't think that's the point. If your service can fit within its opinionated, limited structure, it will make your life *very easy*, and fast!
 
