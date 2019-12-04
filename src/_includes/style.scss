@@ -16,6 +16,7 @@
 
   // colors
   --background-color: #f7f7f7;
+  --background-color-lifted: #e7e7e7;
   --header-background-color: #e07148;
   --header-title-color: #f7f7f7;
   --body-font-color: #404040;
@@ -29,6 +30,7 @@
 
   @media (prefers-color-scheme: dark) {
     --background-color: #242424;
+    --background-color-lifted: #313131;
     --header-background-color: #1a1a1a;
     --header-title-color: #f7f7f7;
     --body-font-color: #f7f7f7;
@@ -167,6 +169,10 @@ main {
     margin: 1.25em 0 0 0;
     line-height: 180%;
     text-rendering: optimizeLegibility;
+
+    code {
+      font-size: 0.85em;
+    }
   }
 
   ul,
@@ -196,6 +202,21 @@ main {
     p {
       margin: 0;
     }
+  }
+
+  pre {
+    margin: 1em 0 0 0;
+    padding: 1em 1.5em;
+    display: block;
+    max-width: 100%;
+    overflow: auto;
+    word-wrap: break-word;
+    page-break-inside: avoid;
+    line-height: 180%;
+    color: var(--body-font-color);
+    background: var(--background-color-lifted);
+    border-left: 5px solid var(--link-color);
+    border-radius: 0.2em;
   }
 }
 
