@@ -5,8 +5,6 @@ layout: post
 published: true
 ---
 
-{% include image-alpha.html src="cloud-run-console" alt="Google Cloud Run web console" %}
-
 Google's recently available [Cloud Run](https://cloud.google.com/run/), in my opinion, resembles the future of the developer experience on the cloud. Cloud Run (*fully managed flavor*) lets me build a containerized application, and just *run* it, without firing a single neuron to consider:
 
 * Scaling
@@ -15,9 +13,11 @@ Google's recently available [Cloud Run](https://cloud.google.com/run/), in my op
 * Underlying infrastructure
 * Vendor or product lock-in
 
+{% include image-alpha.html src="cloud-run-console" alt="Google Cloud Run web console" %}
+
 <!--more-->
 
-Usage is straightforward. You create a "service" with some minimal configuration options, then provide a container for the service to run. Your container must be stateless, and operate via an HTTP interface on `$PORT`. *That's it*.
+Usage is straightforward: you create a "service" with some minimal configuration options, then provide a container for the service to run. Your container must be stateless, and operate via an HTTP interface on `$PORT`. *That's it*.
 
 It's the answer to *"I just want to run this container, can you do that for me? Fast?"*
 
