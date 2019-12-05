@@ -5,7 +5,7 @@ layout: post
 published: true
 ---
 
-{% include image-alpha.html src="cloud-run-console" alt="Google Cloud Run web console" %}
+{% include image-alpha.html src="cloud-run-console-screenshot" alt="Google Cloud Run web console" %}
 
 Google's recently available [Cloud Run](https://cloud.google.com/run/), in my opinion, resembles the future of the developer experience on the cloud. Cloud Run (*fully managed flavor*) lets me build a containerized application, and just *run* it, without firing a single neuron to consider:
 
