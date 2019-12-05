@@ -17,7 +17,7 @@
     <h1>Recent Posts</h1>
     {% for post in site.posts %}
       {% if post.type != "link" %}
-      <article style="margin-bottom: 5em;">
+      <article style="margin-bottom: 6em;">
         <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
         <p class="subtitle">{{ post.date | date: "%B %-d, %Y" }}</p>
         {{ post.excerpt }}
@@ -25,7 +25,7 @@
       </article>
       {% endif %}
       {% if post.type == "link" %}
-      <article style="margin-bottom: 5em;">
+      <article style="margin-bottom: 6em;">
         <h2><a href="{{ post.link_url }}">{{ post.title }} &#8594;</a></h2>
         <p class="subtitle">{{ post.date | date: "%B %-d, %Y" }}</p>
         {{ post.content }}
