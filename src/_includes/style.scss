@@ -240,20 +240,26 @@ main {
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
-  padding: 0 0 1em 0;
-  border-bottom: 1px solid var(--faded-text-color);
+  padding: 0.75em;
+  background-color: var(--background-color-lifted);
+  border-radius: 1em;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
   img {
-    border-radius: 100%;
-    width: 7em;
+    display: block;
+    width: 6em;
     margin: 0 1em 0 0;
+    border-radius: 100%;
   }
   p {
     margin: 0;
   }
 
   @media screen and (max-width: 28em) {
-    img {
-      width: 5em;
-    }
+    flex-direction: column;
+    padding: 1em;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
   }
 }
