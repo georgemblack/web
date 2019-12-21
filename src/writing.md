@@ -1,4 +1,0 @@
---- 
-title: Writing
-layout: writing
----

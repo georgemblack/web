@@ -1,8 +1,8 @@
 pages:
 - title: Home
   url: /
-- title: Writing
-  url: /writing/
+- title: Blog
+  url: /blog/
   new_window: false
 - title: Photos
   url: https://photos.georgeblack.me
