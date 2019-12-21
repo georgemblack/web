@@ -59,6 +59,10 @@ body {
   margin: 0 auto;
   padding: 0 1em;
   background-color: var(--background-color);
+
+  @media screen and (max-width: $break-point-small) {
+    padding: 0 0.75em;
+  }
 }
 
 h1,
