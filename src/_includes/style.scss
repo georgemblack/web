@@ -1,62 +1,63 @@
 /* ==========================================================================
-   Global Variables
+   SCSS Variables
    ========================================================================== */
+$break-point-medium: 58em;
+$break-point-small: 28em;
+
+/* ==========================================================================
+   CSS Variables
+   ========================================================================== */
+
+// Color theme: EEEEEE - FFAF65 - FA8282 - F36886 - CA5FA6
 :root {
   // defined widths
   --page-max-width: 54rem;
   --reading-max-width: 36rem;
 
   // primary fonts
-  --header-font: system-ui, -apple-system, "Roboto", sans-serif;
-  --body-font: system-ui, -apple-system, "Roboto", sans-serif;
+  --header-font: system-ui, sans-serif;
+  --body-font: system-ui, sans-serif;
 
   // font weights
   --font-weight-bold: 900;
   --font-weight-normal: 400;
 
-  // colors
-  --background-color: #f7f7f7;
-  --background-color-lifted: #e7e7e7;
-  --header-background-color: #e07148;
-  --header-title-color: #f7f7f7;
-  --body-font-color: #404040;
-  --faded-text-color: rgba(0, 0, 0, 0.35);
-  --link-color: #ba5c3a;
-  --link-hover-color: #9e4f33;
-  --nav-link-color: rgba(255, 255, 255, 0.5);
-  --nav-link-hover-color: #f7f7f7;
-  --nav-link-button-color: rgba(255, 255, 255, 0.75);
-  --nav-link-button-background-color: rgba(0, 0, 0, 0.1);
+  // general purpose
+  --background-color: #eeeeee;
+  --blockquote-border-color: #ca5fa6;
+  --line-separator-color: #ffaf65;
+
+  // header colors
+  --title-color: #444444;
+  --nav-link-color: #707070;
+  --nav-link-hover-color: #fa8282;
+
+  // text colors
+  --header-color: #444444;
+  --link-color: #f36886;
+  --link-hover-color: #be536a;
+  --faded-text-color: #666666;
 
   @media (prefers-color-scheme: dark) {
-    --background-color: #242424;
-    --background-color-lifted: #313131;
-    --header-background-color: #1a1a1a;
-    --header-title-color: #f7f7f7;
-    --body-font-color: #f7f7f7;
-    --faded-text-color: rgba(255, 255, 255, 0.35);
-    --link-color: #76dae3;
-    --link-hover-color: #69c1c9;
-    --nav-link-color: rgba(255, 255, 255, 0.5);
-    --nav-link-hover-color: #f7f7f7;
-    --nav-link-button-color: rgba(255, 255, 255, 0.75);
-    --nav-link-button-background-color: rgba(255, 255, 255, 0.1);
   }
 
-  @media screen and (max-width: 58em) {
+  @media screen and (max-width: $break-point-medium) {
     --page-max-width: var(--reading-max-width);
   }
 }
 
 /* ==========================================================================
-    Essential Elements
-    ========================================================================== */
+   Essential Elements
+   ========================================================================== */
 * {
   margin: 0;
   padding: 0;
 }
 
 body {
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: 0 1em;
   background-color: var(--background-color);
 }
 
@@ -68,14 +69,17 @@ h5,
 h6 {
   font-family: var(--header-font);
   font-weight: var(--font-weight-bold);
-  color: var(--body-font-color);
+  color: var(--header-color);
+}
+
+h1 {
+  font-size: 2em;
 }
 
 p,
 li {
   font-size: 16px;
   font-family: var(--body-font);
-  color: var(--body-font-color);
 }
 
 a {
@@ -88,27 +92,12 @@ a {
 }
 
 /* ==========================================================================
-    Header and Navigation
-    ========================================================================== */
+   Header and Navigation
+   ========================================================================== */
 header {
-  padding: 0.85em 0;
-  background-color: var(--header-background-color);
-
   .inner {
-    max-width: var(--page-max-width);
-    margin: 0 auto;
-    padding: 0 1.15em;
-  }
-
-  h1 {
-    color: var(--header-title-color);
-    @media screen and (max-width: 28em) {
-      font-size: 1.85em;
-    }
-  }
-
-  @media screen and (max-width: 28em) {
-    padding: 0.6em 0;
+    padding: 0.85em 0;
+    border-bottom: 2px solid var(--line-separator-color);
   }
 }
 
@@ -127,27 +116,17 @@ nav {
     }
   }
 
-  @media screen and (max-width: 28em) {
+  @media screen and (max-width: $break-point-small) {
     margin-top: 0.5em;
     font-size: 1em;
-    a {
-      display: inline-block;
-      margin: 0 0.15em 0 0;
-      padding: 0.25em 0.75em;
-      border-radius: 1em;
-      color: var(--nav-link-button-color);
-      background-color: var(--nav-link-button-background-color);
-    }
   }
 }
 
 /* ==========================================================================
-    Primary Content
-    ========================================================================== */
+   Primary Content
+   ========================================================================== */
 main {
-  max-width: var(--page-max-width);
   margin: 2em auto 5em auto;
-  padding: 0 1.15em;
 
   h1,
   h2,
@@ -163,10 +142,6 @@ main {
     margin: 1.25em 0 0 0;
     line-height: 180%;
     text-rendering: optimizeLegibility;
-
-    code {
-      font-size: 0.85em;
-    }
   }
 
   ul,
@@ -190,76 +165,20 @@ main {
     margin: 1em 0 0 1em;
     padding: 0.5em 1em;
     font-style: italic;
-    border-left: 5px solid var(--link-color);
+    border-left: 5px solid var(--blockquote-border-color);
     border-radius: 0.2em;
 
     p {
       margin: 0;
     }
   }
-
-  pre {
-    margin: 1em 0 0 0;
-    padding: 1em 1.5em;
-    display: block;
-    max-width: 100%;
-    overflow: auto;
-    word-wrap: break-word;
-    page-break-inside: avoid;
-    line-height: 180%;
-    color: var(--body-font-color);
-    background: var(--background-color-lifted);
-    border-left: 5px solid var(--link-color);
-    border-radius: 0.2em;
-  }
 }
 
 /* ==========================================================================
     General-Purpose Classes
     ========================================================================== */
-.post-content {
-  h1 {
-    font-size: 2em;
-  }
-
-  h2 {
-    margin-top: 2em;
-  }
-}
-
 .subtitle {
   margin-top: 0;
   font-family: var(--header-font);
   color: var(--faded-text-color);
-}
-
-/* ==========================================================================
-    Specific Content
-    ========================================================================== */
-.home-aside {
-  display: flex;
-  align-items: center;
-  flex-wrap: nowrap;
-  padding: 0.75em;
-  background-color: var(--background-color-lifted);
-  border-radius: 1em;
-  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
-  img {
-    display: block;
-    width: 6em;
-    margin: 0 1em 0 0;
-    border-radius: 100%;
-  }
-  p {
-    margin: 0;
-  }
-
-  @media screen and (max-width: 28em) {
-    flex-direction: column;
-    padding: 1em;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
-  }
 }
