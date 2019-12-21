@@ -213,9 +213,13 @@ main {
   }
   @media screen and (max-width: $break-point-medium) {
     flex-direction: column;
-    .inner-left,
-    .inner-right {
-      margin: 0;
+    margin: 0;
+    .inner {
+      h1,
+      h2,
+      h3 {
+        margin-top: 1em;
+      }
     }
   }
 }
