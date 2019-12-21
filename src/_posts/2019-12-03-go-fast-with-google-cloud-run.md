@@ -2,7 +2,7 @@
 title: Go Fast with Google Cloud Run
 date: 2019-12-03T20:44:00-0600
 layout: post
-published: true
+published: false
 ---
 
 {% include image-alpha.html src="cloud-run-console-screenshot" alt="Google Cloud Run web console" %}
