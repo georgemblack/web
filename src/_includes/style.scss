@@ -227,6 +227,15 @@ main {
 /* ==========================================================================
    Homepage
    ========================================================================== */
+.profile {
+  max-width: 16em;
+  margin: 0 auto 2em auto;
+  img {
+    margin: 0;
+    border-radius: 100%;
+  }
+}
+
 .recent-posts {
   article {
     margin-top: 1em;
