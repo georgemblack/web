@@ -187,9 +187,27 @@ main {
   color: var(--faded-text-color);
 }
 
+.side-by-side {
+  display: flex;
+  justify-content: space-between;
+
+  .inner {
+    width: 100%;
+    flex-grow: 1;
+  }
+
+  .inner:first-child {
+    margin: 0 2em 0 0;
+  }
+  @media screen and (max-width: $break-point-medium) {
+    flex-direction: column;
+    .inner-left,
+    .inner-right {
+      margin: 0;
+    }
+  }
+}
+
 /* ==========================================================================
    Homepage
    ========================================================================== */
-.apple-music-embed {
-  max-width: 600px;
-}

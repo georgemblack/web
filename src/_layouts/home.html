@@ -5,16 +5,42 @@
   <body>
     {% include header.html %}
     <main>
-      <h2>Current Jam</h2>
-      <iframe
-        class="apple-music-embed"
-        allow="autoplay *; encrypted-media *;"
-        frameborder="0"
-        height="150"
-        style="width:100%;overflow:hidden;background:transparent;"
-        sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-        src="https://embed.music.apple.com/us/album/el-ni%C3%B1o/1449979804?i=1449979807"
-      ></iframe>
+      <div class="side-by-side">
+        <div class="inner">
+          <h2>Current Jam</h2>
+          <iframe
+            class="apple-music-embed"
+            allow="autoplay *; encrypted-media *;"
+            frameborder="0"
+            height="150"
+            style="width:100%;overflow:hidden;background:transparent;"
+            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+            src="https://embed.music.apple.com/us/album/el-ni%C3%B1o/1449979804?i=1449979807"
+          ></iframe>
+        </div>
+        <div class="inner">
+          <h2>Internet Places I Like</h2>
+          <ul>
+            <li><a href="https://craigmod.com">Craig Mod</a></li>
+            <li>
+              <a href="https://daringfireball.net">Daring Fireball</a> – Top
+              notch Apple blog
+            </li>
+            <li>
+              <a href="https://inessential.com/">Inessential</a> – Personal blog
+              on tech & software dev
+            </li>
+            <li>
+              <a href="http://robinrendle.com/">Robin Rendle</a> – Cool designer
+              in San Fran
+            </li>
+            <li>
+              <a href="https://www.brandonjbrown.com">HUMAN</a> – Blog by
+              personal friend & mentor
+            </li>
+          </ul>
+        </div>
+      </div>
       <h2>Recent Posts</h2>
       {% for post in site.posts %} {% if post.type != "link" %}
       <article style="margin-bottom: 6em;">
