@@ -24,6 +24,7 @@ $break-point-small: 28em;
 
   // general purpose
   --background-color: #eeeeee;
+  --background-color-lifted: #f3f3f3;
   --blockquote-border-color: #ca5fa6;
   --line-separator-color: #ffaf65;
 
@@ -215,3 +216,16 @@ main {
 /* ==========================================================================
    Homepage
    ========================================================================== */
+.recent-posts {
+  article {
+    margin-top: 1em;
+    padding: 0.75em 1em;
+    border-radius: 0.25em;
+    background-color: var(--background-color-lifted);
+
+    h2,
+    p {
+      margin: 0;
+    }
+  }
+}
