@@ -5,15 +5,6 @@
 <body>
   {% include header.html %}
   <main>
-    <aside class="home-aside">
-      <picture>
-        <source srcset="/assets/img/profile.webp" type="image/webp">
-        <img src="/assets/img/profile.jpg" alt="George Black profile picture" type="image/jpeg"> 
-      </picture>
-      <div>
-      {{ content }} 
-      </div>       
-    </aside>
     <h1>Recent Posts</h1>
     {% for post in site.posts %}
       {% if post.type != "link" %}
