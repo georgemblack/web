@@ -14,7 +14,7 @@ window.onload = function hello() {
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
   }
   
-  fetch('https://a.georgeblack.me/views', {
+  fetch('https://api.georgeblack.me/views', {
     method: 'POST',
     mode: 'cors',
     headers: {
