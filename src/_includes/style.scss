@@ -232,7 +232,9 @@ main {
   margin: 0 auto 2em auto;
   img {
     margin: 0;
+    border: 2px solid var(--blockquote-border-color);
     border-radius: 100%;
+    box-shadow: 5px 5px 20px 0px rgba(250, 130, 130, 0.3);
   }
 }
 
