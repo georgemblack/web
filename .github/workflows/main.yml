@@ -30,7 +30,7 @@ jobs:
         with:
           gcloudProjectId: ${{ secrets.GCLOUD_PROJECT_ID }}
           gcloudServiceAccount: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
-          gcsUri: s3://georgeblack-archive/personal-website
+          gcsUri: gs://georgeblack-archive/personal-website
           localPath: ./src/_site
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
