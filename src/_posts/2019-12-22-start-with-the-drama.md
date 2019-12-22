@@ -2,6 +2,7 @@
 title: Start with the Drama
 date: 2019-12-22T07:21:00-0600
 layout: link
+type: link
 link_url: http://robinrendle.com/notes/start-with-the-drama.html
 published: true
 ---
