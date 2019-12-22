@@ -18,13 +18,6 @@ jobs:
         uses: ./.github/actions/jekyll-build
         with:
           sourceDirectory: src
-      - name: Upload Artifact to S3
-        uses: ./.github/actions/s3-artifact-upload
-        with:
-          awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          s3Uri: s3://georgeblack/archive/artifacts/personal-website
-          localPath: ./src/_site
       - name: Upload Artifact to GCS
         uses: ./.github/actions/gcs-artifact-upload
         with:
