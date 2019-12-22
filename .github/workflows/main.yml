@@ -6,27 +6,36 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Download Assets from S3
-      uses: ./.github/actions/s3-download
-      with:
-        awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        s3Uri: s3://georgeblack/web/assets
-        localPath: ./src/assets
-    - name: Jekyll Build
-      uses: ./.github/actions/jekyll-build
-      with:
-        sourceDirectory: src
-    - name: Upload Artifact
-      uses: ./.github/actions/s3-artifact-upload
-      with:
-        awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        s3Uri: s3://georgeblack/archive/artifacts/personal-website
-        localPath: ./src/_site
-    - name: Deploy to Cloudflare Workers
-      uses: cloudflare/wrangler-action@1.0.0
-      with:
-        apiKey: ${{ secrets.CF_API_KEY }}
-        email: ${{ secrets.CF_EMAIL }}
+      - uses: actions/checkout@v1
+      - name: Download Assets from S3
+        uses: ./.github/actions/s3-download
+        with:
+          awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          s3Uri: s3://georgeblack/web/assets
+          localPath: ./src/assets
+      - name: Jekyll Build
+        uses: ./.github/actions/jekyll-build
+        with:
+          sourceDirectory: src
+      - name: Upload Artifact to S3
+        uses: ./.github/actions/s3-artifact-upload
+        with:
+          awsAccessKeyId: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          s3Uri: s3://georgeblack/archive/artifacts/personal-website
+          localPath: ./src/_site
+      - name: Upload Artifact to S3
+          uses: ./.github/actions/gcs-artifact-upload
+          with:
+            gcloudProjectId: ${{ secrets.GCLOUD_PROJECT_ID }}
+            gcloudServiceAccount: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+            gcsUri: s3://georgeblack-archive/personal-website
+            localPath: ./src/_site
+          env:
+            GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@1.0.0
+        with:
+          apiKey: ${{ secrets.CF_API_KEY }}
+          email: ${{ secrets.CF_EMAIL }}
