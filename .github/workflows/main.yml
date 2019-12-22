@@ -25,15 +25,15 @@ jobs:
           awsSecretAccessKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           s3Uri: s3://georgeblack/archive/artifacts/personal-website
           localPath: ./src/_site
-      - name: Upload Artifact to S3
-          uses: ./.github/actions/gcs-artifact-upload
-          with:
-            gcloudProjectId: ${{ secrets.GCLOUD_PROJECT_ID }}
-            gcloudServiceAccount: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
-            gcsUri: s3://georgeblack-archive/personal-website
-            localPath: ./src/_site
-          env:
-            GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+      - name: Upload Artifact to GCS
+        uses: ./.github/actions/gcs-artifact-upload
+        with:
+          gcloudProjectId: ${{ secrets.GCLOUD_PROJECT_ID }}
+          gcloudServiceAccount: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+          gcsUri: s3://georgeblack-archive/personal-website
+          localPath: ./src/_site
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@1.0.0
         with:
