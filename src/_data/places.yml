@@ -1,6 +1,8 @@
 places:
   - title: Craig Mod
     url: https://craigmod.com
+  - title: Stratechery
+    url: https://stratechery.com
   - title: Daring Fireball
     url: https://daringfireball.net
     description: Top notch Apple blog
