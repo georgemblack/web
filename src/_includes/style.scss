@@ -101,12 +101,14 @@ h1 {
 
 p,
 li {
-  font-size: 16px;
+  font-size: 1em;
   font-family: var(--body-font);
   color: var(--body-color);
 }
 
 a {
+  font-size: 1em;
+  font-family: var(--body-font);
   text-decoration: none;
   color: var(--link-color);
 
@@ -244,32 +246,30 @@ main {
 }
 
 /* ==========================================================================
-   Home Page
+   Includes
    ========================================================================== */
-.home {
-  .profile {
-    max-width: 16em;
-    margin: 0 auto 2em auto;
-    img {
+.recent-posts {
+  article {
+    margin-top: 1em;
+    padding: 0.75em 1em;
+    border-radius: 0.5em;
+    background-color: var(--background-color-lifted);
+
+    h2,
+    p {
       margin: 0;
-      border: 3px solid var(--blockquote-border-color);
-      border-radius: 100%;
-      box-shadow: 5px 5px 20px 0px rgba(250, 130, 130, 0.3);
     }
   }
+}
 
-  .recent-posts {
-    article {
-      margin-top: 1em;
-      padding: 0.75em 1em;
-      border-radius: 0.5em;
-      background-color: var(--background-color-lifted);
-
-      h2,
-      p {
-        margin: 0;
-      }
-    }
+.profile {
+  max-width: 16em;
+  margin: 0 auto 2em auto;
+  img {
+    margin: 0;
+    border: 3px solid var(--blockquote-border-color);
+    border-radius: 100%;
+    box-shadow: 5px 5px 20px 0px rgba(250, 130, 130, 0.3);
   }
 }
 
