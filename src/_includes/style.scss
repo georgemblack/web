@@ -244,29 +244,56 @@ main {
 }
 
 /* ==========================================================================
-   Homepage
+   Home Page
    ========================================================================== */
-.profile {
-  max-width: 16em;
-  margin: 0 auto 2em auto;
-  img {
-    margin: 0;
-    border: 3px solid var(--blockquote-border-color);
-    border-radius: 100%;
-    box-shadow: 5px 5px 20px 0px rgba(250, 130, 130, 0.3);
+.home {
+  .profile {
+    max-width: 16em;
+    margin: 0 auto 2em auto;
+    img {
+      margin: 0;
+      border: 3px solid var(--blockquote-border-color);
+      border-radius: 100%;
+      box-shadow: 5px 5px 20px 0px rgba(250, 130, 130, 0.3);
+    }
+  }
+
+  .recent-posts {
+    article {
+      margin-top: 1em;
+      padding: 0.75em 1em;
+      border-radius: 0.5em;
+      background-color: var(--background-color-lifted);
+
+      h2,
+      p {
+        margin: 0;
+      }
+    }
   }
 }
 
-.recent-posts {
+/* ==========================================================================
+   Blog Page
+   ========================================================================== */
+.blog {
+  h2 {
+    font-size: 2em;
+  }
   article {
-    margin-top: 1em;
-    padding: 0.75em 1em;
-    border-radius: 0.5em;
-    background-color: var(--background-color-lifted);
+    margin-bottom: 5em;
+  }
+}
 
-    h2,
-    p {
-      margin: 0;
-    }
+/* ==========================================================================
+   Posts
+   ========================================================================== */
+.post {
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 2em;
   }
 }
