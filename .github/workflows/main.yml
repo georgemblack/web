@@ -14,6 +14,8 @@ jobs:
           gcloudServiceAccount: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
           gcsUri: s3://georgeblack-public/web/assets
           localPath: ./src/assets
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
       - name: Jekyll Build
         uses: ./.github/actions/jekyll-build
         with:
