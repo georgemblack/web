@@ -1,0 +1,9 @@
+<ul>
+  {% for place in site.data.places.places %} {% if place.description %}
+  <li>
+    <a href="{{ place.url }}">{{ place.title }}</a> – {{ place.description }}
+  </li>
+  {% else %}
+  <li><a href="{{ place.url }}">{{ place.title }}</a></li>
+  {% endif %} {% endfor %}
+</ul>
