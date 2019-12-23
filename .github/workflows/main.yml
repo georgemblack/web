@@ -12,7 +12,7 @@ jobs:
         with:
           gcloudProjectId: ${{ secrets.GCLOUD_PROJECT_ID }}
           gcloudServiceAccount: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
-          gcsUri: gs://georgeblack-public/web/assets
+          gcsUri: gs://georgeblack-public/web/assets/
           localPath: ./src/assets
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
