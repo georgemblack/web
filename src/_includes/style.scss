@@ -246,7 +246,7 @@ main {
 }
 
 /* ==========================================================================
-   Includes
+   Components
    ========================================================================== */
 .recent-posts {
   article {
@@ -270,6 +270,12 @@ main {
     border: 3px solid var(--blockquote-border-color);
     border-radius: 100%;
     box-shadow: 5px 5px 20px 0px rgba(250, 130, 130, 0.3);
+  }
+}
+
+.apple-music {
+  p {
+    margin-top: 0;
   }
 }
 
