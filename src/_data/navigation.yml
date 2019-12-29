@@ -5,7 +5,5 @@ pages:
   url: /about/
 - title: Blog
   url: /blog/
-  new_window: false
 - title: Photos
-  url: https://photos.georgeblack.me
-  new_window: false
+  url: /photos/
