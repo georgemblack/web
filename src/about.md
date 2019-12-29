@@ -7,7 +7,6 @@ layout: default
 
 * Software engineer in Chicago
 * Forever a [badger](https://twitter.com/georgeblackm/status/995345329087270912)
-* That's basically everything you need to know
 
 Email: [contact@georgeblack.me](mailto:contact@georgeblack.me)
 
