@@ -24,4 +24,4 @@ gcloud auth activate-service-account --key-file=./key.json
 rm ./key.json
 
 echo "Downloading from GCS"
-gsutil cp -r ${INPUT_GCSURI} ${INPUT_LOCALPATH}
+gsutil cp -m -r ${INPUT_GCSURI} ${INPUT_LOCALPATH}
