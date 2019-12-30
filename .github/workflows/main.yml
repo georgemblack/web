@@ -16,6 +16,10 @@ jobs:
           localPath: ./src/assets
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+      - name: Run Preprocessor
+        uses: ./.github/actions/yarn-action
+        with:
+          command: build
       - name: Jekyll Build
         uses: ./.github/actions/jekyll-build
         with:

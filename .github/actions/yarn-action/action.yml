@@ -1,0 +1,8 @@
+name: 'Yarn Action'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+inputs:
+  command:
+    description: 'Yarn command to run after install'
+    required: true
