@@ -4,3 +4,10 @@
 # Jekyll
 _site
 .jekyll-cache
+
+# Node
+node_modules
+
+# Project
+src/_includes/gen
+src/assets/gen
