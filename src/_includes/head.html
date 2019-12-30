@@ -19,7 +19,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:image" content="{{ site.url }}/assets/gen/profile.jpg" />
   <meta property="og:description" content="{{ site.description }}" />
-  <!-- icons -->
+  <!-- Icons -->
   <link
     rel="apple-touch-icon"
     sizes="180x180"
@@ -47,9 +47,8 @@
   <meta name="msapplication-TileColor" content="#2b5797" />
   <meta name="msapplication-config" content="/assets/icons/browserconfig.xml" />
   <meta name="theme-color" content="#f7f7f7" />
-  <!-- inline styles -->
-  {% capture style %} {% include style.scss %} {% endcapture %}
+  <!-- Inline styles -->
   <style>
-    {{ style | scssify }}
+    {% include gen/main.css %}
   </style>
 </head>

@@ -2,12 +2,15 @@ const { src, dest } = require("gulp");
 const concat = require("gulp-concat");
 const terser = require("gulp-terser");
 const insert = require("gulp-insert");
+const sass = require("gulp-sass");
+const cleanCSS = require("gulp-clean-css");
 
 /**
- * Bundle scripts in _js and output to _includes/gen
+ * Bundle _scripts and output to _includes/gen/app.min.js
+ * Bundle _styles and output to _includes/gen/main.css
  */
-function buildScripts(cb) {
-  src("src/_js/*.js")
+function build(cb) {
+  src("src/_scripts/*.js")
     .pipe(concat("app.min.js"))
     .pipe(
       terser({
@@ -16,7 +19,14 @@ function buildScripts(cb) {
     )
     .pipe(insert.wrap("{% raw %}", "{% endraw %}"))
     .pipe(dest("src/_includes/gen/"));
+
+  src("src/_styles/*.scss")
+    .pipe(sass())
+    .pipe(cleanCSS())
+    .pipe(insert.wrap("{% raw %}", "{% endraw %}"))
+    .pipe(dest("src/_includes/gen/"));
+
   cb();
 }
 
-exports.default = buildScripts;
+exports.default = build;
