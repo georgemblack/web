@@ -7,16 +7,13 @@ $break-point-small: 28em;
 /* ==========================================================================
    CSS Variables
    ========================================================================== */
-
-// Color theme: EEEEEE - FFAF65 - FA8282 - F36886 - CA5FA6
 :root {
   // defined widths
   --page-max-width: 54rem;
-  --reading-max-width: 36rem;
+  --reading-max-width: 38rem;
 
   // primary fonts
-  --header-font: -apple-system, system-ui, sans-serif;
-  --body-font: -apple-system, system-ui, sans-serif;
+  --primary-font: -apple-system, system-ui, sans-serif;
 
   // font weights
   --font-weight-bold: 900;
@@ -72,9 +69,10 @@ $break-point-small: 28em;
 }
 
 body {
-  max-width: var(--page-max-width);
   margin: 0 auto;
   padding: 0 1em;
+  max-width: var(--page-max-width);
+  font-family: var(--primary-font);
   background-color: var(--background-color);
 
   @media screen and (max-width: $break-point-small) {
@@ -88,7 +86,6 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--header-font);
   font-weight: var(--font-weight-bold);
   color: var(--header-color);
 }
@@ -99,14 +96,11 @@ h1 {
 
 p,
 li {
-  font-size: 1em;
-  font-family: var(--body-font);
+  font-size: 1.125em;
   color: var(--body-color);
 }
 
 a {
-  font-size: 1em;
-  font-family: var(--body-font);
   text-decoration: none;
   color: var(--link-color);
 
@@ -120,15 +114,14 @@ a {
    ========================================================================== */
 header {
   .inner {
-    padding: 0.85em 0;
-    border-bottom: 3px solid var(--line-separator-color);
+    padding: 0.75em 0;
+    border-bottom: 2px solid var(--line-separator-color);
   }
 }
 
 nav {
-  margin-top: 0.15em;
-  font-size: 1.15em;
-  font-family: var(--header-font);
+  margin: 0.15em 0 0 0;
+  font-size: 1.125em;
   font-weight: var(--font-weight-bold);
 
   a {
@@ -141,8 +134,7 @@ nav {
   }
 
   @media screen and (max-width: $break-point-small) {
-    margin-top: 0.5em;
-    font-size: 1em;
+    margin: 0.5em 0 0.15em 0;
   }
 }
 
@@ -207,7 +199,6 @@ main {
    ========================================================================== */
 .subtitle {
   margin-top: 0;
-  font-family: var(--header-font);
   color: var(--faded-text-color);
 }
 
