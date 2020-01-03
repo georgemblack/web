@@ -6,6 +6,8 @@
     {% include header.html %}
     <main class="home">
       {% include profile.html %}
+      <h2>Recent Posts</h2>
+      {% include recent-posts.html %}
       <div class="side-by-side">
         <div class="inner apple-music">
           <h2>Current Jam</h2>
@@ -34,8 +36,6 @@
           {% include places.html %}
         </div>
       </div>
-      <h2>Recent Posts</h2>
-      {% include recent-posts.html %}
     </main>
     {% include footer.html %}
   </body>
