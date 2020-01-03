@@ -10,6 +10,6 @@ A whole new generation (myself included) will experience a moon landing for the 
 
 Also:
 
-> It also includes a dedicated lunar station in orbit around the Moon, called Gateway. ... With a growing list of commercial and international opportunities, Gateway is the ideal hub between Earth and all that lies beyond. 
+> It also includes a dedicated lunar station in orbit around the Moon, called Gateway. ... Gateway is the ideal hub between Earth and all that lies beyond. 
 
-We're not only going back, we're *staying*.
+We're not only going back, we're *staying*. More info on Artemis [can be found here](https://www.nasa.gov/specials/artemis/).
