@@ -17,6 +17,4 @@ layout: default
 
 # About This Site
 
-This site is built with [Jekyll](https://jekyllrb.com), deployed with [GitHub Actions](https://github.com/features/actions), and hosted on [Cloudflare Workers](https://workers.cloudflare.com).
-
-Additional components are hosted on [Google Cloud Platform](https://cloud.google.com).
+This site is built with [Jekyll](https://jekyllrb.com), deployed with [GitHub Actions](https://github.com/features/actions), and hosted on [Cloudflare Workers](https://workers.cloudflare.com). Additional components are hosted on [Google Cloud Platform](https://cloud.google.com).

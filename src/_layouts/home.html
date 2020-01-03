@@ -5,9 +5,21 @@
   <body>
     {% include header.html %}
     <main class="home">
-      {% include profile.html %}
+      <div class="profile">
+        <picture>
+          <source
+            srcset="/assets/gen/profile-distorted-opt.webp"
+            type="image/webp"
+          />
+          <img
+            src="/assets/gen/profile-distorted-opt.jpg"
+            alt="George Black profile distorted"
+            type="image/jpeg"
+          />
+        </picture>
+      </div>
       <div class="side-by-side">
-        <div class="inner apple-music">
+        <section class="inner apple-music">
           <h2>Current Jam</h2>
           <iframe
             allow="autoplay *; encrypted-media *;"
@@ -23,19 +35,28 @@
               >Apple Music</a
             >
             |
-            <a
-              href="https://open.spotify.com/track/2JQm8NNpFkwvhuKH3yhuC9"
+            <a href="https://open.spotify.com/track/2JQm8NNpFkwvhuKH3yhuC9"
               >Spotify</a
             >
           </p>
-        </div>
-        <div class="inner">
+        </section>
+        <section class="inner">
           <h2>Internet Places I Like</h2>
-          {% include places.html %}
-        </div>
+          <ul>
+            {% for place in site.data.places.places %} {% if place.description %}
+            <li>
+              <a href="{{ place.url }}">{{ place.title }}</a> – {{ place.description }}
+            </li>
+            {% else %}
+            <li><a href="{{ place.url }}">{{ place.title }}</a></li>
+            {% endif %} {% endfor %}
+          </ul>
+        </section>
       </div>
-      <h2>Recent Posts</h2>
-      {% include recent-posts.html %}
+      <section>
+        <h2>Recent Posts</h2>
+        {% include recent-posts.html %}
+      </section>
     </main>
     {% include footer.html %}
   </body>
