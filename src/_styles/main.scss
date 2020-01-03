@@ -22,18 +22,18 @@ $break-point-small: 28em;
   // general purpose
   --background-color: #eeeeee;
   --background-color-lifted: #f7f7f7;
-  --blockquote-border-color: #fa8282;
-  --line-separator-color: #ffaf65;
+  --blockquote-border-color: #bebebe;
+  --line-separator-color: #bebebe;
 
   // header colors
-  --nav-link-color: #707070;
-  --nav-link-hover-color: #fa8282;
+  --nav-link-color: #888888;
+  --nav-link-hover-color: #3d3d3d;
 
   // text colors
-  --header-color: #444444;
+  --header-color: #3d3d3d;
   --body-color: #111111;
-  --link-color: #f36886;
-  --link-hover-color: #d15973;
+  --link-color: #256FF6;
+  --link-hover-color: #1e52b3;
   --faded-text-color: #666666;
 
   @media (prefers-color-scheme: dark) {
