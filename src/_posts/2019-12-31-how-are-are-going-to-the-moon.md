@@ -12,4 +12,6 @@ Also:
 
 > It also includes a dedicated lunar station in orbit around the Moon, called Gateway. ... Gateway is the ideal hub between Earth and all that lies beyond. 
 
-We're not only going back, we're *staying*. More info on Artemis [can be found here](https://www.nasa.gov/specials/artemis/).
+We're not only going back, we're *staying*.
+
+More info on Artemis [can be found here](https://www.nasa.gov/specials/artemis/).
