@@ -1,7 +1,8 @@
 {
   "license": "MIT",
   "scripts": {
-    "build": "gulp"
+    "build": "gulp",
+    "watch": "gulp watch"
   },
   "devDependencies": {
     "gulp": "^4.0.2",
