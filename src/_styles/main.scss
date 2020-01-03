@@ -29,7 +29,6 @@ $break-point-small: 28em;
   --line-separator-color: #ffaf65;
 
   // header colors
-  --title-color: #444444;
   --nav-link-color: #707070;
   --nav-link-hover-color: #fa8282;
 
@@ -44,19 +43,18 @@ $break-point-small: 28em;
     // general purpose
     --background-color: #202020;
     --background-color-lifted: #272727;
-    --blockquote-border-color: #fa8282;
-    --line-separator-color: #ffaf65;
+    --blockquote-border-color: #272727;
+    --line-separator-color: #353535;
 
     // header colors
-    --title-color: #444444;
-    --nav-link-color: #aaaaaa;
-    --nav-link-hover-color: #fa8282;
+    --nav-link-color: #8f8f8f;
+    --nav-link-hover-color: #f7f7f7;
 
     // text colors
     --header-color: #dddddd;
     --body-color: #f7f7f7;
-    --link-color: #f36886;
-    --link-hover-color: #ff819c;
+    --link-color: #ffaf65;
+    --link-hover-color: #d89657;
     --faded-text-color: #a3a3a3;
   }
 
@@ -252,7 +250,7 @@ main {
   article {
     margin-top: 1em;
     padding: 0.75em 1em;
-    border-radius: 0.5em;
+    border-radius: 0.25em;
     background-color: var(--background-color-lifted);
 
     h2,
@@ -267,9 +265,7 @@ main {
   margin: 0 auto 2em auto;
   img {
     margin: 0;
-    border: 3px solid var(--blockquote-border-color);
     border-radius: 100%;
-    box-shadow: 5px 5px 20px 0px rgba(250, 130, 130, 0.3);
   }
 }
 
