@@ -10,11 +10,11 @@ layout: default
 * Reach me at [contact@georgeblack.me](mailto:contact@georgeblack.me)
 
 ## Links
-* [Archive](/archive/)
 * [GitHub](https://github.com/georgemblack)
 * [Twitter](https://twitter.com/georgeblackm)
 * [LinkedIn](https://www.linkedin.com/in/georgemblack/)
 * [Feed](https://georgeblack.me/feed.xml)
+* [Archive](/archive/)
 
 # About This Site
 
