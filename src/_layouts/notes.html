@@ -5,7 +5,8 @@
   <body>
     {% include header.html %}
     <main class="notes">
-      {{ content }} {% for post in site.posts %} {% if post.layout != "link" %}
+      {{ content }}
+      {% for post in site.posts limit:10 %} {% if post.layout != "link" %}
       <article>
         <h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
         <p class="subtitle">{{post.date | date: "%B %-d, %Y" }}</p>
