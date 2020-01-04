@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Download Assets from GCS
-        uses: ./.github/actions/gcs-download
+        uses: georgemblack/actions/gcs-download@1.0.0
         with:
           gcloudProjectId: ${{ secrets.GCLOUD_PROJECT_ID }}
           gcloudServiceAccount: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
@@ -21,11 +21,11 @@ jobs:
         with:
           command: build
       - name: Jekyll Build
-        uses: ./.github/actions/jekyll-build
+        uses: georgemblack/actions/jekyll-build@1.0.0
         with:
           sourceDirectory: src
       - name: Upload Artifact to GCS
-        uses: ./.github/actions/gcs-artifact-upload
+        uses: georgemblack/actions/gcs-artifact-upload@1.0.0
         with:
           gcloudProjectId: ${{ secrets.GCLOUD_PROJECT_ID }}
           gcloudServiceAccount: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
