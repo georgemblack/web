@@ -7,13 +7,13 @@ published: true
 
 Will our listings on Ancestry.com link to 10,000 photos we once uploaded to Facebook?
 
-Will third-party companies collect our ancient data, and keep it only for a fee? (Or auction it off like abandon storage units?)
+Will third-party companies collect our ancient data, and keep it only for a fee? Or auction it off like abandon storage units?
 
 Is it *worth* storing a tweet from 2,000 years ago?
 
 <!--more-->
 
-Will there be a day when even [Amazon Glacier](https://aws.amazon.com/glacier/) is too expensive? (It's currently $0.00099/GB to store data in Deep Archive.)
+Will there be a day when even [Glacier Deep Archive](https://aws.amazon.com/glacier/) is too expensive? ($0.00099/GB!)
 
 When do we start *deleting* things?
 
