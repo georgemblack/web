@@ -1,6 +1,6 @@
 ---
 title: What Happens to Our Dead Data?
-date: 2020-01-03 20:35:00-0600
+date: '2020-01-03 20:35:00-0600'
 layout: post
 published: true
 ---
