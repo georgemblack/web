@@ -1,10 +1,6 @@
-FROM ubuntu:18.04
+FROM ruby:2.7
 
-RUN apt-get update && \
-    apt-get install -y make gcc g++ ruby-full
-
-RUN gem update --system
-RUN gem install bundler
+RUN gem install jekyll
 
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
