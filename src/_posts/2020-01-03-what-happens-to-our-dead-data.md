@@ -7,11 +7,13 @@ published: true
 
 Will our listing on Ancestry.com link to 10,000 old Facebook photos?
 
-Is it worth keeping a tweet from 2,000 years ago?
-
 Will a third-party company collect our data, and keep it only if someone pays a fee?
 
+Is it worth keeping a tweet from 2,000 years ago?
+
 Will there be a day when even [Amazon Glacier](https://aws.amazon.com/glacier/) is too expensive? (It's $0.00099/GB for Deep Archive.)
+
+<!--more-->
 
 Of the ~108 billion people born, most have *no record of their existence*.
 
