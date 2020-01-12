@@ -1,5 +1,6 @@
 ---
 title: A Small Handful of Mac Apps
+subtitle: Good Mac software by good Mac developers
 date: 2019-07-05 18:00:00-0500
 layout: post
 published: true

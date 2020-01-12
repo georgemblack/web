@@ -1,5 +1,6 @@
 ---
 title: What Happens to Our Dead Data?
+subtitle: A genuine question – just thinking out loud
 date: 2020-01-03 20:35:00-0600
 layout: post
 published: true
