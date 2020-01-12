@@ -22,6 +22,7 @@ $break-point-small: 28em;
   // general purpose
   --background-color: #eeeeee;
   --background-color-lifted: #f7f7f7;
+  --background-color-lifted-hover: #fcfcfc;
   --blockquote-border-color: #bebebe;
   --line-separator-color: #bebebe;
 
@@ -40,6 +41,7 @@ $break-point-small: 28em;
     // general purpose
     --background-color: #202020;
     --background-color-lifted: #272727;
+    --background-color-lifted-hover: #2e2e2e;
     --blockquote-border-color: #272727;
     --line-separator-color: #353535;
 
@@ -252,9 +254,17 @@ main {
       border-radius: 0.25em;
       background-color: var(--background-color-lifted);
 
+      &:hover {
+        background-color: var(--background-color-lifted-hover);
+      }
+
       h2,
       p {
         margin: 0;
+      }
+
+      h2 {
+        color: var(--link-color)
       }
     }
   }

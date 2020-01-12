@@ -1,11 +1,13 @@
 <div class="recent-posts">
   {% for post in site.posts %} {% if post.layout != "link" %}
-  <article>
-    <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-    {% if post.subtitle %}
-    <p>{{ post.subtitle }}</p>
-    {% endif %}
-    <p class="subtitle">{{ post.date | date: "%B %-d, %Y" }}</p>
-  </article>
+  <a href="{{ post.url }}">
+    <article>
+      <h2>{{ post.title }}</h2>
+      {% if post.subtitle %}
+      <p>{{ post.subtitle }}</p>
+      {% endif %}
+      <p class="subtitle">{{ post.date | date: "%B %-d, %Y" }}</p>
+    </article>
+  </a>
   {% endif %} {% endfor %}
 </div>
