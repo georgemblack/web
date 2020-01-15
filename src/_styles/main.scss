@@ -39,11 +39,11 @@ $break-point-small: 28em;
 
   @media (prefers-color-scheme: dark) {
     // general purpose
-    --background-color: #202020;
-    --background-color-lifted: #272727;
-    --background-color-lifted-hover: #2e2e2e;
-    --blockquote-border-color: #272727;
-    --line-separator-color: #353535;
+    --background-color: #282c35;
+    --background-color-lifted: #2d313b;
+    --background-color-lifted-hover: #313641;
+    --blockquote-border-color: #313641;
+    --line-separator-color: #313641;
 
     // header colors
     --nav-link-color: #8f8f8f;
@@ -52,8 +52,8 @@ $break-point-small: 28em;
     // text colors
     --header-color: #dddddd;
     --body-color: #f7f7f7;
-    --link-color: #ffaf65;
-    --link-hover-color: #d89657;
+    --link-color: #ffa7c4;
+    --link-hover-color: #dd7d9d;
     --faded-text-color: #a3a3a3;
   }
 
