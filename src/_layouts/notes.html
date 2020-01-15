@@ -7,14 +7,14 @@
     <main class="notes">
       {{ content }}
       {% for post in site.posts limit:10 %} {% if post.layout != "link" %}
-      <article>
+      <article style="margin-bottom: 6em;">
         <h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
         <p class="subtitle">{{post.date | date: "%B %-d, %Y" }}</p>
         {{ post.excerpt }}
         <p><a href="{{ post.url }}">Read More &#8594;</a></p>
       </article>
       {% endif %} {% if post.layout == "link" %}
-      <article>
+      <article style="margin-bottom: 6em;">
         <h1><a href="{{ post.link_url }}">{{ post.title }} &#8594;</a></h1>
         <p class="subtitle">{{ post.date | date: "%B %-d, %Y" }}</p>
         {{ post.content }}
