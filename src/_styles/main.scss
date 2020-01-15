@@ -253,22 +253,13 @@ main {
 
   .recent-posts {
     article {
-      margin: 1em 0 1.5em 0;
-      padding: 1em 1.15em;
-      border-radius: 0.25em;
-      background-color: var(--background-color-lifted);
-
-      &:hover {
-        background-color: var(--background-color-lifted-hover);
-      }
+      max-width: var(--reading-max-width);
+      padding: 1em 0;
+      border-bottom: 1px solid var(--line-separator-color);
 
       h2,
       p {
         margin: 0;
-      }
-
-      h2 {
-        color: var(--link-color)
       }
     }
   }
