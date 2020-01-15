@@ -72,10 +72,6 @@ body {
   max-width: var(--page-max-width);
   font-family: var(--primary-font);
   background-color: var(--background-color);
-
-  @media screen and (max-width: $break-point-small) {
-    padding: 0 0.85em;
-  }
 }
 
 h1,
@@ -137,6 +133,10 @@ nav {
 
   @media screen and (max-width: $break-point-small) {
     margin: 0.35em 0 0 0;
+
+    a {
+      margin: 0 0.6em 0 0;
+    }
   }
 }
 
@@ -144,7 +144,7 @@ nav {
    Primary Content
    ========================================================================== */
 main {
-  margin: 2.25em 0 6em 0;
+  margin: 2em 0 6em 0;
 
   h1,
   h2,
@@ -250,7 +250,7 @@ main {
   .recent-posts {
     article {
       max-width: var(--reading-max-width);
-      padding: 1em 0;
+      padding: 1.25em 0;
       border-bottom: 1px solid var(--line-separator-color);
 
       h2,
