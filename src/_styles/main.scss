@@ -192,7 +192,7 @@ main {
    ========================================================================== */
 .home {
   section {
-    margin-top: 3.5em;
+    margin-top: 3em;
 
     h2 {
       margin-top: 0;
@@ -222,12 +222,6 @@ main {
 
     @media screen and (max-width: $break-point-medium) {
       flex-direction: column;
-    }
-  }
-
-  .apple-music {
-    p {
-      margin-top: 0;
     }
   }
 

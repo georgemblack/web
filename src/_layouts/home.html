@@ -20,10 +20,20 @@
       </div>
       <section>
         <h2>Recent Notes</h2>
-        {% include recent-posts.html %}
+        <div class="recent-posts">
+          {% for post in site.posts %} {% if post.layout != "link" %}
+          <article>
+            <p class="subtitle" style="margin-top: 0;">{{ post.date | date: "%B %-d, %Y" }}</p>
+            <a href="{{ post.url }}"><h2 style="margin-top: 0;">{{ post.title }}</a></h2>
+            {% if post.subtitle %}
+            <p style="margin-top: 0.5em">{{ post.subtitle }}</p>
+            {% endif %}
+          </article>
+          {% endif %} {% endfor %}
+        </div>
       </section>
       <div class="side-by-side">
-        <section class="inner apple-music">
+        <section class="inner">
           <h2>Current Jam</h2>
           <iframe
             allow="autoplay *; encrypted-media *;"
@@ -33,7 +43,7 @@
             sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
             src="https://embed.music.apple.com/us/album/deja/1487536080?i=1487536081"
           ></iframe>
-          <p>
+          <p style="margin-top: 0;">
             <a
               href="https://music.apple.com/us/album/deja/1487536080?i=1487536081"
               >Apple Music</a
