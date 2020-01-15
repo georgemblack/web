@@ -20,38 +20,22 @@ $break-point-small: 28em;
   --font-weight-normal: 400;
 
   // general purpose
-  --background-color: #ffffff;
-  --blockquote-border-color: #fab7c3;
-  --line-separator-color: #d1d1d1;
+  --background-color: #282c35;
+  --background-color-lifted: #2d313b;
+  --background-color-lifted-hover: #313641;
+  --blockquote-border-color: #313641;
+  --line-separator-color: #313641;
 
   // header colors
-  --nav-link-color: #757575;
-  --nav-link-hover-color: #3d3d3d;
+  --nav-link-color: rgba(255, 255, 255, 0.5);
+  --nav-link-hover-color: #f7f7f7;
 
   // text colors
-  --header-color: #3d3d3d;
-  --body-color: #111111;
-  --link-color: #e2637a; // Original: #ff718c
-  --link-hover-color: #bd4f63;
-  --faded-text-color: #757575;
-
-  @media (prefers-color-scheme: dark) {
-    // general purpose
-    --background-color: #282c35;
-    --blockquote-border-color: #313641;
-    --line-separator-color: #313641;
-
-    // header colors
-    --nav-link-color: rgba(255, 255, 255, 0.5);
-    --nav-link-hover-color: #f7f7f7;
-
-    // text colors
-    --header-color: #dddddd;
-    --body-color: #f7f7f7;
-    --link-color: #ffa7c4;
-    --link-hover-color: #dd7d9d;
-    --faded-text-color: rgba(255, 255, 255, 0.4);
-  }
+  --header-color: #dddddd;
+  --body-color: #f7f7f7;
+  --link-color: #ffa7c4;
+  --link-hover-color: #dd7d9d;
+  --faded-text-color: rgba(255, 255, 255, 0.4);
 
   @media screen and (max-width: $break-point-medium) {
     --page-max-width: var(--reading-max-width);
@@ -249,12 +233,23 @@ main {
 
   .recent-posts {
     article {
-      padding: 1.25em 0;
-      border-bottom: 1px solid var(--line-separator-color);
+      margin: 1em 0 1.5em 0;
+      padding: 1em 1.15em;
+      border-radius: 0.25em;
+      background-color: var(--background-color-lifted);
 
-      h2,
-      p {
-        margin: 0;
+      &:hover {
+        background-color: var(--background-color-lifted-hover);
+      }
+
+      h2 {
+        color: var(--link-color)
+      }
+    }
+
+    @media screen and (max-width: $break-point-small) {
+      article {
+        padding: 0.65em 1em;
       }
     }
   }
