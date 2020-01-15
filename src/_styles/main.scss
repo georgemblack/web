@@ -46,7 +46,7 @@ $break-point-small: 28em;
     --line-separator-color: #313641;
 
     // header colors
-    --nav-link-color: #8f8f8f;
+    --nav-link-color: rgba(255, 255, 255, 0.5);
     --nav-link-hover-color: #f7f7f7;
 
     // text colors
@@ -54,7 +54,7 @@ $break-point-small: 28em;
     --body-color: #f7f7f7;
     --link-color: #ffa7c4;
     --link-hover-color: #dd7d9d;
-    --faded-text-color: #a3a3a3;
+    --faded-text-color: rgba(255, 255, 255, 0.4);
   }
 
   @media screen and (max-width: $break-point-medium) {
@@ -94,6 +94,10 @@ h6 {
 
 h1 {
   font-size: 2em;
+}
+
+h2 {
+  font-size: 1.65em;
 }
 
 p,
@@ -144,7 +148,7 @@ nav {
    Primary Content
    ========================================================================== */
 main {
-  margin: 2em 0 5em 0;
+  margin: 2.5em 0 8em 0;
 
   h1,
   h2,
@@ -208,7 +212,7 @@ main {
    ========================================================================== */
 .home {
   section {
-    margin-top: 4em;
+    margin-top: 3.5em;
 
     h2 {
       margin-top: 0;
@@ -249,8 +253,8 @@ main {
 
   .recent-posts {
     article {
-      margin-top: 1em;
-      padding: 0.75em 1em;
+      margin: 1em 0 1.5em 0;
+      padding: 1em 1.15em;
       border-radius: 0.25em;
       background-color: var(--background-color-lifted);
 
