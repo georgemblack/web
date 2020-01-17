@@ -6,8 +6,6 @@ window.onload = function analytics() {
   }
 
   const data = {
-    userAgent: window.navigator.userAgent,
-    hostname: window.location.hostname,
     pathname: window.location.pathname,
     referrer: window.document.referrer,
     windowInnerWidth: window.innerWidth,
