@@ -12,4 +12,4 @@ Whether or not you like Cruz – the podcast is refreshingly unfiltered and free
 
 Apparently, something is resonating. It's the number one podcast in the U.S., and has been for almost a week.
 
-I would love more shows with this format in the future – from Democrats as well as Republicans, and not just on matters of impeachment.
+I would love more shows of this format in the future – not just from Republicans, and not just on matters of impeachment, either.
