@@ -2,7 +2,7 @@
 title: Verdict with Ted Cruz
 date: 2020-01-30 21:59:00-0600
 layout: link
-url: https://podcasts.apple.com/us/podcast/verdict-with-ted-cruz/id1495601614
+link_url: https://podcasts.apple.com/us/podcast/verdict-with-ted-cruz/id1495601614
 published: true
 ---
 
