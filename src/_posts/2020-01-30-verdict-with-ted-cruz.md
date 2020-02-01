@@ -6,9 +6,11 @@ link_url: https://podcasts.apple.com/us/podcast/verdict-with-ted-cruz/id14956016
 published: true
 ---
 
-I found myself unexpectedly interested in the legality of milk on the Senate floor, gossip in the cloakroom, and importantly, substantive discussion on matters of impeachment.
+I found myself unexpectedly interested in the legality of milk on the Senate floor, gossip in the cloakroom, and most surprisingly, the impeachment trial itself.
 
-Whether or not you like Cruz – the podcast is refreshingly unfiltered and free from "headline noise". It's concise and well-explained for the majority of Americans (myself included) that have tuned out, without condescension. I appreciate that.
+Whether or not you like Cruz – the podcast is refreshingly unfiltered and free from "headline noise". It's concise and well-explained for the majority of Americans (myself included) that have tuned out – all without condescension. 
+
+I appreciate that.
 
 Apparently, something is resonating. It's the number one podcast in the U.S., and has been for almost a week.
 
