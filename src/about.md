@@ -13,7 +13,7 @@ layout: default
 * [GitHub](https://github.com/georgemblack)
 * [Twitter](https://twitter.com/georgeblackm)
 * [LinkedIn](https://www.linkedin.com/in/georgemblack/)
-* [Feed](https://georgeblack.me/feed.xml)
+* [Feed](https://georgeblack.me/feeds/main.xml)
 * [Archive](/archive/)
 
 # About This Site

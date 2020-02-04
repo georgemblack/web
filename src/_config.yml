@@ -18,3 +18,5 @@ plugins:
   - jekyll-commonmark
   - jekyll-feed
   - jekyll-sitemap
+feed:
+  path: '/feeds/main.xml'
