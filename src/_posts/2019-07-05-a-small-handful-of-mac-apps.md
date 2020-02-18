@@ -27,7 +27,7 @@ Spotlight is scrawny and weak. Alfred is the ripped guy at the gym with tattoos 
 
 **[DaisyDisk](https://daisydiskapp.com)** – My MacBook Pro has 256GB of storage (had to compromise somewhere). DaisyDisk has great visuals to help you understand your storage.
 
-**[1Password](https://1password.com)** – Secret documents, passwords, server keys, driver's license, software licenses. My Digital life would be an insecure hot mess without this thing.
+**[1Password](https://1password.com)** – Secret documents, passwords, server keys, driver's license, software licenses. My digital life would be an insecure hot mess without this thing.
 
 Most of the time, 1Password can simply exist as a keyboard shortcut. `CMD + SLASH` to populate credentials into just about any application or website.
 
