@@ -19,6 +19,16 @@ function buildAll(cb) {
     )
     .pipe(insert.wrap("{% raw %}", "{% endraw %}"))
     .pipe(dest("src/_includes/gen/"));
+    
+  src("src/_scripts/pages/*.js")
+    .pipe(concat("bookmarks.js"))
+    .pipe(
+      terser({
+        mangle: true
+      })
+    )
+    .pipe(insert.wrap("{% raw %}", "{% endraw %}"))
+    .pipe(dest("src/_includes/gen/pages/"));
 
   src("src/_styles/*.scss")
     .pipe(sass())
@@ -30,7 +40,7 @@ function buildAll(cb) {
 }
 
 function watchAll() {
-  watch(['src/_scripts/*.js', 'src/_styles/*.scss'], buildAll);
+  watch(['src/_scripts/*.js', 'src/_scripts/pages/*.js', 'src/_styles/*.scss'], buildAll);
 }
 
 exports.default = buildAll
