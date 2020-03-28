@@ -1,5 +1,4 @@
 window.onload = function analytics() {
-
   if ('doNotTrack' in window.navigator && window.navigator.doNotTrack === '1') {
     console.log('Respecting \'do not track\' preferences')
     return
