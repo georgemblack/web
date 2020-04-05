@@ -19,7 +19,7 @@ jobs:
         with:
           sourceDirectory: src
       - name: Sync to GCS
-        uses: ./github/actions/gsc-rsync
+        uses: ./.github/actions/gsc-rsync
         with:
           projectId: ${{ secrets.GCLOUD_PROJECT_ID }}
           bucketName: ${{ secrets.GCLOUD_BUCKET_NAME }}
