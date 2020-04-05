@@ -18,3 +18,10 @@ jobs:
         uses: georgemblack/actions/jekyll-build@1.0.0
         with:
           sourceDirectory: src
+      - name: Sync to GCS
+        uses: georgemblack/web/actions/gsc-rsync
+        with:
+          projectId: ${{ secrets.GCLOUD_PROJECT_ID }}
+          bucketName: ${{ secrets.GCLOUD_BUCKET_NAME }}
+        env:
+           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
