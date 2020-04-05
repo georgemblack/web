@@ -10,15 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Download Assets from GCS
-        uses: georgemblack/actions/gcs-download@1.0.0
-        with:
-          gcloudProjectId: ${{ secrets.GCLOUD_PROJECT_ID }}
-          gcloudServiceAccount: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
-          gcsUri: gs://georgeblack.me/web/assets/gen
-          localPath: ./src/assets
-        env:
-          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
       - name: Run Preprocessor
         uses: georgemblack/actions/yarn-command@1.0.0
         with:
@@ -27,16 +18,3 @@ jobs:
         uses: georgemblack/actions/jekyll-build@1.0.0
         with:
           sourceDirectory: src
-      - name: Upload Artifact to GCS
-        uses: georgemblack/actions/gcs-artifact-upload@1.0.0
-        with:
-          gcloudProjectId: ${{ secrets.GCLOUD_PROJECT_ID }}
-          gcloudServiceAccount: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
-          gcsUri: gs://oceanblue-archive/web
-          localPath: ./src/_site
-        env:
-          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
-      - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@1.1.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
