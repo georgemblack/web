@@ -9,5 +9,5 @@ _site
 node_modules
 
 # Project
-src/_includes/gen
-src/assets/gen
+sites/main/src/_includes/gen
+sites/main/src/assets/gen

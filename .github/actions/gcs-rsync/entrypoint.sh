@@ -27,4 +27,4 @@ gcloud auth activate-service-account --key-file=./key.json
 rm ./key.json
 
 # Upload dir
-gsutil -m rsync -r -d -x ".*assets/.*$" ./src/_site gs://${BUCKET_NAME}
+gsutil -m rsync -r -d -x ".*assets/.*$" ./sites/main/src/_site gs://${BUCKET_NAME}

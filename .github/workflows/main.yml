@@ -14,10 +14,11 @@ jobs:
         uses: georgemblack/actions/yarn-command@1.0.0
         with:
           command: build
+          directory: sites/main/src
       - name: Jekyll Build
         uses: georgemblack/actions/jekyll-build@1.0.0
         with:
-          sourceDirectory: src
+          sourceDirectory: sites/main/src
       - name: Sync to GCS
         uses: ./.github/actions/gcs-rsync
         with:
