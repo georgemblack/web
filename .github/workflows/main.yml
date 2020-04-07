@@ -14,7 +14,7 @@ jobs:
         uses: georgemblack/actions/yarn-command@1.0.0
         with:
           command: build
-          directory: sites/main/src
+          directory: sites/main
       - name: Jekyll Build
         uses: georgemblack/actions/jekyll-build@1.0.0
         with:
