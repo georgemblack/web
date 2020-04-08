@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Run Preprocessor
-        uses: georgemblack/actions/yarn-command@1.0.0
+        uses: georgemblack/actions/yarn-command@1.0.4
         with:
           command: build
           directory: sites/main
