@@ -16,9 +16,10 @@ jobs:
           command: build
           directory: sites/main
       - name: Jekyll Build
-        uses: georgemblack/actions/jekyll-build@1.0.0
+        uses: ./.github/actions/jekyll-build
         with:
           sourceDirectory: sites/main/src
+          outputDirectory: dist
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@1.1.0
         with:
