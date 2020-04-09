@@ -16,7 +16,7 @@ params=(
   --config=_config.yml,_config_prod.yml
 )
 if [[ -n "$INPUT_OUTPUTDIRECTORY" ]]; then
-    params+=(-o ${GITHUB_WORKSPACE}/${INPUT_OUTPUTDIRECTORY})
+    params+=(-d ${GITHUB_WORKSPACE}/${INPUT_OUTPUTDIRECTORY})
 fi
 
 if [ -n "$INPUT_SOURCEDIRECTORY" ]; then
