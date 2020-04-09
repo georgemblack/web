@@ -10,4 +10,4 @@ node_modules
 
 # Project
 sites/main/src/_includes/gen
-sites/main/src/assets/gen
+sites/main/src/assets
