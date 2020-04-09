@@ -19,8 +19,8 @@ if [[ -n "$INPUT_OUTPUTDIRECTORY" ]]; then
     params+=(-o ${GITHUB_WORKSPACE}/${INPUT_OUTPUTDIRECTORY})
 fi
 
-if [ -n "$INPUT_DIRECTORY" ]; then
-  cd ${GITHUB_WORKSPACE}/${INPUT_DIRECTORY}
+if [ -n "$INPUT_SOURCEDIRECTORY" ]; then
+  cd ${GITHUB_WORKSPACE}/${INPUT_SOURCEDIRECTORY}
 fi
 
 bundle install
