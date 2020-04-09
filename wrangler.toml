@@ -6,5 +6,5 @@ workers_dev = false
 zone_id = "4a21548be8c0b23b8101c86314f4e413"
 
 [site]
-bucket = "./sites/main/src/_site"
+bucket = "./dist"
 entry-point = "worker"
