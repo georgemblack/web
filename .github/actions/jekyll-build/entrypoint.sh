@@ -15,12 +15,13 @@ sanitize "${INPUT_SOURCEDIRECTORY}" "sourceDirectory"
 params=(
   --config=_config.yml,_config_prod.yml
 )
-if [[ -z ${INPUT_SOURCEDIRECTORY} ]]; then
-    params+=(-s ${GITHUB_WORKSPACE}/${INPUT_SOURCEDIRECTORY})
-fi
-if [[ -z ${INPUT_OUTPUTDIRECTORY} ]]; then
+if [[ -n "$INPUT_OUTPUTDIRECTORY" ]]; then
     params+=(-o ${GITHUB_WORKSPACE}/${INPUT_OUTPUTDIRECTORY})
 fi
 
-bundle install --gemfile=${GITHUB_WORKSPACE}/${INPUT_SOURCEDIRECTORY}/Gemfile
+if [ -n "$INPUT_DIRECTORY" ]; then
+  cd ${GITHUB_WORKSPACE}/${INPUT_DIRECTORY}
+fi
+
+bundle install
 bundle exec jekyll build "${params[@]}"
