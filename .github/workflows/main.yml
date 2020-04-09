@@ -26,3 +26,7 @@ jobs:
           bucketName: ${{ secrets.GCLOUD_BUCKET_NAME }}
         env:
            GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@1.1.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
