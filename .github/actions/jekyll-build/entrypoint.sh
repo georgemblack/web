@@ -15,10 +15,10 @@ sanitize "${INPUT_SOURCEDIRECTORY}" "sourceDirectory"
 params=(
   --config=_config.yml,_config_prod.yml
 )
-if [[ -z INPUT_SOURCEDIRECTORY ]]; then
+if [[ -z ${INPUT_SOURCEDIRECTORY} ]]; then
     params+=(-s ${GITHUB_WORKSPACE}/${INPUT_SOURCEDIRECTORY})
 fi
-if [[ -z INPUT_OUTPUTDIRECTORY ]]; then
+if [[ -z ${INPUT_OUTPUTDIRECTORY} ]]; then
     params+=(-o ${GITHUB_WORKSPACE}/${INPUT_OUTPUTDIRECTORY})
 fi
 
