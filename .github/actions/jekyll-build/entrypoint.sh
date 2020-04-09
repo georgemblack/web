@@ -19,7 +19,7 @@ if [[ -z INPUT_SOURCEDIRECTORY ]]; then
     params+=(-s ${INPUT_SOURCEDIRECTORY})
 fi
 if [[ -z INPUT_OUTPUTDIRECTORY ]]; then
-    params+=(-o ${INPUT_OUTPUTDIRECTORY)
+    params+=(-o ${INPUT_OUTPUTDIRECTORY})
 fi
 
 bundle install --gemfile=${INPUT_SOURCEDIRECTORY}/Gemfile
