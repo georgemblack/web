@@ -11,14 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Run Preprocessor
-        uses: georgemblack/actions/yarn-command@1.0.4
+        uses: georgemblack/actions/yarn-command@1.0.5
         with:
-          command: build
           directory: sites/main
+          command: build
       - name: Jekyll Build
-        uses: ./.github/actions/jekyll-build
+        uses: georgemblack/actions/jekyll-build@1.0.5
         with:
-          sourceDirectory: sites/main/src
+          directory: sites/main/src
           outputDirectory: dist
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@1.1.0
