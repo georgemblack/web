@@ -1,6 +1,6 @@
 import mime from "mime";
 
-const EDGE_CACHE_TTL = "864000";
+const EDGE_CACHE_TTL = "2592000";
 const ORIGIN = "https://georgeblack.me";
 const REMOTE_STORAGE_PATH = "https://storage.googleapis.com/georgeblack.me";
 
@@ -117,7 +117,7 @@ async function getNotFoundResponse() {
 function browserCacheMaxAge(pathname) {
   const extension = pathname.split(".").pop();
   if (/^(jpg|jpeg|png|webp|mov|ico|svg|webmanifest)$/.test(extension))
-    return "2592000"; // 30 days
+    return "7776000"; // 90 days
   if (/^(js|css)$/.test(extension)) return "86400"; // 1 day
   return "900";
 }
