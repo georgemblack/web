@@ -1,5 +1,16 @@
 {
+  "license": "MIT",
+  "scripts": {
+    "build": "gulp",
+    "watch": "gulp watch"
+  },
   "devDependencies": {
-    "prettier": "2.0.4"
+    "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-insert": "^0.5.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-terser": "^1.2.0",
+    "prettier": "^2.0.4"
   }
 }

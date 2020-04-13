@@ -9,7 +9,7 @@ _site
 node_modules
 
 # Project
-sites/main/src/_includes/gen
-sites/main/src/assets
+src/_includes/gen
+src/assets
 worker/worker
 dist

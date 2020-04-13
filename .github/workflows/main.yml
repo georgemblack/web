@@ -13,12 +13,11 @@ jobs:
       - name: Run Preprocessor
         uses: georgemblack/actions/yarn-command@1.0.5
         with:
-          directory: sites/main
           command: build
       - name: Jekyll Build
         uses: georgemblack/actions/jekyll-build@1.0.5
         with:
-          directory: sites/main/src
+          directory: src
           outputDirectory: dist
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@1.1.0
