@@ -2,7 +2,7 @@ import mime from "mime";
 
 const EDGE_CACHE_TTL = "2592000";
 const ORIGIN = "https://georgeblack.me";
-const REMOTE_STORAGE_PATH = "https://storage.googleapis.com/georgeblack.me";
+const REMOTE_STORAGE_URL = "https://storage.googleapis.com/georgeblack.me";
 
 addEventListener("fetch", (event) => {
   try {
@@ -40,10 +40,7 @@ async function handleEvent(event) {
     let headers = new Headers(response.headers);
     response = new Response(response.body, { headers });
     response.headers.set("CF-Cache-Status", "HIT");
-    response.headers.set(
-      "Cache-Control",
-      `public, max-age=${browserCacheMaxAge(pathKey)}`
-    );
+    response.headers.set("Cache-Control", `public, max-age=${browserCacheMaxAge(pathKey)}`);
     response.headers.delete("Age");
     return response;
   }
@@ -64,17 +61,13 @@ async function handleEvent(event) {
   event.waitUntil(cache.put(`${ORIGIN}/${pathKey}`, response.clone()));
 
   // set browser headers
-  response.headers.set(
-    "Cache-Control",
-    `public, max-age=${browserCacheMaxAge(pathKey)}`
-  );
+  response.headers.set("Cache-Control", `public, max-age=${browserCacheMaxAge(pathKey)}`);
   response.headers.set("CF-Cache-Status", "MISS");
-
   return response;
 }
 
 /**
- * Retrieve asset from cloud storage via URL
+ * Retrieve asset from URL
  */
 async function getAssetFromURL(pathKey, mimeType) {
   const response = await fetch(`${REMOTE_STORAGE_PATH}/${pathKey}`);
@@ -116,14 +109,13 @@ async function getNotFoundResponse() {
  */
 function browserCacheMaxAge(pathname) {
   const extension = pathname.split(".").pop();
-  if (/^(jpg|jpeg|png|webp|mov|ico|svg|webmanifest)$/.test(extension))
-    return "7776000"; // 90 days
+  if (/^(jpg|jpeg|png|webp|mov|ico|svg|webmanifest)$/.test(extension)) return "7776000"; // 90 days
   if (/^(js|css)$/.test(extension)) return "86400"; // 1 day
   return "900";
 }
 
 /**
- * Get sanitized pathname and mime-type from event data
+ * Get sanitized pathname and mime-type from event
  */
 function getRequestInfo(event) {
   let pathname = new URL(event.request.url).pathname;
@@ -141,23 +133,20 @@ function getRequestInfo(event) {
       mimeType = "text/html";
     }
   }
-  // replace leading slash
+  // remove leading slash
   pathname = pathname.replace(/^\/+/, "");
 
   return [pathname, mimeType];
 }
 
 /**
- * Gets unique path key for asset
+ * Get unique key for asset
  */
 function getPathKey(pathname) {
-  if (isRemoteAsset(pathname)) return pathname;
-
   const pathKey = JSON.parse(__STATIC_CONTENT_MANIFEST)[pathname];
-  if (!pathKey) {
-    throw new Error("Invalid path for asset!");
-  }
-  return pathKey;
+  if (pathKey) return pathKey;
+  if (!isRemoteAsset(pathname)) throw new Error("Invalid path for asset!");
+  return pathname;
 }
 
 /**
