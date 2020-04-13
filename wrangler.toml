@@ -1,5 +1,5 @@
 account_id = "bc4564dd499c0a9b8a7bb79c9bd5ea6d"
-name = "personal-website"
+name = "web"
 type = "webpack"
 route = "georgeblack.me/*"
 workers_dev = false
