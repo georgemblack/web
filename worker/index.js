@@ -70,7 +70,7 @@ async function handleEvent(event) {
  * Retrieve asset from URL
  */
 async function getAssetFromURL(pathKey, mimeType) {
-  const response = await fetch(`${REMOTE_STORAGE_PATH}/${pathKey}`);
+  const response = await fetch(`${REMOTE_STORAGE_URL}/${pathKey}`);
   if (response.status != 200) {
     throw new Error("Asset not found in Cloud Storage!");
   }
