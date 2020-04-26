@@ -5,16 +5,15 @@ layout: default
 
 # About Me
 
-* Software engineer in Chicago
-* Forever a [badger](https://twitter.com/georgeblackm/status/995345329087270912)
-* Reach me at [contact@georgeblack.me](mailto:contact@georgeblack.me)
+* Software engineer in Chicago, and a former [badger](https://twitter.com/georgeblackm/status/995345329087270912). Say hello at [contact@georgeblack.me](mailto:contact@georgeblack.me)!
 
 ## Links
+
 * [GitHub](https://github.com/georgemblack)
 * [Twitter](https://twitter.com/georgeblackm)
 * [LinkedIn](https://www.linkedin.com/in/georgemblack/)
-* [Feed](https://georgeblack.me/feeds/main.xml)
-* [Archive](/archive/)
+* [RSS Feed](https://georgeblack.me/feeds/main.xml)
+* [Notes Archive](/archive/)
 
 # About This Site
 
