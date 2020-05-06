@@ -1,6 +1,6 @@
 ---
 title: The Paradox of Preparation
-date: 2020-03-18 20:59:00-0500 
+date: 2020-03-18 20:59:00-0500
 layout: link
 link_url: https://kottke.org/20/03/the-paradox-of-preparation
 published: true
