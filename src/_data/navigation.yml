@@ -5,5 +5,7 @@ pages:
   url: /about/
 - title: Notes
   url: /notes/
+- title: Bookmarks
+  url: /bookmarks/
 - title: Photos
   url: /photos/
