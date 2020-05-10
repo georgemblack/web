@@ -1,7 +1,7 @@
 import mime from "mime";
 
-const EDGE_CACHE_TTL = "7776000";
 const ORIGIN = "https://georgeblack.me";
+const EDGE_CACHE_TTL = "7776000";
 const NOT_FOUND_ASSET_PATHNAME = "404/index.html";
 
 addEventListener("fetch", (event) => {
@@ -18,14 +18,16 @@ addEventListener("fetch", (event) => {
 async function handleEvent(event) {
   let response;
   const cache = caches.default;
+  const pathname = getPathname(event);
+  const key = getKVKey(pathname);
 
   if (!["GET", "HEAD"].includes(event.request.method)) {
     return new Response("Method not allowed", { status: 405 });
   }
 
-  const pathname = getPathname(event);
-  const key = getKVKey(pathname);
-  if (!key) return await getNotFoundResponse();
+  if (!key) {
+    return await getNotFoundResponse();
+  }
 
   // check cache
   response = await cache.match(`${ORIGIN}/${key}`);
@@ -58,7 +60,6 @@ async function handleEvent(event) {
 
 async function getNotFoundResponse() {
   const key = getKVKey(NOT_FOUND_ASSET_PATHNAME);
-  if (!key) return new Response("404 not found!", { status: 404 });
   return new Response(await getKVAsset(key), {
     status: 404,
     headers: { "Content-Type": "text/html" },
