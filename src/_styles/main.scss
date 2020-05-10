@@ -105,6 +105,8 @@ nav {
   margin: 0.15em 0 0 0;
   font-size: 1.125em;
   font-weight: var(--font-weight-bold);
+  overflow-x: scroll;
+  white-space: nowrap;
 
   a {
     margin: 0 0.75em 0 0;
