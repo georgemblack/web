@@ -4,6 +4,7 @@ author: 'George Black'
 author_email: 'contact@georgeblack.me'
 author_twitter: '@georgeblackme'
 url: 'https://georgeblack.me'
+media_url: 'https://media.georgeblack.me'
 timezone: 'America/Chicago'
 strict_front_matter: true
 production: false

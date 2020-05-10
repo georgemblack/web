@@ -1,10 +1,10 @@
 <picture>
   <source
-    srcset="/assets/{{ page.date | date: '%Y' }}/{{ include.src }}.webp"
+    srcset="{{ site.media_url }}/{{ page.date | date: '%Y' }}/{{ include.src }}.webp"
     type="image/webp"
   />
   <img
-    src="/assets/{{ page.date | date: '%Y' }}/{{ include.src }}.jpg"
+    src="{{ site.media_url }}/{{ page.date | date: '%Y' }}/{{ include.src }}.jpg"
     alt="{{ include.alt }}"
     type="image/jpeg"
   />
