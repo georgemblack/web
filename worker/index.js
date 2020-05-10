@@ -56,10 +56,6 @@ async function handleEvent(event) {
   return response;
 }
 
-/**
- * Fetch 404 page from KV
- * If page doesn't exist, return text response
- */
 async function getNotFoundResponse() {
   const key = getKVKey(NOT_FOUND_ASSET_PATHNAME);
   if (!key) return new Response("404 not found!", { status: 404 });
@@ -69,9 +65,6 @@ async function getNotFoundResponse() {
   });
 }
 
-/**
- * Get sanitized pathname of asset
- */
 function getPathname(event) {
   let pathname = new URL(event.request.url).pathname;
   if (pathname.endsWith("/")) {
@@ -85,9 +78,6 @@ function getPathname(event) {
   return pathname;
 }
 
-/**
- * Calculate the max age for an asset in the browser
- */
 function browserCacheMaxAge(pathname) {
   const extension = pathname.split(".").pop();
   if (/^(jpg|jpeg|png|webp|mov|ico|svg|webmanifest)$/.test(extension))
@@ -96,16 +86,10 @@ function browserCacheMaxAge(pathname) {
   return "900";
 }
 
-/**
- * Get key of KV asset
- */
 function getKVKey(pathname) {
   return JSON.parse(__STATIC_CONTENT_MANIFEST)[pathname];
 }
 
-/**
- * Get KV asset
- */
 async function getKVAsset(key) {
   return await __STATIC_CONTENT.get(key, "arrayBuffer");
 }
