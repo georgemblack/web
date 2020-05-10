@@ -1,8 +1,5 @@
 {
   "private": true,
-  "name": "worker",
-  "version": "1.0.0",
-  "description": "Personal web",
   "main": "index.js",
   "author": "George Black <contact@georgeblack.me>",
   "license": "MIT",
