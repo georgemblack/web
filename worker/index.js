@@ -1,8 +1,7 @@
 import mime from "mime";
 
-const EDGE_CACHE_TTL = "2592000";
+const EDGE_CACHE_TTL = "7776000";
 const ORIGIN = "https://georgeblack.me";
-const REMOTE_STORAGE_URL = "https://storage.googleapis.com/georgeblack.me";
 const NOT_FOUND_ASSET_PATHNAME = "404/index.html";
 
 addEventListener("fetch", (event) => {
@@ -17,117 +16,57 @@ addEventListener("fetch", (event) => {
  * Primary event handler
  */
 async function handleEvent(event) {
-  if (!["GET", "HEAD"].includes(event.request.method))
-    return new Response("Bad request", { status: 400 });
-
-  // route requests
-  const pathname = getPathname(event);
-  if (pathname.startsWith("assets/")) {
-    return await handleAssetFromURL(event);
-  }
-  return await handleAssetFromKV(event);
-}
-
-/**
- * Fetch asset from Cloudflare Workers KV
- */
-async function handleAssetFromKV(event) {
+  let response;
   const cache = caches.default;
-  const pathname = getPathname(event);
-  const pathKey = getKVKey(pathname);
 
-  if (!pathKey) {
-    return await getNotFoundResponse();
+  if (!["GET", "HEAD"].includes(event.request.method)) {
+    return new Response("Method not allowed", { status: 405 });
   }
+
+  const pathname = getPathname(event);
+  const key = getKVKey(pathname);
+  if (!key) return await getNotFoundResponse();
 
   // check cache
-  let response = await cache.match(`${ORIGIN}/${pathKey}`);
+  response = await cache.match(`${ORIGIN}/${key}`);
   if (response) {
     let headers = new Headers(response.headers);
     response = new Response(response.body, { headers });
-    response.headers.set("CF-Cache-Status", "HIT");
-    setBrowserHeaders(response, pathname);
+    response.headers.delete("Age");
+    response.headers.set(
+      "Cache-Control",
+      `public, max-age=${browserCacheMaxAge(pathname)}`
+    );
     return response;
   }
 
   // build request
-  const mimeType = mime.getType(pathname) || "text/html";
-  const body = await __STATIC_CONTENT.get(pathKey, "arrayBuffer");
-  response = new Response(body, {
-    headers: { "Content-Type": mimeType },
+  response = new Response(await getKVAsset(key), {
+    headers: {
+      "Content-Type": mime.getType(pathname) || "text/html",
+      "Cache-Control": `public, max-age=${browserCacheMaxAge(pathname)}`,
+    },
   });
 
   // send to cache
-  setEdgeCacheHeaders(response);
-  event.waitUntil(cache.put(`${ORIGIN}/${pathKey}`, response.clone()));
+  let responseForCache = response.clone();
+  responseForCache.headers.set("Cache-Control", `max-age=${EDGE_CACHE_TTL}`);
+  event.waitUntil(cache.put(`${ORIGIN}/${key}`, responseForCache));
 
-  setBrowserHeaders(response, pathname);
-  response.headers.set("CF-Cache-Status", "MISS");
   return response;
 }
 
 /**
- * Fetch asset from a URL
- */
-async function handleAssetFromURL(event) {
-  const cache = caches.default;
-  const pathname = getPathname(event);
-
-  // check cache
-  let response = await cache.match(`${ORIGIN}/${pathname}`);
-  if (response) {
-    let headers = new Headers(response.headers);
-    response = new Response(response.body, { headers });
-    response.headers.set("CF-Cache-Status", "HIT");
-    setBrowserHeaders(response, pathname);
-    return response;
-  }
-
-  const remoteStorageResponse = await fetch(
-    `${REMOTE_STORAGE_URL}/${pathname}`
-  );
-  if (remoteStorageResponse.status != 200) {
-    return await getNotFoundResponse();
-  }
-
-  // build request
-  const mimeType = mime.getType(pathname) || "text/html";
-  response = new Response(remoteStorageResponse.body, {
-    headers: { "Content-Type": mimeType },
-  });
-
-  // send to cache
-  setEdgeCacheHeaders(response);
-  event.waitUntil(cache.put(`${ORIGIN}/${pathname}`, response.clone()));
-
-  // set browser headers
-  setBrowserHeaders(response, pathname);
-  response.headers.set("CF-Cache-Status", "MISS");
-  return response;
-}
-
-/**
- * Fetch 404 page from Cloudflare Workers KV
+ * Fetch 404 page from KV
  * If page doesn't exist, return text response
  */
 async function getNotFoundResponse() {
-  const pathKey = getKVKey(NOT_FOUND_ASSET_PATHNAME);
-  if (!pathKey) {
-    return new Response("404 not found!", { status: 404 });
-  }
-
-  const body = await __STATIC_CONTENT.get(pathKey, "arrayBuffer");
-  return new Response(body, {
+  const key = getKVKey(NOT_FOUND_ASSET_PATHNAME);
+  if (!key) return new Response("404 not found!", { status: 404 });
+  return new Response(await getKVAsset(key), {
     status: 404,
     headers: { "Content-Type": "text/html" },
   });
-}
-
-/**
- * Get key of object stored in Cloudflare Workers KV
- */
-function getKVKey(pathname) {
-  return JSON.parse(__STATIC_CONTENT_MANIFEST)[pathname];
 }
 
 /**
@@ -147,24 +86,6 @@ function getPathname(event) {
 }
 
 /**
- * Set headers for request to be sent to edge cache
- */
-function setEdgeCacheHeaders(response) {
-  response.headers.set("Cache-Control", `max-age=${EDGE_CACHE_TTL}`);
-}
-
-/**
- * Set headers for request to be sent to browser
- */
-function setBrowserHeaders(response, pathname) {
-  response.headers.delete("Age");
-  response.headers.set(
-    "Cache-Control",
-    `public, max-age=${browserCacheMaxAge(pathname)}`
-  );
-}
-
-/**
  * Calculate the max age for an asset in the browser
  */
 function browserCacheMaxAge(pathname) {
@@ -173,4 +94,18 @@ function browserCacheMaxAge(pathname) {
     return "7776000"; // 90 days
   if (/^(js|css)$/.test(extension)) return "86400"; // 1 day
   return "900";
+}
+
+/**
+ * Get key of KV asset
+ */
+function getKVKey(pathname) {
+  return JSON.parse(__STATIC_CONTENT_MANIFEST)[pathname];
+}
+
+/**
+ * Get KV asset
+ */
+async function getKVAsset(key) {
+  return await __STATIC_CONTENT.get(key, "arrayBuffer");
 }
