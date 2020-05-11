@@ -13,7 +13,7 @@ layout: default
 * [Twitter](https://twitter.com/georgeblackm)
 * [LinkedIn](https://www.linkedin.com/in/georgemblack/)
 * [RSS Feed](https://georgeblack.me/feeds/main.xml)
-* [Notes Archive](/archive/)
+* [Archive](/archive/)
 
 # About This Site
 
