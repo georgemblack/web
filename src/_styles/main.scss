@@ -95,14 +95,12 @@ a {
    Header and Navigation
    ========================================================================== */
 header {
-  .inner {
-    padding: 0.75em 0;
-    border-bottom: 1px solid var(--line-separator-color);
-  }
+  margin: 0.75em 0 0 0;
+  border-bottom: 1px solid var(--line-separator-color);
 }
 
 nav {
-  margin: 0.15em 0 0 0;
+  padding: 0.15em 0 0.75em 0;
   font-size: 1.125em;
   font-weight: var(--font-weight-bold);
   overflow-x: scroll;
@@ -114,14 +112,6 @@ nav {
 
     &:hover {
       color: var(--nav-link-hover-color);
-    }
-  }
-
-  @media screen and (max-width: $break-point-small) {
-    margin: 0.35em 0 0 0;
-
-    a {
-      margin: 0 0.6em 0 0;
     }
   }
 }
