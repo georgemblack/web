@@ -2,7 +2,7 @@
    SCSS Variables
    ========================================================================== */
 $break-point-medium: 58em;
-$break-point-small: 28em;
+$break-point-small: 30em;
 
 /* ==========================================================================
    CSS Variables
@@ -97,6 +97,10 @@ a {
 header {
   padding: 0.75em 0 0 0;
   border-bottom: 1px solid var(--line-separator-color);
+
+  @media screen and (max-width: $break-point-small) {
+    padding: 1.15em 0 0 0;
+  }
 }
 
 nav {
@@ -113,6 +117,10 @@ nav {
     &:hover {
       color: var(--nav-link-hover-color);
     }
+  }
+
+  @media screen and (max-width: $break-point-small) {
+    padding: 0.15em 0 1.15em 0;
   }
 }
 
