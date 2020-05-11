@@ -5,7 +5,7 @@ layout: default
 
 # About Me
 
-* Software engineer in Chicago, and a former [badger](https://twitter.com/georgeblackm/status/995345329087270912). Say hello at [contact@georgeblack.me](mailto:contact@georgeblack.me)!
+Software engineer in Chicago, and a former [badger](https://twitter.com/georgeblackm/status/995345329087270912). Say hello at [contact@georgeblack.me](mailto:contact@georgeblack.me)!
 
 ## Links
 
