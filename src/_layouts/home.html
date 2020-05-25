@@ -21,7 +21,7 @@
       <section>
         <h2>Recent Notes</h2>
         <div class="recent-posts">
-          {% for post in site.posts %} {% if post.layout != "link" %}
+          {% for post in site.posts %}
           <a href="{{ post.url }}">
             <article>
               <p class="subtitle">{{ post.date | date: "%B %-d, %Y" }}</p>
@@ -31,7 +31,7 @@
               {% endif %}
             </article>
           </a>
-          {% endif %} {% endfor %}
+          {% endfor %}
         </div>
       </section>
       <div class="side-by-side">

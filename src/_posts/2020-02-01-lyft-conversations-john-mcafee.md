@@ -1,6 +1,6 @@
 ---
 title: 'Lyft Conversations: John McAfee'
-subtitle: What society expects of us, John McAfee, and Bitcoin
+subtitle: What society expects of us, John McAfee, and Bitcoin.
 date: 2020-02-01 13:23:00-0600
 layout: post
 published: true
