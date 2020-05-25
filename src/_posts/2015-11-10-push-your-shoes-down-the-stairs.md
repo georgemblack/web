@@ -3,7 +3,6 @@ title: Push Your Shoes Down the Stairs
 subtitle: Finding the divine in small places
 date: 2015-11-10 12:00:00-0600
 layout: post
-published: true
 ---
 
 {% include image.html src="abstract-cave" alt="Abstract cave" %}

@@ -3,7 +3,6 @@ title: A Small Handful of Mac Apps
 subtitle: Good Mac software by good Mac developers
 date: 2019-07-05 18:00:00-0500
 layout: post
-published: true
 ---
 
 I freaking *love* macOS. I joined the club when cat names were cool. My first Mac was a Mac mini rocking Mountain Lion.
