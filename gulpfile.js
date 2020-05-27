@@ -2,7 +2,6 @@ const { src, dest, watch } = require("gulp");
 const concat = require("gulp-concat");
 const terser = require("gulp-terser");
 const insert = require("gulp-insert");
-const sass = require("gulp-sass");
 const cleanCSS = require("gulp-clean-css");
 
 /**
@@ -30,8 +29,7 @@ function buildAll(cb) {
     .pipe(insert.wrap("{% raw %}", "{% endraw %}"))
     .pipe(dest("src/_includes/gen/pages/"));
 
-  src("src/_styles/*.scss")
-    .pipe(sass())
+  src("src/_styles/*.css")
     .pipe(cleanCSS())
     .pipe(insert.wrap("{% raw %}", "{% endraw %}"))
     .pipe(dest("src/_includes/gen/"));
@@ -40,7 +38,7 @@ function buildAll(cb) {
 }
 
 function watchAll() {
-  watch(['src/_scripts/*.js', 'src/_scripts/pages/*.js', 'src/_styles/*.scss'], buildAll);
+  watch(['src/_scripts/*.js', 'src/_scripts/pages/*.js', 'src/_styles/*.css'], buildAll);
 }
 
 exports.default = buildAll
