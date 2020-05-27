@@ -13,25 +13,45 @@
   --font-weight-bold: 900;
   --font-weight-normal: 400;
 
-  /* general purpose */
-  --background-color: #282c35;
-  --blockquote-border-color: #313641;
-  --line-separator-color: #313641;
+  /* general purpose colors */
+  --background-color: #f5efe6;
+  --blockquote-border-color: #fdb377;
+  --line-separator-color: #fdb377;
 
   /* header colors */
-  --nav-link-color: rgba(255, 255, 255, 0.5);
-  --nav-link-hover-color: #f7f7f7;
+  --nav-link-color: #57514e;
+  --nav-link-hover-color: #302b29;
 
   /* text colors */
-  --header-color: #dddddd;
-  --body-color: #f7f7f7;
-  --link-color: #ffa7c4;
-  --link-hover-color: #dd7d9d;
-  --link-active-color: #3069e4;
-  --faded-text-color: rgba(255, 255, 255, 0.4);
+  --header-color: #302b29;
+  --body-color: #272422;
+  --link-color: #e69554;
+  --link-hover-color: #fdb377;
+  --faded-text-color: rgba(0, 0, 0, 0.4);
 }
 
-/* $break-point-medium */
+/* dark mode colors */
+@media screen and (prefers-color-scheme: dark) {
+  :root {
+    /* general purpose colors */
+    --background-color: #282c35;
+    --blockquote-border-color: #313641;
+    --line-separator-color: #313641;
+
+    /* header colors */
+    --nav-link-color: rgba(255, 255, 255, 0.5);
+    --nav-link-hover-color: #f7f7f7;
+
+    /* text colors */
+    --header-color: #dddddd;
+    --body-color: #f7f7f7;
+    --link-color: #ffa7c4;
+    --link-hover-color: #dd7d9d;
+    --faded-text-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* medium break-point */
 @media screen and (max-width: 58em) {
   :root {
     --page-max-width: var(--reading-max-width);
@@ -84,10 +104,6 @@ a:hover {
   color: var(--link-hover-color);
 }
 
-a:active {
-  color: var(--link-active-color);
-}
-
 /* ==========================================================================
    Header and Navigation
    ========================================================================== */
@@ -122,7 +138,7 @@ nav a:hover {
   color: var(--nav-link-hover-color);
 }
 
-/* $break-point-medium */
+/* medium break-point */
 @media screen and (max-width: 58em) {
   nav a {
     margin: 0 0 0 0.65em;
