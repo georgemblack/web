@@ -5,70 +5,16 @@
   <body>
     {% include header.html %}
     <main class="home">
-      <div class="profile">
-        <picture>
-          <source
-            srcset="/images/profile-ghost.webp"
-            type="image/webp"
-          />
-          <img
-            src="/images/profile-ghost.jpg"
-            alt="George Black profile distorted"
-            type="image/jpeg"
-          />
-        </picture>
-      </div>
-      <section>
-        <h2>Recent Notes</h2>
-        <div class="recent-posts">
-          {% for post in site.posts %}
-          <a href="{{ post.url }}">
-            <article>
-              <p class="subtitle">{{ post.date | date: "%B %-d, %Y" }}</p>
-              <h2 style="margin-top: 0;">{{ post.title }}</h2>
-              {% if post.subtitle %}
-              <p style="margin-top: 0.35em">{{ post.subtitle }}</p>
-              {% endif %}
-            </article>
-          </a>
-          {% endfor %}
-        </div>
-      </section>
-      <div class="side-by-side">
-        <section class="inner">
-          <h2>Current Jam</h2>
-          <iframe
-            allow="autoplay *; encrypted-media *;"
-            frameborder="0"
-            height="150"
-            style="width:100%;overflow:hidden;background:transparent;"
-            sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-            src="https://embed.music.apple.com/us/album/letting-go-while-holding-on/1504272133?i=1504272140"
-          ></iframe>
-          <p style="margin-top: 0;">
-            <a
-              href="https://music.apple.com/us/album/ghosts-v-together/1504272133"
-              >Apple Music</a
-            >
-            |
-            <a href="https://open.spotify.com/album/296zqVG4gI7mDSUD0CytXM"
-              >Spotify</a
-            >
-          </p>
-        </section>
-        <section class="inner">
-          <h2>Internet Places I Like</h2>
-          <ul>
-            {% for place in site.data.places.places %} {% if place.description %}
-            <li>
-              <a href="{{ place.url }}">{{ place.title }}</a> – {{ place.description }}
-            </li>
-            {% else %}
-            <li><a href="{{ place.url }}">{{ place.title }}</a></li>
-            {% endif %} {% endfor %}
-          </ul>
-        </section>
-      </div>
+      {{ content }}
+      {% for post in site.posts limit:20 %}
+      <article style="margin-bottom: 6em;">
+        <h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
+        <p class="subtitle">{{post.date | date: "%B %-d, %Y" }}</p>
+        {{ post.excerpt }}
+        <p><a href="{{ post.url }}">Read More &#8594;</a></p>
+      </article>
+      {% endfor %}
+      <p><a href="{{ site.url }}/archive/">Go to Archive</a></p>
     </main>
     {% include footer.html %}
   </body>

@@ -21,8 +21,6 @@ $break-point-small: 30em;
 
   // general purpose
   --background-color: #282c35;
-  --background-color-lifted: #2d313b;
-  --background-color-lifted-hover: #313641;
   --blockquote-border-color: #313641;
   --line-separator-color: #313641;
 
@@ -183,68 +181,6 @@ main iframe {
 .subtitle {
   margin-top: 0;
   color: var(--faded-text-color);
-}
-
-/* ==========================================================================
-   Home Page
-   ========================================================================== */
-.home {
-  section {
-    margin-top: 3em;
-
-    h2 {
-      margin-top: 0;
-    }
-  }
-
-  .profile {
-    max-width: 16em;
-    margin: 0 auto;
-    img {
-      margin: 0;
-      border-radius: 100%;
-    }
-  }
-
-  .side-by-side {
-    display: flex;
-    justify-content: space-between;
-
-    .inner {
-      width: 100%;
-    }
-
-    .inner:first-child {
-      margin-right: 2em;
-    }
-
-    @media screen and (max-width: $break-point-medium) {
-      flex-direction: column;
-    }
-  }
-
-  .recent-posts {
-    article {
-      margin: 1em 0 1.5em 0;
-      padding: 0.85em 1em;
-      border-radius: 0.25em;
-      background-color: var(--background-color-lifted);
-
-      &:hover {
-        background-color: var(--background-color-lifted-hover);
-      }
-
-      h2 {
-        color: var(--link-color);
-      }
-    }
-
-    @media screen and (max-width: $break-point-small) {
-      article {
-        padding: 0.65em 1em;
-      }
-    }
-  }
 }
 
 /* ==========================================================================
