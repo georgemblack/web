@@ -4,7 +4,7 @@
 
   <body>
     {% include header.html %}
-    <main class="home">
+    <main>
       {{ content }}
       {% for post in site.posts limit:20 %}
       <article style="margin-bottom: 6em;">
