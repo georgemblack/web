@@ -1,10 +1,4 @@
 /* ==========================================================================
-   SCSS Variables
-   ========================================================================== */
-$break-point-medium: 58em;
-$break-point-small: 30em;
-
-/* ==========================================================================
    CSS Variables
    ========================================================================== */
 :root {
@@ -35,7 +29,8 @@ $break-point-small: 30em;
   --link-hover-color: #dd7d9d;
   --faded-text-color: rgba(255, 255, 255, 0.4);
 
-  @media screen and (max-width: $break-point-medium) {
+  // $break-point-medium
+  @media screen and (max-width: 58em) {
     --page-max-width: var(--reading-max-width);
   }
 }
@@ -116,7 +111,8 @@ nav a:hover {
   color: var(--nav-link-hover-color);
 }
 
-@media screen and (max-width: $break-point-medium) {
+// $break-point-medium
+@media screen and (max-width: 58em) {
   nav a {
     margin: 0 0 0 0.65em;
     line-height: 150%;
