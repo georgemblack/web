@@ -206,10 +206,29 @@ main iframe {
   color: var(--faded-text-color);
 }
 
+.centered {
+  max-width: var(--reading-max-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* ==========================================================================
-   Post Pages
+   Posts
    ========================================================================== */
 .post h2,
 .post h3 {
   margin-top: 2.5em;
+}
+
+/* ==========================================================================
+   About Page
+   ========================================================================== */
+.profile {
+  max-width: 16em;
+  margin: 0 auto;
+}
+
+.profile img {
+  margin: 0;
+  border-radius: 100%;
 }
