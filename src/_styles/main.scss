@@ -13,7 +13,7 @@ $break-point-small: 30em;
   --reading-max-width: 38rem;
 
   // primary fonts
-  --primary-font: -apple-system, system-ui, sans-serif;
+  --primary-font: system-ui, sans-serif;
 
   // font weights
   --font-weight-bold: 900;
@@ -60,10 +60,7 @@ body {
 
 h1,
 h2,
-h3,
-h4,
-h5,
-h6 {
+h3 {
   font-weight: var(--font-weight-bold);
   color: var(--header-color);
 }
@@ -85,10 +82,10 @@ li {
 a {
   text-decoration: none;
   color: var(--link-color);
+}
 
-  &:hover {
-    color: var(--link-hover-color);
-  }
+a:hover {
+  color: var(--link-hover-color);
 }
 
 /* ==========================================================================
@@ -110,15 +107,15 @@ header h1 a {
 nav {
   font-size: 1.125em;
   font-weight: var(--font-weight-bold);
+}
 
-  a {
-    margin: 0 0 0 0.75em;
-    color: var(--nav-link-color);
+nav a {
+  margin: 0 0 0 0.75em;
+  color: var(--nav-link-color);
+}
 
-    &:hover {
-      color: var(--nav-link-hover-color);
-    }
-  }
+nav a:hover {
+  color: var(--nav-link-hover-color);
 }
 
 @media screen and (max-width: $break-point-medium) {
@@ -133,54 +130,51 @@ nav {
    ========================================================================== */
 main {
   margin: 2em 0 6em 0;
+}
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin-top: 1em;
-  }
+main h1,
+main h2,
+main h3 {
+  margin-top: 1em;
+}
 
-  p {
-    max-width: var(--reading-max-width);
-    margin: 1.25em 0 0 0;
-    line-height: 180%;
-    text-rendering: optimizeLegibility;
-  }
+main p {
+  max-width: var(--reading-max-width);
+  margin: 1.25em 0 0 0;
+  line-height: 180%;
+  text-rendering: optimizeLegibility;
+}
 
-  ul,
-  ol {
-    margin: 1em 0 0 2em;
-    line-height: 180%;
-  }
+main ul,
+main ol {
+  margin: 1em 0 0 2em;
+  line-height: 180%;
+}
 
-  img,
-  video {
-    margin: 2em 0 0 0;
-    border-radius: 0.25em;
-  }
+main img,
+main video {
+  margin: 2em 0 0 0;
+  border-radius: 0.25em;
+}
 
-  img {
-    max-width: var(--reading-max-width);
-    width: 100%;
-  }
+main img {
+  max-width: var(--reading-max-width);
+  width: 100%;
+}
 
-  blockquote {
-    margin: 1em 0 0 1em;
-    padding: 0.5em 1em;
-    font-style: italic;
-    border-left: 5px solid var(--blockquote-border-color);
+main blockquote {
+  margin: 1em 0 0 1em;
+  padding: 0.5em 1em;
+  font-style: italic;
+  border-left: 5px solid var(--blockquote-border-color);
+}
 
-    p {
-      margin: 0;
-    }
-  }
+main blockquote p {
+  margin: 0;
+}
 
-  iframe {
-    margin: 1em 0 0 0;
-  }
+main iframe {
+  margin: 1em 0 0 0;
 }
 
 /* ==========================================================================
@@ -256,12 +250,7 @@ main {
 /* ==========================================================================
    Post Pages
    ========================================================================== */
-.post {
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin-top: 2.5em;
-  }
+.post h2,
+.post h3 {
+  margin-top: 2.5em;
 }
