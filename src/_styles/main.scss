@@ -27,6 +27,7 @@
   --body-color: #f7f7f7;
   --link-color: #ffa7c4;
   --link-hover-color: #dd7d9d;
+  --link-active-color: #3069e4;
   --faded-text-color: rgba(255, 255, 255, 0.4);
 
   // $break-point-medium
@@ -79,6 +80,10 @@ a {
 
 a:hover {
   color: var(--link-hover-color);
+}
+
+a:active {
+  color: var(--link-active-color);
 }
 
 /* ==========================================================================
