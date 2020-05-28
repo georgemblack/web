@@ -30,7 +30,7 @@
   --faded-text-color: rgba(0, 0, 0, 0.4);
 }
 
-/* dark mode colors */
+/* dark mode */
 @media screen and (prefers-color-scheme: dark) {
   :root {
     /* general purpose colors */
@@ -142,7 +142,6 @@ nav a:hover {
 @media screen and (max-width: 58em) {
   nav a {
     margin: 0 0 0 0.65em;
-    line-height: 150%;
   }
 }
 
@@ -206,12 +205,6 @@ main iframe {
   color: var(--faded-text-color);
 }
 
-.centered {
-  max-width: var(--reading-max-width);
-  margin-left: auto;
-  margin-right: auto;
-}
-
 /* ==========================================================================
    Posts
    ========================================================================== */
@@ -223,6 +216,12 @@ main iframe {
 /* ==========================================================================
    About Page
    ========================================================================== */
+.about {
+  max-width: var(--reading-max-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .profile {
   max-width: 16em;
   margin: 0 auto;
