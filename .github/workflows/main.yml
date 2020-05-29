@@ -11,11 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Run Preprocessor
-        uses: georgemblack/actions/yarn-command@1.0.5
+        uses: georgemblack/actions/yarn-command@1.0.6
         with:
           command: build
       - name: Jekyll Build
-        uses: georgemblack/actions/jekyll-build@1.0.5
+        uses: georgemblack/actions/jekyll-custom-build@1.0.6
         with:
           directory: src
           outputDirectory: dist
