@@ -10,14 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Docker Auth
-        run: docker login https://docker.pkg.github.com -u georgemblack -p ${{ secrets.GITHUB_TOKEN }}
       - name: Run Preprocessor
         uses: georgemblack/actions/yarn-command@1.0.6
         with:
           command: build
       - name: Jekyll Build
-        uses: georgemblack/actions/jekyll-custom-build@1.0.6
+        uses: georgemblack/actions/jekyll-custom-build@1.0.7
         with:
           directory: src
           outputDirectory: dist
