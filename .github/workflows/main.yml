@@ -15,7 +15,7 @@ jobs:
         with:
           command: build
       - name: Jekyll Build
-        uses: georgemblack/actions/jekyll-custom-build@1.0.7
+        uses: georgemblack/actions/jekyll-build@1.0.8
         with:
           directory: src
           outputDirectory: dist
