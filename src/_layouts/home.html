@@ -7,7 +7,7 @@
     <main>
       {{ content }}
       {% for post in site.posts limit:20 %}
-      <article style="margin-bottom: 6em;">
+      <article style="margin-bottom: 8em;">
         <h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
         <p class="subtitle">{{post.date | date: "%B %-d, %Y" }}</p>
         {{ post.excerpt }}
