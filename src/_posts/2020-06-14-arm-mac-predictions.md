@@ -37,7 +37,7 @@ I'm not good at making predictions, but will try nonetheless:
 
 ## Thoughts
 
-Sticking with the bullet-point format, my own thoughts:
+Sticking with the bullet-point format, some thoughts:
 
 * I will happily take the baptism of fire and adopt the first A-series Mac.
 * I'm disappointed the regular WWDC audience won't be around to clap and cheer – I mean – *they lost their minds* when Steve Jobs demoed scrolling on the iPhone.
