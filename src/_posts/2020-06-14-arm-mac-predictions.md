@@ -14,9 +14,10 @@ We are weeks from WWDC, where we will [presumably see a long-awaited tectonic-sh
 Here is my favorite commentary, from around the web:
 
 * [The case](https://tidbits.com/2020/06/09/the-case-for-arm-based-macs/) for the transition
+* [Defining a decade](https://appleinsider.com/articles/20/06/13/apples-shift-to-arm-mac-from-intel-at-wwdc-will-define-a-decade-of-computing) of computing
 * [A classic take](https://daringfireball.net/2020/06/on_apple_announcing_the_mac_arm_transition_at_wwdc) at Daring Fireball
 * [Some educated guesses](https://shapeof.com/archives/2020/6/educated_guesses_about_a_mac_transition_to_arm.html)
-* ["Re-engine, Not Re-imagine"](http://bslabs.net/2020/06/12/reengine-not-reimagine/)
+* ["Re-engine, Not Re-imagine"](https://bslabs.net/2020/06/12/reengine-not-reimagine/)
 * [Expanding the possibilities](https://twitter.com/layoutSubviews/status/1270993829231910913?s=20)
 * [A relevant comic](https://www.geekculture.com/joyoftech/joyarchives/2715.html)
 * [An overview of what's going on](https://www.axios.com/apples-challenges-as-it-swaps-out-the-macs-brain-007c089a-4e08-45b1-83b9-6a79591ad566.html) by Axios
