@@ -26,7 +26,7 @@ Here is my favorite commentary, from around the web:
 I'm not good at making predictions, but will try nonetheless:
 
 1. There is a rumored iMac redesign (to be released this year). ARM Macs are rumored to ship next year. Apple doesn't redesign often, so I believe the new iMac chassis will support *both* Intel and ARM (A-series) internals.
-2. The A-series iMac will serve the role of "developer transition kits", while Intel-flavored iMacs of the same chassis will be sold to the public.
+2. The A-series iMac will serve the role of "developer transition kit", while Intel-flavored iMacs of the same chassis will be sold to the public.
 3. There will be an x86 emulator. Apple will demo Adobe software on it.
 4. The value proposition for A-series Macs will be more than just "performance and power consumption". There will be a MacOS feature enabled by the A14 SOC that Intel Macs can't have.
 5. Every Mac (except the Mac Pro) will have an A-series flavor in the first half of 2021.
