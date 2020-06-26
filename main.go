@@ -2,12 +2,14 @@ package web
 
 import (
 	"encoding/json"
-	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"text/template"
 	"time"
+
+	"github.com/russross/blackfriday/v2"
 )
 
 // Constants
@@ -37,12 +39,16 @@ func Build() {
 
 	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " posts")
 
-	tmpl, err := template.ParseFiles("site/templates/post.html")
+	tmpl, err := template.ParseFiles("site/_templates/post.html", "site/_templates/head.html")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for _, post := range posts.Posts {
+		log.Println("Parsing markdown for post: " + post.Metadata.Title)
+		content := blackfriday.Run([]byte(post.Content))
+		post.Content = string(content)
+
 		log.Println("Executing template for post: " + post.Metadata.Title)
 
 		slug := getPostSlug(post)
