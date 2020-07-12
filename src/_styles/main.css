@@ -7,6 +7,7 @@
   --reading-max-width: 38rem;
 
   /* primary fonts */
+  --header-font: ui-rounded, -apple-system, system-ui, sans-serif;
   --primary-font: -apple-system, system-ui, sans-serif;
 
   /* font weights */
@@ -77,6 +78,7 @@ body {
 h1,
 h2,
 h3 {
+  font-family: var(--header-font);
   font-weight: var(--font-weight-bold);
   color: var(--header-color);
 }
@@ -131,6 +133,7 @@ nav {
 
 nav a {
   margin: 0 0 0 0.75em;
+  font-family: var(--header-font);
   color: var(--nav-link-color);
 }
 
