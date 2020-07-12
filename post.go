@@ -1,11 +1,26 @@
 package web
 
 import (
+	"encoding/json"
+	"log"
+	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
 )
+
+// Posts represents a list of posts
+type Posts struct {
+	Posts []Post
+}
+
+// Post represents a single post
+type Post struct {
+	Metadata  PostMetadata
+	Content   string
+	Published PostPublishedDate
+}
 
 // PostMetadata represents a single post's metadata
 type PostMetadata struct {
@@ -13,16 +28,34 @@ type PostMetadata struct {
 	Draft bool
 }
 
-// Post represents a single post
-type Post struct {
-	Metadata  PostMetadata
-	Content   string
-	Published int64
+// PostPublishedDate represents a UTC timestamp of when the post was published
+type PostPublishedDate struct {
+	Seconds int64 `json:"_seconds"`
 }
 
-// Posts represents a list of posts
-type Posts struct {
-	Posts []Post
+func getAllPosts() Posts {
+	client := &http.Client{}
+	postsEndpoint := getAPIEndpoint() + "/admin/posts"
+	var posts Posts
+
+	req, err := http.NewRequest("GET", postsEndpoint, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.Header.Set("Authorization", getAPIAuthToken())
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&posts)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return posts
 }
 
 func getPostSlug(post Post) string {
@@ -35,6 +68,6 @@ func getPostSlug(post Post) string {
 }
 
 func getPostYear(post Post) string {
-	time := time.Unix(post.Published, 0)
+	time := time.Unix(post.Published.Seconds, 0)
 	return strconv.Itoa(time.Year())
 }

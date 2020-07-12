@@ -1,9 +1,7 @@
 package web
 
 import (
-	"encoding/json"
 	"log"
-	"net/http"
 	"os"
 	"strconv"
 	"text/template"
@@ -14,8 +12,7 @@ import (
 
 // Constants
 const (
-	WebPostsEndpoint = "https://api.georgeblack.me/posts"
-	OutputDirectory  = "dist"
+	OutputDirectory = "dist"
 )
 
 // Build starts primary build process
@@ -25,19 +22,8 @@ func Build() {
 	log.Println("Starting build: " + buildID)
 	log.Println("Collecting web posts...")
 
-	resp, err := http.Get(WebPostsEndpoint)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer resp.Body.Close()
-
-	var posts Posts
-	err = json.NewDecoder(resp.Body).Decode(&posts)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " posts")
+	posts := getAllPosts()
+	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 
 	tmpl, err := template.ParseFiles("site/_templates/post.html", "site/_templates/head.html")
 	if err != nil {
