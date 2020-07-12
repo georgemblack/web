@@ -58,6 +58,12 @@ func getAllPosts() Posts {
 	return posts
 }
 
+func getPageMetadataForPost(post Post) PageMetadata {
+	metadata := PageMetadata{}
+	metadata.Title = post.Metadata.Title
+	return metadata
+}
+
 func getPostSlug(post Post) string {
 	slug := strings.ToLower(post.Metadata.Title)
 	slug = strings.ReplaceAll(slug, " ", "-")

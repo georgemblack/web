@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{ $title := .Metadata.Title }}
-  {{ template "head" $title }}
+  {{ template "head" }}
 
   <body>
-    <main>
-      <h1>{{ $title }}</h1>
-      {{ .Content }}
+    {{ template "header" }}
+    <main class="post">
+      <article>
+        <h1>{{ .Post.Metadata.Title }}</h1>
+        <p class="subtitle">Some date</p>
+        {{ .Post.Content }}
+      </article>
     </main>
+    {{ template "footer" }}
   </body>
 </html>
