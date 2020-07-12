@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-  {{ template "head" }}
+  {{ template "head" . }}
 
   <body>
-    {{ template "header" }}
+    {{ template "header" . }}
     <main class="post">
       <article>
         <h1>{{ .Post.Metadata.Title }}</h1>
@@ -11,6 +11,6 @@
         {{ .Post.Content }}
       </article>
     </main>
-    {{ template "footer" }}
+    {{ template "footer" . }}
   </body>
 </html>

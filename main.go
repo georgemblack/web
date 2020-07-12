@@ -50,6 +50,7 @@ func Build() {
 		postPage := PostPage{}
 		postPage.SiteMetadata = getDefaultSiteMetadata()
 		postPage.PageMetadata = getPageMetadataForPost(post)
+		postPage.Post = post
 
 		// Ensure path exists for each post
 		os.MkdirAll(OutputDirectory+"/"+buildID+"/"+year+"/"+slug, 0700)
