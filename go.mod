@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	cloud.google.com/go v0.61.0 // indirect
+	cloud.google.com/go/storage v1.10.0
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect

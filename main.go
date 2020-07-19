@@ -67,7 +67,13 @@ func Build() error {
 		tmpl.Execute(file, postPage)
 	}
 
-	log.Println("Completed build: " + getBuildID())
+	log.Println("Starting upload to cloud storage: " + buildID)
+	err = uploadToCloudStorage(buildID)
+	if err != nil {
+		return err
+	}
+
+	log.Println("Completed build: " + buildID)
 	return nil
 }
 
