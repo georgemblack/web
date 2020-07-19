@@ -11,7 +11,7 @@ import (
 var authToken string
 
 func getAPIEndpoint() string {
-	return getEnv("API_URL", "http://localhost:9000")
+	return getEnv("API_ENDPOINT", "http://localhost:9000")
 }
 
 func getAPIUsername() string {
