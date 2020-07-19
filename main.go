@@ -23,18 +23,21 @@ type PostPage struct {
 }
 
 // Build starts build process
-func Build() {
+func Build() error {
 	buildID := getBuildID()
 
 	log.Println("Starting build: " + buildID)
 	log.Println("Collecting web posts...")
 
-	posts := getAllPosts()
+	posts, err := getAllPosts()
+	if err != nil {
+		return err
+	}
 	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 
 	tmpl, err := template.ParseFiles("site/_templates/post.html", "site/_templates/head.html", "site/_templates/header.html", "site/_templates/footer.html")
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	for _, post := range posts.Posts {
@@ -57,7 +60,7 @@ func Build() {
 
 		file, err := os.Create(OutputDirectory + "/" + buildID + "/" + year + "/" + slug + "/" + "index.html")
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 		defer file.Close()
 
@@ -65,6 +68,7 @@ func Build() {
 	}
 
 	log.Println("Completed build: " + getBuildID())
+	return nil
 }
 
 func getBuildID() string {

@@ -2,7 +2,6 @@ package web
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -33,29 +32,34 @@ type PostPublishedDate struct {
 	Seconds int64 `json:"_seconds"`
 }
 
-func getAllPosts() Posts {
+func getAllPosts() (Posts, error) {
 	client := &http.Client{}
 	postsEndpoint := getAPIEndpoint() + "/admin/posts"
 	var posts Posts
 
+	authToken, err := getAPIAuthToken()
+	if err != nil {
+		return Posts{}, err
+	}
+
 	req, err := http.NewRequest("GET", postsEndpoint, nil)
 	if err != nil {
-		log.Fatal(err)
+		return Posts{}, err
 	}
-	req.Header.Set("Authorization", getAPIAuthToken())
+	req.Header.Set("Authorization", authToken)
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		return Posts{}, err
 	}
 	defer resp.Body.Close()
 
 	err = json.NewDecoder(resp.Body).Decode(&posts)
 	if err != nil {
-		log.Fatal(err)
+		return Posts{}, err
 	}
 
-	return posts
+	return posts, nil
 }
 
 func getPageMetadataForPost(post Post) PageMetadata {

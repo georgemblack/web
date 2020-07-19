@@ -12,7 +12,11 @@ func main() {
 	port := getEnv("PORT", "9001")
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		web.Build()
+		err := web.Build()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			log.Println(err)
+		}
 	})
 
 	log.Println("Listening on " + port)
