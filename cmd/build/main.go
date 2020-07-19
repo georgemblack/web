@@ -1,7 +1,14 @@
 package main
 
-import "github.com/georgemblack/web"
+import (
+	"log"
+
+	"github.com/georgemblack/web"
+)
 
 func main() {
-	web.Build()
+	err := web.Build()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
