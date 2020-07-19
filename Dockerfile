@@ -4,5 +4,7 @@ ADD . /go/src/app
 RUN go build ./cmd/server/main.go
 
 FROM gcr.io/distroless/base-debian10
-COPY --from=build-env /go/src/app/main /app/main
+WORKDIR /app
+COPY --from=build-env /go/src/app/main ./main
+COPY ./site ./site
 CMD ["/app/main"]
