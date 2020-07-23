@@ -8,7 +8,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
-	golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae // indirect
-	golang.org/x/tools v0.0.0-20200715235423-130c9f19d3fe // indirect
-	google.golang.org/genproto v0.0.0-20200715011427-11fb19a81f2c // indirect
+	golang.org/x/sys v0.0.0-20200722175500-76b94024e4b6 // indirect
+	golang.org/x/tools v0.0.0-20200723000907-a7c6fd066f6d // indirect
+	google.golang.org/genproto v0.0.0-20200722002428-88e341933a54 // indirect
 )
