@@ -35,7 +35,7 @@ func Build() error {
 	}
 	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 
-	tmpl, err := template.ParseFiles("site/_templates/post.html", "site/_templates/head.html", "site/_templates/header.html", "site/_templates/footer.html")
+	tmpl, err := template.ParseFiles("site/_templates/post.html", "site/_partials/head.html", "site/_partials/header.html", "site/_partials/footer.html")
 	if err != nil {
 		return err
 	}
