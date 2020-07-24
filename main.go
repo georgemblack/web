@@ -37,6 +37,12 @@ func Build() error {
 	}
 	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 
+	likes, err := getAllLikes()
+	if err != nil {
+		return err
+	}
+	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
+
 	tmpl, err := parseTemplates()
 	if err != nil {
 		return err
