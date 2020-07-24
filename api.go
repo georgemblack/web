@@ -6,6 +6,9 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 var authToken string
@@ -28,7 +31,8 @@ func getAPIAuthToken() (string, error) {
 	var data map[string]interface{}
 
 	// does token already exist?
-	if authToken != "" {
+	if authToken != "" && isValidAuthToken(authToken) {
+		log.Println("Using existing auth token")
 		return authToken, nil
 	}
 
@@ -60,4 +64,23 @@ func getAPIAuthToken() (string, error) {
 	log.Println("Retrieved auth token from API")
 	authToken = token
 	return authToken, nil
+}
+
+func isValidAuthToken(authToken string) bool {
+	parser := jwt.Parser{}
+	token, _, err := parser.ParseUnverified(authToken, jwt.MapClaims{})
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return false
+	}
+	switch expiration := claims["exp"].(type) {
+	case float64:
+		expirationTime := time.Unix(int64(expiration), 0)
+		return expirationTime.After(time.Now())
+	}
+	return false
 }
