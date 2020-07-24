@@ -3,7 +3,9 @@ package web
 import (
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
 	"text/template"
 	"time"
 
@@ -35,7 +37,7 @@ func Build() error {
 	}
 	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 
-	tmpl, err := template.ParseFiles("site/_templates/post.html", "site/_partials/head.html", "site/_partials/header.html", "site/_partials/footer.html")
+	tmpl, err := parseTemplates()
 	if err != nil {
 		return err
 	}
@@ -64,7 +66,7 @@ func Build() error {
 		}
 		defer file.Close()
 
-		tmpl.Execute(file, postPage)
+		tmpl.ExecuteTemplate(file, "post", postPage)
 	}
 
 	log.Println("Starting upload to cloud storage: " + buildID)
@@ -79,4 +81,21 @@ func Build() error {
 
 func getBuildID() string {
 	return time.Now().UTC().Format("2006-01-02-15-04-05")
+}
+
+func parseTemplates() (*template.Template, error) {
+	tmpl := template.New("")
+	err := filepath.Walk("./site", func(path string, info os.FileInfo, err error) error {
+		if strings.Contains(path, ".gohtml") {
+			_, err = tmpl.ParseFiles(path)
+			if err != nil {
+				return err
+			}
+		}
+		return err
+	})
+	if err != nil {
+		return nil, err
+	}
+	return tmpl, nil
 }
