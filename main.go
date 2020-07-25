@@ -37,14 +37,18 @@ func Build() error {
 	}
 	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
 
+	siteData := SiteData{posts, likes}
+	siteMetadata := getDefaultSiteMetadata()
+
 	tmpl, err := parseTemplates()
 	if err != nil {
 		return err
 	}
 
 	// Build index page
-	indexPage := StaticPage{}
-	indexPage.SiteMetadata = getDefaultSiteMetadata()
+	indexPage := Page{}
+	indexPage.SiteData = siteData
+	indexPage.SiteMetadata = siteMetadata
 	indexPage.PageMetadata = PageMetadata{}
 	os.MkdirAll(outputDirectory, 0700)
 	indexFile, err := os.Create(outputDirectory + "/" + "index.html")
@@ -55,8 +59,9 @@ func Build() error {
 	tmpl.ExecuteTemplate(indexFile, "index", indexPage)
 
 	// Build likes page
-	likesPage := LikesPage{}
-	likesPage.SiteMetadata = getDefaultSiteMetadata()
+	likesPage := Page{}
+	likesPage.SiteData = siteData
+	likesPage.SiteMetadata = siteMetadata
 	likesPage.PageMetadata = PageMetadata{"Likes"}
 	os.MkdirAll(outputDirectory+"/likes", 0700)
 	likesFile, err := os.Create(outputDirectory + "/likes/index.html")
@@ -78,7 +83,8 @@ func Build() error {
 		year := getPostYear(post)
 
 		postPage := PostPage{}
-		postPage.SiteMetadata = getDefaultSiteMetadata()
+		postPage.SiteData = siteData
+		postPage.SiteMetadata = siteMetadata
 		postPage.PageMetadata = getPageMetadataForPost(post)
 		postPage.Post = post
 

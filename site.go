@@ -1,6 +1,12 @@
 package web
 
-// SiteMetadata must be included in every template render
+// SiteData represents site data
+type SiteData struct {
+	Posts Posts
+	Likes Likes
+}
+
+// SiteMetadata represents site metadata
 type SiteMetadata struct {
 	Name             string
 	URL              string
@@ -13,7 +19,22 @@ type SiteMetadata struct {
 	ExcerptSeparator string
 }
 
-// PageMetadata represents metadata for an arbitrary page
+// Page represents a page
+type Page struct {
+	SiteData     SiteData
+	SiteMetadata SiteMetadata
+	PageMetadata PageMetadata
+}
+
+// PostPage represents a post pages
+type PostPage struct {
+	SiteData     SiteData
+	SiteMetadata SiteMetadata
+	PageMetadata PageMetadata
+	Post         Post
+}
+
+// PageMetadata represents a single page's metadata
 type PageMetadata struct {
 	Title string
 }
