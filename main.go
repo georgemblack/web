@@ -71,6 +71,19 @@ func Build() error {
 	defer likesFile.Close()
 	tmpl.ExecuteTemplate(likesFile, "likes", likesPage)
 
+	// Build about page
+	aboutPage := Page{}
+	aboutPage.SiteData = siteData
+	aboutPage.SiteMetadata = siteMetadata
+	aboutPage.PageMetadata = PageMetadata{"About"}
+	os.MkdirAll(outputDirectory+"/about", 0700)
+	aboutFile, err := os.Create(outputDirectory + "/about/index.html")
+	if err != nil {
+		return err
+	}
+	defer aboutFile.Close()
+	tmpl.ExecuteTemplate(aboutFile, "about", aboutPage)
+
 	// Build post pages
 	for _, post := range posts.Posts {
 		log.Println("Parsing markdown for post: " + post.Metadata.Title)
