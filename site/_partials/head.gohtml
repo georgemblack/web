@@ -10,7 +10,11 @@
     title="George Black's blog feed"
     href="{{ .SiteMetadata.URL }}/feeds/main.xml"
   />
-  <title>{{ .PageMetadata.Title }} | {{ .SiteMetadata.Name }}</title>
+  {{ if .PageMetadata.Title }}
+    <title>{{ .PageMetadata.Title }} | {{ .SiteMetadata.Name }}</title>
+  {{ else }}
+    <title>{{ .SiteMetadata.Name }}</title>
+  {{ end }}
   <!-- Twitter card data -->
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="{{ .SiteMetadata.AuthorTwitter }}" />

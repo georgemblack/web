@@ -14,22 +14,16 @@ import (
 
 // Constants
 const (
-	OutputDirectory = "dist"
+	DistDirectory = "dist"
 )
-
-// PostPage represents a post with site/page metadata, and is used to render templates
-type PostPage struct {
-	SiteMetadata SiteMetadata
-	PageMetadata PageMetadata
-	Post         Post
-}
 
 // Build starts build process
 func Build() error {
 	buildID := getBuildID()
+	outputDirectory := DistDirectory + "/" + buildID
 
 	log.Println("Starting build: " + buildID)
-	log.Println("Collecting web posts...")
+	log.Println("Collecting web data...")
 
 	posts, err := getAllPosts()
 	if err != nil {
@@ -48,6 +42,21 @@ func Build() error {
 		return err
 	}
 
+	// Create dir for build
+	os.MkdirAll(outputDirectory, 0700)
+
+	// Build index page
+	indexPage := StaticPage{}
+	indexPage.SiteMetadata = getDefaultSiteMetadata()
+	indexPage.PageMetadata = PageMetadata{}
+	file, err := os.Create(outputDirectory + "/" + "index.html")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	tmpl.ExecuteTemplate(file, "index", indexPage)
+
+	// Build post pages
 	for _, post := range posts.Posts {
 		log.Println("Parsing markdown for post: " + post.Metadata.Title)
 		content := blackfriday.Run([]byte(post.Content))
@@ -63,15 +72,12 @@ func Build() error {
 		postPage.PageMetadata = getPageMetadataForPost(post)
 		postPage.Post = post
 
-		// Ensure path exists for each post
-		os.MkdirAll(OutputDirectory+"/"+buildID+"/"+year+"/"+slug, 0700)
-
-		file, err := os.Create(OutputDirectory + "/" + buildID + "/" + year + "/" + slug + "/" + "index.html")
+		os.MkdirAll(outputDirectory+"/"+year+"/"+slug, 0700)
+		file, err := os.Create(outputDirectory + "/" + year + "/" + slug + "/" + "index.html")
 		if err != nil {
 			return err
 		}
 		defer file.Close()
-
 		tmpl.ExecuteTemplate(file, "post", postPage)
 	}
 
