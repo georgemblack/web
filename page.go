@@ -12,3 +12,10 @@ type PostPage struct {
 	PageMetadata PageMetadata
 	Post         Post
 }
+
+// LikesPage represents the likes page
+type LikesPage struct {
+	SiteMetadata SiteMetadata
+	PageMetadata PageMetadata
+	Likes        Likes
+}

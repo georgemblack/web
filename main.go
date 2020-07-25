@@ -42,19 +42,29 @@ func Build() error {
 		return err
 	}
 
-	// Create dir for build
-	os.MkdirAll(outputDirectory, 0700)
-
 	// Build index page
 	indexPage := StaticPage{}
 	indexPage.SiteMetadata = getDefaultSiteMetadata()
 	indexPage.PageMetadata = PageMetadata{}
-	file, err := os.Create(outputDirectory + "/" + "index.html")
+	os.MkdirAll(outputDirectory, 0700)
+	indexFile, err := os.Create(outputDirectory + "/" + "index.html")
 	if err != nil {
 		return err
 	}
-	defer file.Close()
-	tmpl.ExecuteTemplate(file, "index", indexPage)
+	defer indexFile.Close()
+	tmpl.ExecuteTemplate(indexFile, "index", indexPage)
+
+	// Build likes page
+	likesPage := LikesPage{}
+	likesPage.SiteMetadata = getDefaultSiteMetadata()
+	likesPage.PageMetadata = PageMetadata{"Likes"}
+	os.MkdirAll(outputDirectory+"/likes", 0700)
+	likesFile, err := os.Create(outputDirectory + "/likes/index.html")
+	if err != nil {
+		return err
+	}
+	defer likesFile.Close()
+	tmpl.ExecuteTemplate(likesFile, "likes", likesPage)
 
 	// Build post pages
 	for _, post := range posts.Posts {
