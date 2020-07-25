@@ -1,6 +1,7 @@
 package web
 
 import (
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -110,6 +111,12 @@ func Build() error {
 		tmpl.ExecuteTemplate(file, "post", postPage)
 	}
 
+	log.Println("Copying static files to destination...")
+	err = copyStaticFiles(outputDirectory)
+	if err != nil {
+		return err
+	}
+
 	log.Println("Starting upload to cloud storage: " + buildID)
 	err = uploadToCloudStorage(buildID)
 	if err != nil {
@@ -139,4 +146,42 @@ func parseTemplates() (*template.Template, error) {
 		return nil, err
 	}
 	return tmpl, nil
+}
+
+func copyStaticFiles(outputDir string) error {
+	err := filepath.Walk("./site", func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() {
+			return err
+		}
+		if strings.HasPrefix(path, "site/_") {
+			return err
+		}
+		if strings.Contains(path, ".gohtml") {
+			return err
+		}
+
+		// Copy file
+		destPath := strings.Replace(path, "site", outputDir, 1)
+		split := strings.Split(destPath, "/")
+		destDir := strings.Join(split[:len(split)-1], "/")
+
+		srcFile, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer srcFile.Close()
+
+		os.MkdirAll(destDir, 0700)
+		destFile, err := os.Create(destPath)
+		if err != nil {
+			return err
+		}
+		defer destFile.Close()
+		_, err = io.Copy(srcFile, destFile)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+	return err
 }
