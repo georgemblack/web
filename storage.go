@@ -77,7 +77,7 @@ func updateCloudStorage(buildID string) error {
 		}
 		defer file.Close()
 
-		key := strings.Replace(filePath, buildDir, "", 1)
+		key := strings.Replace(filePath, buildDir+"/", "", 1)
 		writer := bucket.Object(key).NewWriter(clientContext)
 		if _, err = io.Copy(writer, file); err != nil {
 			return err
