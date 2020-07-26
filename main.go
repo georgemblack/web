@@ -118,7 +118,7 @@ func Build() error {
 	}
 
 	log.Println("Starting upload to cloud storage: " + buildID)
-	err = uploadToCloudStorage(buildID)
+	err = updateCloudStorage(buildID)
 	if err != nil {
 		return err
 	}
@@ -134,7 +134,7 @@ func getBuildID() string {
 func parseTemplates() (*template.Template, error) {
 	tmpl := template.New("")
 	err := filepath.Walk("./site", func(path string, info os.FileInfo, err error) error {
-		if strings.Contains(path, ".gohtml") {
+		if strings.Contains(path, ".gohtml") || strings.Contains(path, ".goxml") {
 			_, err = tmpl.ParseFiles(path)
 			if err != nil {
 				return err
