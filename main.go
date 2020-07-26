@@ -194,7 +194,6 @@ func copyStaticFiles(outputDir string) error {
 		if err != nil {
 			return err
 		}
-
 		return nil
 	})
 	return err
