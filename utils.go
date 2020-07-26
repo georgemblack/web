@@ -21,6 +21,12 @@ func getPageMetadataForPost(post Post) PageMetadata {
 	return metadata
 }
 
+func getPostPath(post Post) string {
+	slug := getPostSlug(post)
+	year := getPostYear(post)
+	return year + "/" + slug
+}
+
 func getPostSlug(post Post) string {
 	slug := strings.ToLower(post.Metadata.Title)
 	slug = strings.ReplaceAll(slug, " ", "-")
