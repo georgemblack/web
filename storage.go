@@ -56,7 +56,7 @@ func updateCloudStorage(buildID string) error {
 		existingKey := attrs.Name
 		match := false
 		for _, filePath := range filesToUpload {
-			key := strings.Replace(filePath, buildDir, "", 1)
+			key := strings.Replace(filePath, buildDir+"/", "", 1)
 			if key == existingKey {
 				match = true
 				break
