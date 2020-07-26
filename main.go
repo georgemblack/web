@@ -145,6 +145,7 @@ func getBuildID() string {
 
 func parseTemplates() (*template.Template, error) {
 	tmpl := template.New("")
+	tmpl = tmpl.Funcs(getTemplateFuncMap())
 	err := filepath.Walk("./site", func(path string, info os.FileInfo, err error) error {
 		if strings.Contains(path, ".gohtml") || strings.Contains(path, ".goxml") {
 			_, err = tmpl.ParseFiles(path)
