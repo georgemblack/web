@@ -85,6 +85,18 @@ func Build() error {
 	defer aboutFile.Close()
 	tmpl.ExecuteTemplate(aboutFile, "about", aboutPage)
 
+	// Build feed
+	feed := Page{}
+	feed.SiteData = siteData
+	feed.SiteMetadata = siteMetadata
+	os.MkdirAll(outputDirectory+"/feeds", 0700)
+	feedFile, err := os.Create(outputDirectory + "/feeds/main.xml")
+	if err != nil {
+		return err
+	}
+	defer feedFile.Close()
+	tmpl.ExecuteTemplate(feedFile, "feed", feed)
+
 	// Build post pages
 	for _, post := range posts.Posts {
 		log.Println("Parsing markdown for post: " + post.Metadata.Title)

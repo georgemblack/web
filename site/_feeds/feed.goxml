@@ -1,0 +1,30 @@
+{{ define "feed" }}
+{{ $root := . }}
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <link href="{{ .SiteMetadata.URL }}/feeds/main.xml" rel="self" type="application/atom+xml" />
+  <link href="{{ .SiteMetadata.URL }}" rel="alternate" type="text/html" />
+  <updated>2020-07-12T21:08:16-05:00</updated>
+  <id>{{ .SiteMetadata.URL }}/feeds/main.xml</id>
+  <title type="html">{{ .SiteMetadata.Name }}</title>
+  <subtitle>George is a software engineer working in Chicago, with a small home on the internet.</subtitle>
+  <author>
+    <name>{{ .SiteMetadata.Name }}</name>
+  </author>
+  {{ range .SiteData.Posts.Posts }}
+  <entry>
+    <title type="html">{{ .Metadata.Title }}</title>
+    <link href="{{ $root.SiteMetadata.URL }}/2020/arm-mac-predictions/" rel="alternate" type="text/html" title="{{ .Metadata.Title }}" />
+    <published>2020-06-14T23:49:00-05:00</published>
+    <updated>2020-06-14T23:49:00-05:00</updated>
+    <id>{{ $root.SiteMetadata.URL }}/2020/arm-mac-predictions</id>
+    <content type="html" xml:base="{{ $root.SiteMetadata.URL }}/2020/arm-mac-predictions/">
+      {{ .Content }}
+    </content>
+    <author>
+      <name>{{ $root.SiteMetadata.Name }}</name>
+    </author>
+  </entry>
+  {{ end }}
+</feed>
+{{ end }}
