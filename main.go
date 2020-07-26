@@ -190,10 +190,11 @@ func copyStaticFiles(outputDir string) error {
 			return err
 		}
 		defer destFile.Close()
-		_, err = io.Copy(srcFile, destFile)
+		_, err = io.Copy(destFile, srcFile)
 		if err != nil {
 			return err
 		}
+
 		return nil
 	})
 	return err
