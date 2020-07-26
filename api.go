@@ -84,3 +84,63 @@ func isValidAuthToken(authToken string) bool {
 	}
 	return false
 }
+
+func getAllLikes() (Likes, error) {
+	client := &http.Client{}
+	likesEndpoint := getAPIEndpoint() + "/admin/likes"
+	var likes Likes
+
+	authToken, err := getAPIAuthToken()
+	if err != nil {
+		return Likes{}, err
+	}
+
+	req, err := http.NewRequest("GET", likesEndpoint, nil)
+	if err != nil {
+		return Likes{}, err
+	}
+	req.Header.Set("Authorization", authToken)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return Likes{}, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&likes)
+	if err != nil {
+		return Likes{}, err
+	}
+
+	return likes, nil
+}
+
+func getAllPosts() (Posts, error) {
+	client := &http.Client{}
+	postsEndpoint := getAPIEndpoint() + "/admin/posts"
+	var posts Posts
+
+	authToken, err := getAPIAuthToken()
+	if err != nil {
+		return Posts{}, err
+	}
+
+	req, err := http.NewRequest("GET", postsEndpoint, nil)
+	if err != nil {
+		return Posts{}, err
+	}
+	req.Header.Set("Authorization", authToken)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return Posts{}, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&posts)
+	if err != nil {
+		return Posts{}, err
+	}
+
+	return posts, nil
+}

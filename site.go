@@ -1,5 +1,66 @@
 package web
 
+// Likes represents a list of likes
+type Likes struct {
+	Likes []Likes
+}
+
+// Like represents a single like
+type Like struct {
+	ID        string
+	URL       string
+	Title     string
+	Timestamp LikeTimestamp
+}
+
+// LikeTimestamp represents a UTC timestamp of when the like was generated
+type LikeTimestamp struct {
+	Seconds int64 `json:"_seconds"`
+}
+
+// Posts represents a list of posts
+type Posts struct {
+	Posts []Post
+}
+
+// Post represents a single post
+type Post struct {
+	Metadata  PostMetadata
+	Content   string
+	Published PostPublishedDate
+}
+
+// PostMetadata represents a post's metadata
+type PostMetadata struct {
+	Title string
+	Draft bool
+}
+
+// PostPublishedDate represents a UTC timestamp of when the post was published
+type PostPublishedDate struct {
+	Seconds int64 `json:"_seconds"`
+}
+
+// Page represents a page
+type Page struct {
+	SiteData     SiteData
+	SiteMetadata SiteMetadata
+	PageMetadata PageMetadata
+}
+
+// PostPage represents a post page
+type PostPage struct {
+	SiteData     SiteData
+	SiteMetadata SiteMetadata
+	PageMetadata PageMetadata
+	Post         Post
+}
+
+// PageMetadata represents a single page's metadata
+type PageMetadata struct {
+	Title string
+}
+
 // SiteData represents site data
 type SiteData struct {
 	Posts Posts
@@ -17,26 +78,6 @@ type SiteMetadata struct {
 	AuthorTwitter    string
 	Timezone         string
 	ExcerptSeparator string
-}
-
-// Page represents a page
-type Page struct {
-	SiteData     SiteData
-	SiteMetadata SiteMetadata
-	PageMetadata PageMetadata
-}
-
-// PostPage represents a post pages
-type PostPage struct {
-	SiteData     SiteData
-	SiteMetadata SiteMetadata
-	PageMetadata PageMetadata
-	Post         Post
-}
-
-// PageMetadata represents a single page's metadata
-type PageMetadata struct {
-	Title string
 }
 
 func getDefaultSiteMetadata() SiteMetadata {
