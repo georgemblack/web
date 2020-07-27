@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	port := getEnv("PORT", "9001")
+	port := getEnv("PORT", "9002")
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		err := web.Build()
