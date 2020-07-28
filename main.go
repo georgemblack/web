@@ -38,6 +38,13 @@ func Build() error {
 	}
 	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
 
+	// process posts
+	for i := 0; i < len(posts.Posts); i++ {
+		log.Println("Parsing markdown for post: " + posts.Posts[i].Metadata.Title)
+		content := blackfriday.Run([]byte(posts.Posts[i].Content))
+		posts.Posts[i].Content = string(content)
+	}
+
 	siteData := SiteData{posts, likes}
 	siteMetadata := getDefaultSiteMetadata()
 
@@ -99,10 +106,6 @@ func Build() error {
 
 	// Build post pages
 	for _, post := range posts.Posts {
-		log.Println("Parsing markdown for post: " + post.Metadata.Title)
-		content := blackfriday.Run([]byte(post.Content))
-		post.Content = string(content)
-
 		log.Println("Executing template for post: " + post.Metadata.Title)
 
 		slug := getPostSlug(post)
