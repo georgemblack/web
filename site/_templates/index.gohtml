@@ -1,4 +1,5 @@
 {{ define "index" }}
+{{ $root := . }}
 <!DOCTYPE html>
 <html lang="en">
   {{ template "head" . }}
@@ -6,9 +7,15 @@
   <body>
     {{ template "header" . }}
     <main>
-      <article>
-        <p>Homepage</p>
+      {{ range .SiteData.Posts.Posts }}
+      <article style="margin-bottom: 6em;">
+        <h1><a href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></h1>
+        <p class="subtitle">Date</p>
+        {{ .Content }}
+        <p><a href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}">Read More &#8594;</a></p>
       </article>
+      {{ end }}
+      <p><a href="{{ .SiteMetadata.URL }}/archive/">Go to Archive</a></p>
     </main>
     {{ template "footer" . }}
   </body>
