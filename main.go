@@ -92,6 +92,19 @@ func Build() error {
 	defer aboutFile.Close()
 	tmpl.ExecuteTemplate(aboutFile, "about", aboutPage)
 
+	// Build 404 page
+	notFoundPage := Page{}
+	notFoundPage.SiteData = siteData
+	notFoundPage.SiteMetadata = siteMetadata
+	notFoundPage.PageMetadata = PageMetadata{"404 Not Found"}
+	os.MkdirAll(outputDirectory+"/404", 0700)
+	notFoundFile, err := os.Create(outputDirectory + "/404/index.html")
+	if err != nil {
+		return err
+	}
+	defer notFoundFile.Close()
+	tmpl.ExecuteTemplate(notFoundFile, "404", notFoundPage)
+
 	// Build feed
 	feed := Page{}
 	feed.SiteData = siteData
