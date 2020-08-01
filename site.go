@@ -2,7 +2,7 @@ package web
 
 // Likes represents a list of likes
 type Likes struct {
-	Likes []Likes
+	Likes []Like
 }
 
 // Like represents a single like
