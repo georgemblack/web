@@ -1,6 +1,7 @@
 package web
 
 import (
+	"bytes"
 	"io"
 	"log"
 	"os"
@@ -10,7 +11,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/russross/blackfriday/v2"
+	"github.com/yuin/goldmark"
 )
 
 // Constants
@@ -41,8 +42,12 @@ func Build() error {
 	// process posts
 	for i := 0; i < len(posts.Posts); i++ {
 		log.Println("Parsing markdown for post: " + posts.Posts[i].Metadata.Title)
-		content := blackfriday.Run([]byte(posts.Posts[i].Content))
-		posts.Posts[i].Content = string(content)
+		var buf bytes.Buffer
+		err := goldmark.Convert([]byte(posts.Posts[i].Content), &buf)
+		if err != nil {
+			return err
+		}
+		posts.Posts[i].Content = buf.String()
 	}
 
 	siteData := SiteData{posts, likes}
