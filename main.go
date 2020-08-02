@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 // Constants
@@ -40,10 +41,13 @@ func Build() error {
 	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
 
 	// process posts
+	markdown := goldmark.New(goldmark.WithRendererOptions(
+		html.WithUnsafe(),
+	))
 	for i := 0; i < len(posts.Posts); i++ {
 		log.Println("Parsing markdown for post: " + posts.Posts[i].Metadata.Title)
 		var buf bytes.Buffer
-		err := goldmark.Convert([]byte(posts.Posts[i].Content), &buf)
+		err := markdown.Convert([]byte(posts.Posts[i].Content), &buf)
 		if err != nil {
 			return err
 		}
