@@ -1,6 +1,7 @@
 package web
 
 import (
+	"strings"
 	"text/template"
 	"time"
 )
@@ -20,10 +21,16 @@ func GetPostPath(post Post) string {
 	return getPostPath(post)
 }
 
+// GetPostExcerpt is a template function
+func GetPostExcerpt(content string) string {
+	return strings.Split(content, "<!--more-->")[0]
+}
+
 func getTemplateFuncMap() template.FuncMap {
 	return template.FuncMap{
 		"currentISOTimestap":    CurrentISOTimestamp,
 		"secondsToISOTimestamp": SecondsToISOTimestamp,
 		"getPostPath":           GetPostPath,
+		"getPostExcerpt":        GetPostExcerpt,
 	}
 }
