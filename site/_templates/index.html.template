@@ -8,12 +8,14 @@
     {{ template "header" . }}
     <main>
       {{ range .SiteData.Posts.Posts }}
+      {{ if eq .Metadata.Draft false }}
       <article style="margin-bottom: 6em;">
         <h1><a href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></h1>
         <p class="subtitle">Date</p>
         {{ .Content }}
         <p><a href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}">Read More &#8594;</a></p>
       </article>
+      {{ end }}
       {{ end }}
       <p><a href="{{ .SiteMetadata.URL }}/archive/">Go to Archive</a></p>
     </main>

@@ -124,10 +124,12 @@ func Build() error {
 
 	// Build post pages
 	for _, post := range posts.Posts {
-		log.Println("Executing template for post: " + post.Metadata.Title)
+		if post.Metadata.Draft {
+			continue
+		}
 
-		slug := getPostSlug(post)
-		year := getPostYear(post)
+		log.Println("Executing template for post: " + post.Metadata.Title)
+		path := getPostPath(post)
 
 		postPage := PostPage{}
 		postPage.SiteData = siteData
@@ -135,8 +137,8 @@ func Build() error {
 		postPage.PageMetadata = getPageMetadataForPost(post)
 		postPage.Post = post
 
-		os.MkdirAll(outputDirectory+"/"+year+"/"+slug, 0700)
-		file, err := os.Create(outputDirectory + "/" + year + "/" + slug + "/" + "index.html")
+		os.MkdirAll(outputDirectory+"/"+path, 0700)
+		file, err := os.Create(outputDirectory + "/" + path + "/" + "index.html")
 		if err != nil {
 			return err
 		}
@@ -168,7 +170,7 @@ func parseTemplates() (*template.Template, error) {
 	tmpl := template.New("")
 	tmpl = tmpl.Funcs(getTemplateFuncMap())
 	err := filepath.Walk("./site", func(path string, info os.FileInfo, err error) error {
-		if strings.Contains(path, ".gohtml") || strings.Contains(path, ".goxml") {
+		if strings.Contains(path, ".template") {
 			_, err = tmpl.ParseFiles(path)
 			if err != nil {
 				return err
@@ -190,7 +192,7 @@ func copyStaticFiles(outputDir string) error {
 		if strings.HasPrefix(path, "site/_") {
 			return err
 		}
-		if strings.Contains(path, ".gohtml") {
+		if strings.Contains(path, ".template") {
 			return err
 		}
 
