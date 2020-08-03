@@ -8,7 +8,7 @@
     <main class="post">
       <article>
         <h1>{{ .Post.Metadata.Title }}</h1>
-        <p class="subtitle">Some date</p>
+        <p class="subtitle">{{ .Post.Published.Seconds | secondsToFormattedDate }}</p>
         {{ .Post.Content }}
       </article>
     </main>

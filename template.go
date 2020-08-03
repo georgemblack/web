@@ -16,6 +16,11 @@ func SecondsToISOTimestamp(seconds int64) string {
 	return time.Unix(seconds, 0).Format(time.RFC3339)
 }
 
+// SecondsToFormattedDate is a template function
+func SecondsToFormattedDate(seconds int64) string {
+	return time.Unix(seconds, 0).Format("January 1, 2006")
+}
+
 // GetPostPath is a template function
 func GetPostPath(post Post) string {
 	return getPostPath(post)
@@ -28,9 +33,10 @@ func GetPostExcerpt(content string) string {
 
 func getTemplateFuncMap() template.FuncMap {
 	return template.FuncMap{
-		"currentISOTimestap":    CurrentISOTimestamp,
-		"secondsToISOTimestamp": SecondsToISOTimestamp,
-		"getPostPath":           GetPostPath,
-		"getPostExcerpt":        GetPostExcerpt,
+		"currentISOTimestap":     CurrentISOTimestamp,
+		"secondsToISOTimestamp":  SecondsToISOTimestamp,
+		"secondsToFormattedDate": SecondsToFormattedDate,
+		"getPostPath":            GetPostPath,
+		"getPostExcerpt":         GetPostExcerpt,
 	}
 }
