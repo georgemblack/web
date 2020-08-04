@@ -1,8 +1,7 @@
-{{ define "post" }}
+{{- define "post" -}}
 <!DOCTYPE html>
 <html lang="en">
   {{ template "head" . }}
-
   <body>
     {{ template "header" . }}
     <main class="post">
