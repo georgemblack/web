@@ -16,7 +16,6 @@
       </article>
       {{ end }}
       {{ end }}
-      <p><a href="{{ .SiteMetadata.URL }}/archive/">Go to Archive</a></p>
     </main>
     {{ template "footer" . }}
   </body>
