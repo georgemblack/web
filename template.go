@@ -1,6 +1,7 @@
 package web
 
 import (
+	"net/url"
 	"strings"
 	"text/template"
 	"time"
@@ -31,6 +32,15 @@ func GetPostExcerpt(content string) string {
 	return strings.Split(content, "<!--more-->")[0]
 }
 
+// GetDomainFromURL is a template function
+func GetDomainFromURL(urlStr string) string {
+	parsed, err := url.Parse(urlStr)
+	if err != nil {
+		return urlStr
+	}
+	return parsed.Host
+}
+
 func getTemplateFuncMap() template.FuncMap {
 	return template.FuncMap{
 		"currentISOTimestap":     CurrentISOTimestamp,
@@ -38,5 +48,6 @@ func getTemplateFuncMap() template.FuncMap {
 		"secondsToFormattedDate": SecondsToFormattedDate,
 		"getPostPath":            GetPostPath,
 		"getPostExcerpt":         GetPostExcerpt,
+		"getDomainFromURL":       GetDomainFromURL,
 	}
 }

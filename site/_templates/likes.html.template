@@ -8,7 +8,10 @@
     <main>
       <h1>Likes</h1>
       {{ range .SiteData.Likes.Likes }}
-      <a href="{{ .URL }}">{{ .Title }}</a>
+      <div class="like">
+        <h2><a href="{{ .URL }}">{{ .Title }}</a></h2>
+        <p class="subtitle">{{ .URL | getDomainFromURL }}</p>
+      </div>
       {{ end }}
     </main>
     {{ template "footer" . }}
