@@ -1,0 +1,11 @@
+{{ define "header" }}
+<header>
+  <h1><a href="/">GB</a></h1>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <a href="/likes">Likes</a>
+    <a href="https://photos.georgeblack.me">Photos</a>
+  </nav>
+</header>
+{{ end }}

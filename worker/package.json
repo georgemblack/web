@@ -1,9 +1,0 @@
-{
-  "private": true,
-  "main": "index.js",
-  "author": "George Black <contact@georgeblack.me>",
-  "license": "MIT",
-  "dependencies": {
-    "mime": "^2.4.4"
-  }
-}

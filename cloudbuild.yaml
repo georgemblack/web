@@ -1,0 +1,5 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'us-east1-docker.pkg.dev/$PROJECT_ID/private/${_IMAGE}', '.' ]
+images:
+  - 'us-east1-docker.pkg.dev/$PROJECT_ID/private/${_IMAGE}'

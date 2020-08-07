@@ -1,0 +1,30 @@
+{{- define "feed" -}}
+{{- $root := . -}}
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title type="html">{{ .SiteMetadata.Name }}</title>
+  <link href="{{ .SiteMetadata.URL }}" rel="alternate" type="text/html" />
+  <link href="{{ .SiteMetadata.URL }}/feeds/main.xml" rel="self" type="application/atom+xml" />
+  <subtitle>A software engineer in Chicago, with a small home on the internet.</subtitle>
+  <author>
+    <name>{{ .SiteMetadata.Name }}</name>
+  </author>
+  <id>{{ .SiteMetadata.URL }}/feeds/main.xml</id>
+  <updated>{{ currentISOTimestap }}</updated>
+  {{- range .SiteData.Posts.Posts }}
+  <entry>
+    <title type="html">{{ .Metadata.Title }}</title>
+    <link href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}" rel="alternate" type="text/html" title="{{ .Metadata.Title }}" />
+    <published>{{ .Published.Seconds | secondsToISOTimestamp }}</published>
+    <updated>{{ .Published.Seconds | secondsToISOTimestamp }}</updated>
+    <id>{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}</id>
+    <content type="html" xml:base="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}">
+      {{ .Content }}
+    </content>
+    <author>
+      <name>{{ $root.SiteMetadata.Name }}</name>
+    </author>
+  </entry>
+  {{- end }}
+</feed>
+{{ end }}

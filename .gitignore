@@ -1,14 +1,8 @@
-# macOS
-*.DS_Store
+# MacOS
+.DS_Store
 
-# Jekyll
-_site
-.jekyll-cache
+# Go
+main
 
-# Node
-node_modules
-
-# Project
-src/_includes/gen
-worker/worker
+# Program
 dist
