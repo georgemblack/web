@@ -18,8 +18,10 @@
     <published>{{ .Published.Seconds | secondsToISOTimestamp }}</published>
     <updated>{{ .Published.Seconds | secondsToISOTimestamp }}</updated>
     <id>{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}</id>
-    <content type="html" xml:base="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}">
-      {{ .Content }}
+    <content type="xhtml" xml:base="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}">
+      <div xmlns="http://www.w3.org/1999/xhtml">
+        {{ .Content -}}
+      </div>
     </content>
     <author>
       <name>{{ $root.SiteMetadata.Name }}</name>
