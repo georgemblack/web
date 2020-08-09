@@ -12,6 +12,11 @@ func CurrentISOTimestamp() string {
 	return time.Now().Format(time.RFC3339)
 }
 
+// CurrentYear is a template function
+func CurrentYear() string {
+	return time.Now().Format("2006")
+}
+
 // SecondsToISOTimestamp is a template function
 func SecondsToISOTimestamp(seconds int64) string {
 	return time.Unix(seconds, 0).Format(time.RFC3339)
@@ -44,6 +49,7 @@ func GetDomainFromURL(urlStr string) string {
 func getTemplateFuncMap() template.FuncMap {
 	return template.FuncMap{
 		"currentISOTimestap":     CurrentISOTimestamp,
+		"currentYear":            CurrentYear,
 		"secondsToISOTimestamp":  SecondsToISOTimestamp,
 		"secondsToFormattedDate": SecondsToFormattedDate,
 		"getPostPath":            GetPostPath,
