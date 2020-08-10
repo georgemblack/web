@@ -4,22 +4,26 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>{{ .SiteMetadata.URL }}/feeds/main.xml</id>
   <title type="text">{{ .SiteMetadata.Name }}</title>
+  <subtitle>George Black is a software engineer in Chicago, with a small home on the internet.</subtitle>
   <updated>{{ currentISOTimestap }}</updated>
   <author>
     <name>{{ .SiteMetadata.Name }}</name>
+    <uri>{{ .SiteMetadata.URL }}</uri>
+    <email>contact@georgeblack.me</email>
   </author>
   <link href="{{ .SiteMetadata.URL }}" rel="alternate" type="text/html" />
   <link href="{{ .SiteMetadata.URL }}/feeds/main.xml" rel="self" type="application/atom+xml" />
-  <subtitle>George Black is a software engineer in Chicago, with a small home on the internet.</subtitle>
+  <icon>/icons/atom-feed-icon.png</icon>
+  <generator version="1.0">George's custom build engine 1.0</generator>
   <rights>Copyright © {{ currentYear }}, George Black</rights>
   {{- range .SiteData.Posts.Posts }}
   <entry>
-    <title type="text">{{ .Metadata.Title }}</title>
-    <link href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}" rel="alternate" type="text/html" title="{{ .Metadata.Title }}" />
+    <id>{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}</id>
+    <title>{{ .Metadata.Title }}</title>
     <published>{{ .Published.Seconds | secondsToISOTimestamp }}</published>
     <updated>{{ .Published.Seconds | secondsToISOTimestamp }}</updated>
-    <id>{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}</id>
-    <content type="xhtml" xml:base="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}">
+    <link href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}" rel="alternate" type="text/html" title="{{ .Metadata.Title }}" />
+    <content type="xhtml" xml:base="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}" xml:lang="en">
       <div xmlns="http://www.w3.org/1999/xhtml">
         {{ .Content -}}
       </div>
