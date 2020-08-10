@@ -1,6 +1,7 @@
 package web
 
 import (
+	"html"
 	"net/url"
 	"strings"
 	"text/template"
@@ -46,6 +47,11 @@ func GetDomainFromURL(urlStr string) string {
 	return parsed.Host
 }
 
+// EscapeHTML is a template function
+func EscapeHTML(content string) string {
+	return html.EscapeString(content)
+}
+
 func getTemplateFuncMap() template.FuncMap {
 	return template.FuncMap{
 		"currentISOTimestap":     CurrentISOTimestamp,
@@ -55,5 +61,6 @@ func getTemplateFuncMap() template.FuncMap {
 		"getPostPath":            GetPostPath,
 		"getPostExcerpt":         GetPostExcerpt,
 		"getDomainFromURL":       GetDomainFromURL,
+		"escapeHTML":             EscapeHTML,
 	}
 }

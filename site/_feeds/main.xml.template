@@ -23,10 +23,8 @@
     <published>{{ .Published.Seconds | secondsToISOTimestamp }}</published>
     <updated>{{ .Published.Seconds | secondsToISOTimestamp }}</updated>
     <link href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}" rel="alternate" type="text/html" title="{{ .Metadata.Title }}" />
-    <content type="xhtml" xml:base="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}" xml:lang="en">
-      <div xmlns="http://www.w3.org/1999/xhtml">
-        {{ .Content }}
-      </div>
+    <content type="html" xml:base="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}" xml:lang="en">
+      {{ .Content | escapeHTML }}
     </content>
     <author>
       <name>{{ $root.SiteMetadata.Name }}</name>
