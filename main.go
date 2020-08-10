@@ -111,7 +111,7 @@ func Build() error {
 		return err
 	}
 	defer feedFile.Close()
-	tmpl.ExecuteTemplate(feedFile, "feed", feed)
+	tmpl.ExecuteTemplate(feedFile, "mainFeed", feed)
 
 	// Build post pages
 	for _, post := range posts.Posts {

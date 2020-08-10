@@ -1,4 +1,4 @@
-{{- define "feed" -}}
+{{- define "mainFeed" -}}
 {{- $root := . -}}
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
@@ -25,7 +25,7 @@
     <link href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}" rel="alternate" type="text/html" title="{{ .Metadata.Title }}" />
     <content type="xhtml" xml:base="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}" xml:lang="en">
       <div xmlns="http://www.w3.org/1999/xhtml">
-        {{ .Content -}}
+        {{ .Content }}
       </div>
     </content>
     <author>
