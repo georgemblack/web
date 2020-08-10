@@ -22,21 +22,26 @@ func getPageMetadataForPost(post Post) PageMetadata {
 }
 
 func getPostPath(post Post) string {
-	slug := getPostSlug(post)
-	year := getPostYear(post)
+	slug := getSlugFromTitle(post.Metadata.Title)
+	year := getYearStrFromSeconds(post.Published.Seconds)
 	return year + "/" + slug
 }
 
-func getPostSlug(post Post) string {
-	slug := strings.ToLower(post.Metadata.Title)
-	slug = strings.ReplaceAll(slug, " ", "-")
+func getLikePath(like Like) string {
+	slug := getSlugFromTitle(like.Title)
+	year := getYearStrFromSeconds(like.Timestamp.Seconds)
+	return year + "/" + slug
+}
 
-	happyCharsRegex := regexp.MustCompile("[^a-z0-9-]")
+func getSlugFromTitle(title string) string {
+	happyCharsRegex := regexp.MustCompile("[^a-z0-9 ]")
+	slug := strings.ToLower(title)
 	slug = happyCharsRegex.ReplaceAllString(slug, "")
+	slug = strings.ReplaceAll(slug, " ", "-")
 	return slug
 }
 
-func getPostYear(post Post) string {
-	time := time.Unix(post.Published.Seconds, 0)
-	return strconv.Itoa(time.Year())
+func getYearStrFromSeconds(seconds int64) string {
+	timestamp := time.Unix(seconds, 0)
+	return strconv.Itoa(timestamp.Year())
 }

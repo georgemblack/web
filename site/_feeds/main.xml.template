@@ -26,9 +26,6 @@
     <content type="html" xml:base="{{ $root.SiteMetadata.URL }}" xml:lang="en">
       {{ .Content | escapeHTML }}
     </content>
-    <author>
-      <name>{{ $root.SiteMetadata.Name }}</name>
-    </author>
   </entry>
   {{- end }}
 </feed>

@@ -1,0 +1,34 @@
+{{- define "likesFeed" -}}
+{{- $root := . -}}
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>{{ .SiteMetadata.URL }}/feeds/likes.xml</id>
+  <title type="text">George&#39;s Likes</title>
+  <subtitle>George Black is a software engineer in Chicago, with a small home on the internet.</subtitle>
+  <updated>{{ currentISOTimestap }}</updated>
+  <author>
+    <name>{{ .SiteMetadata.Name }}</name>
+    <uri>{{ .SiteMetadata.URL }}</uri>
+    <email>contact@georgeblack.me</email>
+  </author>
+  <link href="{{ .SiteMetadata.URL }}" rel="alternate" type="text/html" />
+  <link href="{{ .SiteMetadata.URL }}/feeds/likes.xml" rel="self" type="application/atom+xml" />
+  <icon>/icons/atom-feed-icon.png</icon>
+  <generator version="1.0">George's custom build engine 1.0</generator>
+  <rights>Copyright © {{ currentYear }}, George Black</rights>
+  {{- range .SiteData.Likes.Likes }}
+  <entry>
+    <id>{{ $root.SiteMetadata.URL }}/{{ . | getLikePath }}</id>
+    <title>{{ .Title }}</title>
+    <published>{{ .Timestamp.Seconds | secondsToISOTimestamp }}</published>
+    <updated>{{ .Timestamp.Seconds | secondsToISOTimestamp }}</updated>
+    <link href="{{ .URL }}" rel="alternate" type="text/html" title="{{ .Title }}" />
+    <content type="html" xml:base="{{ $root.SiteMetadata.URL }}" xml:lang="en">
+      &lt;p&gt;Like of: &lt;a href=&quot;{{ .URL }}&quot;&gt;{{ .Title }}&lt;/a&gt;&lt;/p&gt;
+      &lt;hr&gt;
+      &lt;p&gt;&lt;em&gt;Please note: a “like” of a page does not explicitly imply my endorsement of its contents.&lt;/em&gt;&lt;/p&gt;
+    </content>
+  </entry>
+  {{- end }}
+</feed>
+{{ end }}

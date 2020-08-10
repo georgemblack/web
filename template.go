@@ -38,6 +38,11 @@ func GetPostExcerpt(content string) string {
 	return strings.Split(content, "<!--more-->")[0]
 }
 
+// GetLikePath is a template function
+func GetLikePath(like Like) string {
+	return getLikePath(like)
+}
+
 // GetDomainFromURL is a template function
 func GetDomainFromURL(urlStr string) string {
 	parsed, err := url.Parse(urlStr)
@@ -60,6 +65,7 @@ func getTemplateFuncMap() template.FuncMap {
 		"secondsToFormattedDate": SecondsToFormattedDate,
 		"getPostPath":            GetPostPath,
 		"getPostExcerpt":         GetPostExcerpt,
+		"getLikePath":            getLikePath,
 		"getDomainFromURL":       GetDomainFromURL,
 		"escapeHTML":             EscapeHTML,
 	}

@@ -101,7 +101,7 @@ func Build() error {
 	defer aboutFile.Close()
 	tmpl.ExecuteTemplate(aboutFile, "about", aboutPage)
 
-	// Build feed
+	// Build main feed
 	feed := Page{}
 	feed.SiteData = siteData
 	feed.SiteMetadata = siteMetadata
@@ -112,6 +112,18 @@ func Build() error {
 	}
 	defer feedFile.Close()
 	tmpl.ExecuteTemplate(feedFile, "mainFeed", feed)
+
+	// Build likes feed
+	likesFeed := Page{}
+	likesFeed.SiteData = siteData
+	likesFeed.SiteMetadata = siteMetadata
+	os.MkdirAll(outputDirectory+"/feeds", 0700)
+	likesFeedFile, err := os.Create(outputDirectory + "/feeds/likes.xml")
+	if err != nil {
+		return err
+	}
+	defer feedFile.Close()
+	tmpl.ExecuteTemplate(likesFeedFile, "likesFeed", likesFeed)
 
 	// Build post pages
 	for _, post := range posts.Posts {
