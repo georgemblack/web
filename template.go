@@ -65,7 +65,7 @@ func getTemplateFuncMap() template.FuncMap {
 		"secondsToFormattedDate": SecondsToFormattedDate,
 		"getPostPath":            GetPostPath,
 		"getPostExcerpt":         GetPostExcerpt,
-		"getLikePath":            getLikePath,
+		"getLikePath":            GetLikePath,
 		"getDomainFromURL":       GetDomainFromURL,
 		"escapeHTML":             EscapeHTML,
 	}
