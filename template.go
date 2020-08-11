@@ -59,7 +59,7 @@ func EscapeHTML(content string) string {
 
 func getTemplateFuncMap() template.FuncMap {
 	return template.FuncMap{
-		"currentISOTimestap":     CurrentISOTimestamp,
+		"currentISOTimestamp":    CurrentISOTimestamp,
 		"currentYear":            CurrentYear,
 		"secondsToISOTimestamp":  SecondsToISOTimestamp,
 		"secondsToFormattedDate": SecondsToFormattedDate,

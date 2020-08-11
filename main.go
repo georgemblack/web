@@ -57,6 +57,38 @@ func Build() error {
 	siteData := SiteData{posts, likes}
 	siteMetadata := getDefaultSiteMetadata()
 
+	// build atom feeds
+	os.MkdirAll(outputDirectory+"/feeds", 0700)
+	err = filepath.Walk("./site/_feeds", func(path string, info os.FileInfo, err error) error {
+		if !isTemplate(path) {
+			return err
+		}
+
+		fileName := getFileNameFromPath(path)
+		outputName := strings.ReplaceAll(fileName, ".template", "")
+
+		feed := Page{}
+		feed.SiteData = siteData
+		feed.SiteMetadata = siteMetadata
+
+		tmpl, err := template.New("").Funcs(getTemplateFuncMap()).ParseFiles(path)
+		if err != nil {
+			return err
+		}
+
+		output, err := os.Create(outputDirectory + "/feeds/" + outputName)
+		if err != nil {
+			return err
+		}
+		defer output.Close()
+
+		tmpl.ExecuteTemplate(output, fileName, feed)
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
 	tmpl, err := parseTemplates()
 	if err != nil {
 		return err
@@ -100,30 +132,6 @@ func Build() error {
 	}
 	defer aboutFile.Close()
 	tmpl.ExecuteTemplate(aboutFile, "about", aboutPage)
-
-	// Build main feed
-	feed := Page{}
-	feed.SiteData = siteData
-	feed.SiteMetadata = siteMetadata
-	os.MkdirAll(outputDirectory+"/feeds", 0700)
-	feedFile, err := os.Create(outputDirectory + "/feeds/main.xml")
-	if err != nil {
-		return err
-	}
-	defer feedFile.Close()
-	tmpl.ExecuteTemplate(feedFile, "mainFeed", feed)
-
-	// Build likes feed
-	likesFeed := Page{}
-	likesFeed.SiteData = siteData
-	likesFeed.SiteMetadata = siteMetadata
-	os.MkdirAll(outputDirectory+"/feeds", 0700)
-	likesFeedFile, err := os.Create(outputDirectory + "/feeds/likes.xml")
-	if err != nil {
-		return err
-	}
-	defer feedFile.Close()
-	tmpl.ExecuteTemplate(likesFeedFile, "likesFeed", likesFeed)
 
 	// Build post pages
 	for _, post := range posts.Posts {

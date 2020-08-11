@@ -2,6 +2,7 @@ package web
 
 import (
 	"os"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -13,6 +14,14 @@ func getEnv(key, fallback string) string {
 		return value
 	}
 	return fallback
+}
+
+func isTemplate(path string) bool {
+	return strings.HasSuffix(path, ".template")
+}
+
+func getFileNameFromPath(path string) string {
+	return filepath.Base(path)
 }
 
 func getPageMetadataForPost(post Post) PageMetadata {

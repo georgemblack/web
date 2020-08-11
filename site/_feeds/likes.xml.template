@@ -1,11 +1,10 @@
-{{- define "likesFeed" -}}
 {{- $root := . -}}
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>{{ .SiteMetadata.URL }}/feeds/likes.xml</id>
   <title type="text">George&#39;s Likes</title>
   <subtitle>George Black is a software engineer in Chicago, with a small home on the internet.</subtitle>
-  <updated>{{ currentISOTimestap }}</updated>
+  <updated>{{ currentISOTimestamp }}</updated>
   <author>
     <name>{{ .SiteMetadata.Name }}</name>
     <uri>{{ .SiteMetadata.URL }}</uri>
@@ -31,4 +30,3 @@
   </entry>
   {{- end }}
 </feed>
-{{ end }}
