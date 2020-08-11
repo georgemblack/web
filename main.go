@@ -20,6 +20,8 @@ const (
 	DistDirectory = "dist"
 )
 
+var standardTemplate *template.Template
+
 // Build starts build process
 func Build() error {
 	buildID := getBuildID()
@@ -27,6 +29,8 @@ func Build() error {
 
 	log.Println("Starting build: " + buildID)
 	log.Println("Collecting web data...")
+
+	os.MkdirAll(outputDirectory, 0700)
 
 	posts, err := getAllPosts()
 	if err != nil {
@@ -40,7 +44,7 @@ func Build() error {
 	}
 	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
 
-	// process posts
+	// process all posts
 	markdown := goldmark.New(goldmark.WithRendererOptions(
 		html.WithUnsafe(),
 	))
@@ -57,6 +61,56 @@ func Build() error {
 	siteData := SiteData{posts, likes}
 	siteMetadata := getDefaultSiteMetadata()
 
+	// build index page
+	index := Page{}
+	index.SiteData = siteData
+	index.SiteMetadata = siteMetadata
+	index.PageMetadata = PageMetadata{}
+
+	tmpl, err := getStandardTemplateWith("./site/index.html.template")
+	if err != nil {
+		return err
+	}
+
+	file, err := os.Create(outputDirectory + "/index.html")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	tmpl.ExecuteTemplate(file, "index.html.template", index)
+
+	// build standard pages
+	err = filepath.Walk("./site", func(path string, info os.FileInfo, err error) error {
+		if info.IsDir() || !isTemplate(path) || isIndex(path) || strings.HasPrefix(path, "site/_") {
+			return err
+		}
+
+		fileName := filepath.Base(path)
+		pageName := strings.ReplaceAll(fileName, ".html.template", "")
+		page := Page{}
+		page.SiteData = siteData
+		page.SiteMetadata = siteMetadata
+		page.PageMetadata = PageMetadata{strings.Title(pageName)}
+
+		log.Println("Executing template: " + fileName)
+
+		tmpl, err := getStandardTemplateWith(path)
+		if err != nil {
+			return err
+		}
+
+		os.MkdirAll(outputDirectory+"/"+pageName, 0700)
+		output, err := os.Create(outputDirectory + "/" + pageName + "/index.html")
+		if err != nil {
+			return err
+		}
+		defer output.Close()
+
+		tmpl.ExecuteTemplate(output, fileName, page)
+		return nil
+	})
+
 	// build atom feeds
 	os.MkdirAll(outputDirectory+"/feeds", 0700)
 	err = filepath.Walk("./site/_feeds", func(path string, info os.FileInfo, err error) error {
@@ -64,14 +118,15 @@ func Build() error {
 			return err
 		}
 
-		fileName := getFileNameFromPath(path)
+		fileName := filepath.Base(path)
 		outputName := strings.ReplaceAll(fileName, ".template", "")
-
 		feed := Page{}
 		feed.SiteData = siteData
 		feed.SiteMetadata = siteMetadata
 
-		tmpl, err := template.New("").Funcs(getTemplateFuncMap()).ParseFiles(path)
+		log.Println("Executing template: " + fileName)
+
+		tmpl, err := getStandardTemplateWith(path)
 		if err != nil {
 			return err
 		}
@@ -89,64 +144,25 @@ func Build() error {
 		return err
 	}
 
-	tmpl, err := parseTemplates()
-	if err != nil {
-		return err
-	}
-
-	// Build index page
-	indexPage := Page{}
-	indexPage.SiteData = siteData
-	indexPage.SiteMetadata = siteMetadata
-	indexPage.PageMetadata = PageMetadata{}
-	os.MkdirAll(outputDirectory, 0700)
-	indexFile, err := os.Create(outputDirectory + "/" + "index.html")
-	if err != nil {
-		return err
-	}
-	defer indexFile.Close()
-	tmpl.ExecuteTemplate(indexFile, "index", indexPage)
-
-	// Build likes page
-	likesPage := Page{}
-	likesPage.SiteData = siteData
-	likesPage.SiteMetadata = siteMetadata
-	likesPage.PageMetadata = PageMetadata{"Likes"}
-	os.MkdirAll(outputDirectory+"/likes", 0700)
-	likesFile, err := os.Create(outputDirectory + "/likes/index.html")
-	if err != nil {
-		return err
-	}
-	defer likesFile.Close()
-	tmpl.ExecuteTemplate(likesFile, "likes", likesPage)
-
-	// Build about page
-	aboutPage := Page{}
-	aboutPage.SiteData = siteData
-	aboutPage.SiteMetadata = siteMetadata
-	aboutPage.PageMetadata = PageMetadata{"About"}
-	os.MkdirAll(outputDirectory+"/about", 0700)
-	aboutFile, err := os.Create(outputDirectory + "/about/index.html")
-	if err != nil {
-		return err
-	}
-	defer aboutFile.Close()
-	tmpl.ExecuteTemplate(aboutFile, "about", aboutPage)
-
-	// Build post pages
+	// build post pages
 	for _, post := range posts.Posts {
 		if post.Metadata.Draft {
 			continue
 		}
 
-		log.Println("Executing template for post: " + post.Metadata.Title)
 		path := getPostPath(post)
-
 		postPage := PostPage{}
 		postPage.SiteData = siteData
 		postPage.SiteMetadata = siteMetadata
 		postPage.PageMetadata = getPageMetadataForPost(post)
 		postPage.Post = post
+
+		log.Println("Executing template for post: " + post.Metadata.Title)
+
+		tmpl, err := getStandardTemplate()
+		if err != nil {
+			return err
+		}
 
 		os.MkdirAll(outputDirectory+"/"+path, 0700)
 		file, err := os.Create(outputDirectory + "/" + path + "/" + "index.html")
@@ -154,6 +170,7 @@ func Build() error {
 			return err
 		}
 		defer file.Close()
+
 		tmpl.ExecuteTemplate(file, "post", postPage)
 	}
 
@@ -177,22 +194,39 @@ func getBuildID() string {
 	return time.Now().UTC().Format("2006-01-02-15-04-05")
 }
 
-func parseTemplates() (*template.Template, error) {
-	tmpl := template.New("")
-	tmpl = tmpl.Funcs(getTemplateFuncMap())
-	err := filepath.Walk("./site", func(path string, info os.FileInfo, err error) error {
-		if strings.Contains(path, ".template") {
+func getStandardTemplate() (*template.Template, error) {
+	if standardTemplate != nil {
+		return standardTemplate.Clone()
+	}
+
+	tmpl := template.New("").Funcs(getTemplateFuncMap())
+
+	for _, dir := range []string{"site/_layouts", "site/_partials", "site/_shortcodes"} {
+		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+			if info.IsDir() {
+				return err
+			}
 			_, err = tmpl.ParseFiles(path)
 			if err != nil {
 				return err
 			}
+			return err
+		})
+		if err != nil {
+			return nil, err
 		}
-		return err
-	})
+	}
+
+	standardTemplate = tmpl
+	return tmpl.Clone()
+}
+
+func getStandardTemplateWith(tmplPath string) (*template.Template, error) {
+	tmpl, err := getStandardTemplate()
 	if err != nil {
 		return nil, err
 	}
-	return tmpl, nil
+	return tmpl.ParseFiles(tmplPath)
 }
 
 func copyStaticFiles(outputDir string) error {
@@ -203,7 +237,7 @@ func copyStaticFiles(outputDir string) error {
 		if strings.HasPrefix(path, "site/_") {
 			return err
 		}
-		if strings.Contains(path, ".template") {
+		if strings.HasSuffix(path, ".template") {
 			return err
 		}
 

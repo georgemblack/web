@@ -20,8 +20,9 @@ func isTemplate(path string) bool {
 	return strings.HasSuffix(path, ".template")
 }
 
-func getFileNameFromPath(path string) string {
-	return filepath.Base(path)
+func isIndex(path string) bool {
+	fileName := filepath.Base(path)
+	return strings.HasPrefix(fileName, "index.html")
 }
 
 func getPageMetadataForPost(post Post) PageMetadata {
