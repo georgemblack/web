@@ -15,17 +15,14 @@ PORT                    # default 9002
 CLOUD_STORAGE_BUCKET
 ```
 
-To authorize with build endpoint:
-
-```
-ADMIN_ORIGIN            # default *
-USERNAME                # default test
-PASSWORD                # default test
-```
-
 To authorize with data API:
 ```
 API_ENDPOINT            # default http://localhost:9000
 API_USERNAME            # default test
 API_PASSWORD            # default test
 ```
+
+## Cloud Run
+
+* Container uses Google Cloud IAM to authenticate requests
+* Cloud Run Invoker permissions are added to service
