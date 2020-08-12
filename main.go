@@ -23,7 +23,7 @@ const (
 var standardTemplate *template.Template
 
 // Build starts build process
-func Build() error {
+func Build() (string, error) {
 	buildID := getBuildID()
 	outputDirectory := DistDirectory + "/" + buildID
 
@@ -34,13 +34,13 @@ func Build() error {
 
 	posts, err := getAllPosts()
 	if err != nil {
-		return err
+		return "", err
 	}
 	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 
 	likes, err := getAllLikes()
 	if err != nil {
-		return err
+		return "", err
 	}
 	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
 
@@ -53,7 +53,7 @@ func Build() error {
 		var buf bytes.Buffer
 		err := markdown.Convert([]byte(posts.Posts[i].Content), &buf)
 		if err != nil {
-			return err
+			return "", err
 		}
 		posts.Posts[i].Content = buf.String()
 	}
@@ -69,12 +69,12 @@ func Build() error {
 
 	tmpl, err := getStandardTemplateWith("./site/index.html.template")
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	file, err := os.Create(outputDirectory + "/index.html")
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer file.Close()
 
@@ -141,7 +141,7 @@ func Build() error {
 		return nil
 	})
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	// build post pages
@@ -161,13 +161,13 @@ func Build() error {
 
 		tmpl, err := getStandardTemplate()
 		if err != nil {
-			return err
+			return "", err
 		}
 
 		os.MkdirAll(outputDirectory+"/"+path, 0700)
 		file, err := os.Create(outputDirectory + "/" + path + "/" + "index.html")
 		if err != nil {
-			return err
+			return "", err
 		}
 		defer file.Close()
 
@@ -177,17 +177,17 @@ func Build() error {
 	log.Println("Copying static files to destination...")
 	err = copyStaticFiles(outputDirectory)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	log.Println("Starting upload to cloud storage: " + buildID)
 	err = updateCloudStorage(buildID)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	log.Println("Completed build: " + buildID)
-	return nil
+	return buildID, nil
 }
 
 func getBuildID() string {

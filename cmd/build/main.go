@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	err := web.Build()
+	_, err := web.Build()
 	if err != nil {
 		log.Fatal(err)
 	}
