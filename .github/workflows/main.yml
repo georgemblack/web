@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Cloud Run Deploy
-      uses: georgemblack/actions/cloud-run-deploy@1.0.13
+      uses: georgemblack/actions/cloud-run-deploy-auth@1.0.14
       with:
         serviceName: web-builder
         projectId: ${{ secrets.GCLOUD_PROJECT_ID }}
