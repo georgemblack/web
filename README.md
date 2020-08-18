@@ -8,21 +8,36 @@ Web Builder is a container that performs static site builds for [georgeblack.me]
 
 ## Running Locally
 
-Service requires following env vars:
+For running locally, you will need credentials with access to Google Cloud Storage:
 
 ```
-PORT                    # default 9002
-CLOUD_STORAGE_BUCKET
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
 ```
 
-To authorize with data API:
+To start the server locally, run:
+
 ```
-API_ENDPOINT            # default http://localhost:9000
-API_USERNAME            # default test
-API_PASSWORD            # default test
+go run ./cmd/server/main.go
 ```
 
-## Cloud Run
+Or perform a single build:
 
-* Container uses Google Cloud IAM to authenticate requests
-* Cloud Run Invoker permissions are added to service
+```
+go run ./cmd/build/main.go
+```
+
+## Environment
+
+The following environment configurations are used (with dummy defaults): 
+
+```
+PORT
+CLOUD_STORAGE_BUCKET    # for uploading builds
+API_ENDPOINT            # for auth with Web API
+API_USERNAME
+API_PASSWORD
+```
+
+## Infrastructure
+
+The Web Builder runs as a service on Google Cloud Run. Authentication to trigger builds is provided by Google Cloud IAM.
