@@ -1,4 +1,3 @@
-{{ $root := . }}
 <!DOCTYPE html>
 <html lang="en">
   {{ template "head" . }}
@@ -8,13 +7,14 @@
       {{ range .SiteData.Posts.Posts }}
       {{ if eq .Metadata.Draft false }}
       <article style="margin-bottom: 6em;">
-        <h1><a href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></h1>
+        <h1><a href="/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></h1>
         <p class="subtitle">{{ .Published.Seconds | secondsToFormattedDate }}</p>
         {{ .Content | getPostExcerpt }}
-        <p><a href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}">Read More &#8594;</a></p>
+        <p><a href="/{{ . | getPostPath }}">Read More &#8594;</a></p>
       </article>
       {{ end }}
       {{ end }}
+      <p><a href="/archive">Go to Archive</a></p>
     </main>
     {{ template "footer" . }}
   </body>

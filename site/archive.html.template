@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  {{ template "head" . }}
+  <body>
+    {{ template "header" . }}
+    <main class="archive">
+      <h1>Archive</h1>
+      {{ range .SiteData.Posts.Posts }}
+      {{ if eq .Metadata.Draft false }}
+      <p><a href="/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></p>
+      <p class="subtitle">{{ .Published.Seconds | secondsToFormattedDate }}</p>
+      {{ end }}
+      {{ end }}
+    </main>
+    {{ template "footer" . }}
+  </body>
+</html>
