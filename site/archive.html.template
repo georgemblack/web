@@ -7,8 +7,10 @@
       <h1>Archive</h1>
       {{ range .SiteData.Posts.Posts }}
       {{ if eq .Metadata.Draft false }}
-      <p><a href="/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></p>
-      <p class="subtitle">{{ .Published.Seconds | secondsToFormattedDate }}</p>
+      <div class="archive-item">
+        <p><a href="/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></p>
+        <p class="subtitle">{{ .Published.Seconds | secondsToFormattedDate }}</p>
+      </div>
       {{ end }}
       {{ end }}
     </main>
