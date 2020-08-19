@@ -67,6 +67,8 @@ func Build() (string, error) {
 	index.SiteMetadata = siteMetadata
 	index.PageMetadata = PageMetadata{}
 
+	log.Println("Executing template: " + "index.html.template")
+
 	tmpl, err := getStandardTemplateWith("./site/index.html.template")
 	if err != nil {
 		return "", err
@@ -81,9 +83,13 @@ func Build() (string, error) {
 	tmpl.ExecuteTemplate(file, "index.html.template", index)
 
 	// build standard pages
-	err = filepath.Walk("./site", func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() || !isTemplate(path) || isIndex(path) || strings.HasPrefix(path, "site/_") {
-			return err
+	filePaths, err := filepath.Glob("site/*.html.template")
+	if err != nil {
+		return "", err
+	}
+	for _, path := range filePaths {
+		if isIndex(path) {
+			continue
 		}
 
 		fileName := filepath.Base(path)
@@ -97,27 +103,26 @@ func Build() (string, error) {
 
 		tmpl, err := getStandardTemplateWith(path)
 		if err != nil {
-			return err
+			return "", err
 		}
 
 		os.MkdirAll(outputDirectory+"/"+pageName, 0700)
 		output, err := os.Create(outputDirectory + "/" + pageName + "/index.html")
 		if err != nil {
-			return err
+			return "", err
 		}
 		defer output.Close()
 
 		tmpl.ExecuteTemplate(output, fileName, page)
-		return nil
-	})
+	}
 
 	// build atom feeds
 	os.MkdirAll(outputDirectory+"/feeds", 0700)
-	err = filepath.Walk("./site/_feeds", func(path string, info os.FileInfo, err error) error {
-		if !isTemplate(path) {
-			return err
-		}
-
+	filePaths, err = filepath.Glob("site/_feeds/*.template")
+	if err != nil {
+		return "", err
+	}
+	for _, path := range filePaths {
 		fileName := filepath.Base(path)
 		outputName := strings.ReplaceAll(fileName, ".template", "")
 		feed := Page{}
@@ -128,20 +133,16 @@ func Build() (string, error) {
 
 		tmpl, err := getStandardTemplateWith(path)
 		if err != nil {
-			return err
+			return "", err
 		}
 
 		output, err := os.Create(outputDirectory + "/feeds/" + outputName)
 		if err != nil {
-			return err
+			return "", err
 		}
 		defer output.Close()
 
 		tmpl.ExecuteTemplate(output, fileName, feed)
-		return nil
-	})
-	if err != nil {
-		return "", err
 	}
 
 	// build post pages
