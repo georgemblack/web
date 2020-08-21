@@ -18,6 +18,11 @@ func CurrentYear() string {
 	return time.Now().Format("2006")
 }
 
+// HasExcerpt is a template function
+func HasExcerpt(post Post) bool {
+	return strings.Contains(post.Content, "<!--more-->")
+}
+
 // SecondsToISOTimestamp is a template function
 func SecondsToISOTimestamp(seconds int64) string {
 	return time.Unix(seconds, 0).Format(time.RFC3339)
@@ -61,6 +66,7 @@ func getTemplateFuncMap() template.FuncMap {
 	return template.FuncMap{
 		"currentISOTimestamp":    CurrentISOTimestamp,
 		"currentYear":            CurrentYear,
+		"hasExcerpt":             HasExcerpt,
 		"secondsToISOTimestamp":  SecondsToISOTimestamp,
 		"secondsToFormattedDate": SecondsToFormattedDate,
 		"getPostPath":            GetPostPath,
