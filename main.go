@@ -83,7 +83,7 @@ func Build() (string, error) {
 	tmpl.ExecuteTemplate(file, "index.html.template", index)
 
 	// build standard pages
-	filePaths, err := filepath.Glob("site/*.html.template")
+	filePaths, err := matchSiteFiles(`site/[a-z]*\.html\.template`)
 	if err != nil {
 		return "", err
 	}
@@ -118,7 +118,7 @@ func Build() (string, error) {
 
 	// build atom feeds
 	os.MkdirAll(outputDirectory+"/feeds", 0700)
-	filePaths, err = filepath.Glob("site/_feeds/*.template")
+	filePaths, err = matchSiteFiles(`site\/_feeds/[a-z]*\.(xml|json)\.template`)
 	if err != nil {
 		return "", err
 	}
@@ -202,17 +202,12 @@ func getStandardTemplate() (*template.Template, error) {
 
 	tmpl := template.New("").Funcs(getTemplateFuncMap())
 
-	for _, dir := range []string{"site/_layouts", "site/_partials", "site/_shortcodes"} {
-		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-			if info.IsDir() {
-				return err
-			}
-			_, err = tmpl.ParseFiles(path)
-			if err != nil {
-				return err
-			}
-			return err
-		})
+	filePaths, err := matchSiteFiles(`site\/(_layouts|_partials|_shortcodes)/[a-z]*\.html\.template`)
+	if err != nil {
+		return nil, err
+	}
+	for _, path := range filePaths {
+		_, err = tmpl.ParseFiles(path)
 		if err != nil {
 			return nil, err
 		}
@@ -242,7 +237,6 @@ func copyStaticFiles(outputDir string) error {
 			return err
 		}
 
-		// Copy file
 		destPath := strings.Replace(path, "site", outputDir, 1)
 		split := strings.Split(destPath, "/")
 		destDir := strings.Join(split[:len(split)-1], "/")

@@ -55,3 +55,24 @@ func getYearStrFromSeconds(seconds int64) string {
 	timestamp := time.Unix(seconds, 0)
 	return strconv.Itoa(timestamp.Year())
 }
+
+func matchSiteFiles(pattern string) ([]string, error) {
+	var matches []string
+	re := regexp.MustCompile(pattern)
+	err := filepath.Walk("site", func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		if re.MatchString(path) {
+			matches = append(matches, path)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return matches, nil
+}
