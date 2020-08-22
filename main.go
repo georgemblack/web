@@ -175,9 +175,31 @@ func Build() (string, error) {
 	}
 
 	log.Println("Copying static files to destination...")
-	err = copyStaticFiles(outputDirectory)
+	filePaths, err = staticSiteFiles()
 	if err != nil {
 		return "", err
+	}
+	for _, path := range filePaths {
+		destPath := strings.Replace(path, "site", outputDirectory, 1)
+		split := strings.Split(destPath, "/")
+		destDir := strings.Join(split[:len(split)-1], "/")
+
+		srcFile, err := os.Open(path)
+		if err != nil {
+			return "", err
+		}
+		defer srcFile.Close()
+
+		os.MkdirAll(destDir, 0700)
+		destFile, err := os.Create(destPath)
+		if err != nil {
+			return "", err
+		}
+		defer destFile.Close()
+		_, err = io.Copy(destFile, srcFile)
+		if err != nil {
+			return "", err
+		}
 	}
 
 	log.Println("Completed build: " + buildID)
@@ -194,41 +216,4 @@ func Publish(buildID string) error {
 
 	log.Println("Completed publish for build: " + buildID)
 	return nil
-}
-
-func copyStaticFiles(outputDir string) error {
-	err := filepath.Walk("./site", func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() {
-			return err
-		}
-		if strings.HasPrefix(path, "site/_") {
-			return err
-		}
-		if strings.HasSuffix(path, ".template") {
-			return err
-		}
-
-		destPath := strings.Replace(path, "site", outputDir, 1)
-		split := strings.Split(destPath, "/")
-		destDir := strings.Join(split[:len(split)-1], "/")
-
-		srcFile, err := os.Open(path)
-		if err != nil {
-			return err
-		}
-		defer srcFile.Close()
-
-		os.MkdirAll(destDir, 0700)
-		destFile, err := os.Create(destPath)
-		if err != nil {
-			return err
-		}
-		defer destFile.Close()
-		_, err = io.Copy(destFile, srcFile)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-	return err
 }

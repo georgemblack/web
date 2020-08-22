@@ -80,3 +80,27 @@ func matchSiteFiles(pattern string) ([]string, error) {
 	}
 	return matches, nil
 }
+
+func staticSiteFiles() ([]string, error) {
+	var matches []string
+	err := filepath.Walk("./site", func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		if strings.HasPrefix(path, "site/_") {
+			return nil
+		}
+		if strings.HasSuffix(path, ".template") {
+			return nil
+		}
+		matches = append(matches, path)
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return matches, nil
+}
