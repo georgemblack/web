@@ -181,14 +181,20 @@ func Build() (string, error) {
 		return "", err
 	}
 
-	log.Println("Starting upload to cloud storage: " + buildID)
-	err = updateCloudStorage(buildID)
-	if err != nil {
-		return "", err
-	}
-
 	log.Println("Completed build: " + buildID)
 	return buildID, nil
+}
+
+// Publish will upload site to destination
+func Publish(buildID string) error {
+	log.Println("Starting publish for build: " + buildID)
+	err := updateCloudStorage(buildID)
+	if err != nil {
+		return err
+	}
+
+	log.Println("Completed publish for build: " + buildID)
+	return nil
 }
 
 func getBuildID() string {
