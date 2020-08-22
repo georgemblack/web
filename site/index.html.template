@@ -6,13 +6,15 @@
     <main>
       {{ range .SiteData.Posts.Posts }}
       {{ if eq .Metadata.Draft false }}
-      {{ $postHasExcerpt := . | hasExcerpt }}
+      {{ $hasExcerpt := . | hasExcerpt }}
       <article style="margin-bottom: 6em;">
         <h1><a href="/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></h1>
         <p class="subtitle">{{ .Published.Seconds | secondsToFormattedDate }}</p>
+        {{ if $hasExcerpt }}
         {{ .Content | getPostExcerpt }}
-        {{ if $postHasExcerpt }}
         <p><a href="/{{ . | getPostPath }}">Read More &#8594;</a></p>
+        {{ else }}
+        {{ .Content }}
         {{ end }}
       </article>
       {{ end }}
