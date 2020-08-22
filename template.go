@@ -76,3 +76,33 @@ func getTemplateFuncMap() template.FuncMap {
 		"escapeHTML":             EscapeHTML,
 	}
 }
+
+func getStandardTemplate() (*template.Template, error) {
+	if standardTemplate != nil {
+		return standardTemplate.Clone()
+	}
+
+	tmpl := template.New("").Funcs(getTemplateFuncMap())
+
+	filePaths, err := matchSiteFiles(`site\/(_layouts|_partials|_shortcodes)/[a-z]*\.html\.template`)
+	if err != nil {
+		return nil, err
+	}
+	for _, path := range filePaths {
+		_, err = tmpl.ParseFiles(path)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	standardTemplate = tmpl
+	return tmpl.Clone()
+}
+
+func getStandardTemplateWith(tmplPath string) (*template.Template, error) {
+	tmpl, err := getStandardTemplate()
+	if err != nil {
+		return nil, err
+	}
+	return tmpl.ParseFiles(tmplPath)
+}

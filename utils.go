@@ -16,13 +16,8 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
-func isTemplate(path string) bool {
-	return strings.HasSuffix(path, ".template")
-}
-
-func isIndex(path string) bool {
-	fileName := filepath.Base(path)
-	return strings.HasPrefix(fileName, "index.html")
+func getBuildID() string {
+	return time.Now().UTC().Format("2006-01-02-15-04-05")
 }
 
 func getPageMetadataForPost(post Post) PageMetadata {
@@ -54,6 +49,15 @@ func getSlugFromTitle(title string) string {
 func getYearStrFromSeconds(seconds int64) string {
 	timestamp := time.Unix(seconds, 0)
 	return strconv.Itoa(timestamp.Year())
+}
+
+func isTemplate(path string) bool {
+	return strings.HasSuffix(path, ".template")
+}
+
+func isIndex(path string) bool {
+	fileName := filepath.Base(path)
+	return strings.HasPrefix(fileName, "index.html")
 }
 
 func matchSiteFiles(pattern string) ([]string, error) {
