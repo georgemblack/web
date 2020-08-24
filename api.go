@@ -27,7 +27,7 @@ func getAPIPassword() string {
 
 func getAPIAuthToken() (string, error) {
 	client := &http.Client{}
-	authEndpoint := getAPIEndpoint() + "/admin/auth"
+	authEndpoint := getAPIEndpoint() + "/auth"
 	var data map[string]interface{}
 
 	// does token already exist?
@@ -87,7 +87,7 @@ func isValidAuthToken(authToken string) bool {
 
 func getAllLikes() (Likes, error) {
 	client := &http.Client{}
-	likesEndpoint := getAPIEndpoint() + "/admin/likes"
+	likesEndpoint := getAPIEndpoint() + "/likes"
 	var likes Likes
 
 	authToken, err := getAPIAuthToken()
@@ -117,7 +117,7 @@ func getAllLikes() (Likes, error) {
 
 func getAllPosts() (Posts, error) {
 	client := &http.Client{}
-	postsEndpoint := getAPIEndpoint() + "/admin/posts"
+	postsEndpoint := getAPIEndpoint() + "/posts"
 	var posts Posts
 
 	authToken, err := getAPIAuthToken()
