@@ -13,7 +13,7 @@
         windowInnerWidth: window.innerWidth,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
       }
-      fetch('https://api.georgeblack.me/views', {
+      fetch('https://views.georgeblack.me', {
         method: 'POST',
         mode: 'cors',
         headers: {

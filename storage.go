@@ -42,7 +42,7 @@ func updateCloudStorage(buildID string) error {
 	}
 
 	// iterate through existing object keys in bucket
-	// mark object for deletion if not represented in our build output
+	// mark object for deletion if not represented in build output
 	query := &storage.Query{Prefix: ""}
 	iter := bucket.Objects(clientContext, query)
 	for {
