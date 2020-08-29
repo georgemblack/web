@@ -5,7 +5,7 @@
     {{ template "header" . }}
     <main>
       <h1>Likes</h1>
-      <p>Think of these as bookmarks – maybe retweets? I’m not sure! Just web links I find interesting. You can also follow this page <a href="{{ .SiteMetadata.URL }}/feeds/likes.xml">via RSS</a>.</p>
+      <p>Think of these as bookmarks – maybe retweets? I’m not sure! They are links I find interesting. You can also follow this page <a href="{{ .SiteMetadata.URL }}/feeds/likes.xml">via RSS</a>.</p>
       {{ range .SiteData.Likes.Likes }}
       <div class="like">
         <h2><a href="{{ .URL }}">{{ .Title }}</a></h2>
