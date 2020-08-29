@@ -5,6 +5,7 @@
     {{ template "header" . }}
     <main class="archive">
       <h1>Archive</h1>
+      <p>All of the dumb shit I’ve said, organized in one place for your convenience.</p>
       {{ range .SiteData.Posts.Posts }}
       {{ if eq .Metadata.Draft false }}
       <div class="archive-item">
