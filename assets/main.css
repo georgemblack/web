@@ -243,8 +243,25 @@ main iframe {
 /* ==========================================================================
    Likes & Archive Page
    ========================================================================== */
-.like h2,
 .archive-item h2 {
   font-size: 1.25em;
   margin-top: 2em;
+}
+
+/* ==========================================================================
+  Likes Page
+  ========================================================================== */
+.like {
+  padding: 2em 0;
+  max-width: var(--reading-max-width);
+  border-top: 1px solid var(--line-separator-color);
+}
+
+.like h2,
+.like .date {
+  margin-top: 0;
+}
+
+.like .date {
+  color: var(--faded-text-color);
 }
