@@ -254,7 +254,7 @@ main iframe {
 .like {
   padding: 2em 0;
   max-width: var(--reading-max-width);
-  border-top: 1px solid var(--line-separator-color);
+  border-bottom: 1px solid var(--line-separator-color);
 }
 
 .like h2,
