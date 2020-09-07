@@ -221,6 +221,10 @@ main iframe {
   color: var(--faded-text-color);
 }
 
+.supertitle {
+  color: var(--faded-text-color);
+}
+
 /* ==========================================================================
    About Page
    ========================================================================== */
@@ -241,27 +245,24 @@ main iframe {
 }
 
 /* ==========================================================================
-   Likes & Archive Page
+   Card Lists (Archive/Likes page)
    ========================================================================== */
-.archive-item h2 {
-  font-size: 1.25em;
+.card-list {
   margin-top: 2em;
 }
 
-/* ==========================================================================
-  Likes Page
-  ========================================================================== */
-.like {
-  padding: 2em 0;
+.card {
+  padding: 1.5em 0;
   max-width: var(--reading-max-width);
-  border-bottom: 1px solid var(--line-separator-color);
+  border-top: 1px solid var(--line-separator-color);
 }
 
-.like h2,
-.like .date {
+.card h2,
+.card .supertitle,
+.card .subtitle {
   margin-top: 0;
 }
 
-.like .date {
-  color: var(--faded-text-color);
+.card h2 {
+  font-size: 1.25em;
 }
