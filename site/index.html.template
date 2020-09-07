@@ -5,7 +5,6 @@
     {{ template "header" . }}
     <main>
       {{ range .SiteData.Posts.Posts }}
-      {{ if eq .Metadata.Draft false }}
       {{ $hasExcerpt := . | hasExcerpt }}
       <article style="margin-bottom: 6em;">
         <h1><a href="/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></h1>
@@ -17,7 +16,6 @@
         {{ .Content }}
         {{ end }}
       </article>
-      {{ end }}
       {{ end }}
       <p><a href="/archive">Go to Archive</a></p>
     </main>

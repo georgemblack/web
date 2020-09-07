@@ -115,7 +115,7 @@ func getAllLikes() (Likes, error) {
 	return likes, nil
 }
 
-func getAllPosts() (Posts, error) {
+func getPublishedPosts() (Posts, error) {
 	client := &http.Client{}
 	postsEndpoint := getAPIEndpoint() + "/posts"
 	var posts Posts
@@ -129,6 +129,11 @@ func getAllPosts() (Posts, error) {
 	if err != nil {
 		return Posts{}, err
 	}
+
+	// URL params and headers
+	query := req.URL.Query()
+	query.Add("published", "true")
+	req.URL.RawQuery = query.Encode()
 	req.Header.Set("Authorization", authToken)
 
 	resp, err := client.Do(req)

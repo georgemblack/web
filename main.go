@@ -31,7 +31,7 @@ func Build() (string, error) {
 
 	os.MkdirAll(outputDirectory, 0700)
 
-	posts, err := getAllPosts()
+	posts, err := getPublishedPosts()
 	if err != nil {
 		return "", err
 	}
@@ -146,10 +146,6 @@ func Build() (string, error) {
 
 	// build post pages
 	for _, post := range posts.Posts {
-		if post.Metadata.Draft {
-			continue
-		}
-
 		path := getPostPath(post)
 		postPage := PostPage{}
 		postPage.SiteData = siteData

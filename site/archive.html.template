@@ -7,12 +7,10 @@
       <h1>Archive</h1>
       <p>All of the dumb shit I’ve said, organized in one place for your convenience.</p>
       {{ range .SiteData.Posts.Posts }}
-      {{ if eq .Metadata.Draft false }}
       <div class="archive-item">
         <h2><a href="/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></h2>
         <p class="subtitle">{{ .Published.Seconds | secondsToFormattedDate }}</p>
       </div>
-      {{ end }}
       {{ end }}
     </main>
     {{ template "footer" . }}
