@@ -30,7 +30,7 @@ func SecondsToISOTimestamp(seconds int64) string {
 
 // SecondsToFormattedDate is a template function
 func SecondsToFormattedDate(seconds int64) string {
-	return time.Unix(seconds, 0).Format("January 1, 2006")
+	return time.Unix(seconds, 0).Format("January 6, 2006")
 }
 
 // GetPostPath is a template function
