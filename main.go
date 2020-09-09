@@ -1,7 +1,6 @@
 package web
 
 import (
-	"bytes"
 	"io"
 	"log"
 	"os"
@@ -9,9 +8,6 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
-
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/renderer/html"
 )
 
 // Constants
@@ -43,19 +39,11 @@ func Build() (string, error) {
 	}
 	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
 
-	// process all posts
-	markdown := goldmark.New(goldmark.WithRendererOptions(
-		html.WithUnsafe(),
-	))
-	for i := 0; i < len(posts.Posts); i++ {
-		log.Println("Parsing markdown for post: " + posts.Posts[i].Metadata.Title)
-		var buf bytes.Buffer
-		err := markdown.Convert([]byte(posts.Posts[i].Content), &buf)
-		if err != nil {
-			return "", err
-		}
-		posts.Posts[i].Content = buf.String()
+	posts, err = processPostsContent(posts)
+	if err != nil {
+		return "", err
 	}
+	log.Println("Processing content for " + strconv.Itoa(len(likes.Likes)) + " post(s)")
 
 	siteData := SiteData{posts, likes}
 	siteMetadata := getDefaultSiteMetadata()
