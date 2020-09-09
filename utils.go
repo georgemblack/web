@@ -51,10 +51,6 @@ func getYearStrFromSeconds(seconds int64) string {
 	return strconv.Itoa(timestamp.Year())
 }
 
-func isTemplate(path string) bool {
-	return strings.HasSuffix(path, ".template")
-}
-
 func isIndex(path string) bool {
 	fileName := filepath.Base(path)
 	return strings.HasPrefix(fileName, "index.html")
