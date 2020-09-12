@@ -7,15 +7,12 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"text/template"
 )
 
 // Constants
 const (
 	DistDirectory = "dist"
 )
-
-var standardTemplate *template.Template
 
 // Build starts build process
 func Build() (string, error) {
