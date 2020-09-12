@@ -1,5 +1,8 @@
 {{ define "image" }}
 <picture>
+  {{ if .avif }}
+  <source srcset="https://media.georgeblack.me/{{ .avif }}" type="image/avif">
+  {{ end }}
   {{ if .webp }}
   <source srcset="https://media.georgeblack.me/{{ .webp }}" type="image/webp">
   {{ end }}
