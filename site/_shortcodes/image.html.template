@@ -1,13 +1,13 @@
 {{ define "image" }}
 <picture>
-  {{ if .avif }}
-  <source srcset="https://media.georgeblack.me/{{ .avif }}" type="image/avif">
+  {{ if .Args.avif }}
+  <source srcset="{{ .SiteMetadata.MediaURL }}/{{ .Args.avif }}" type="image/avif">
   {{ end }}
-  {{ if .webp }}
-  <source srcset="https://media.georgeblack.me/{{ .webp }}" type="image/webp">
+  {{ if .Args.webp }}
+  <source srcset="{{ .SiteMetadata.MediaURL }}/{{ .Args.webp }}" type="image/webp">
   {{ end }}
-  {{ if .jpg }}
-  <img src="https://media.georgeblack.me/{{ .jpg }}" {{ if .alt }}alt="{{ .alt }}" {{ end }} type="image/jpeg">
+  {{ if .Args.jpg }}
+  <img src="{{ .SiteMetadata.MediaURL }}/{{ .Args.jpg }}" {{ if .Args.alt }}alt="{{ .Args.alt }}" {{ end }} type="image/jpeg">
   {{ end }}
 </picture>
 {{ end }}

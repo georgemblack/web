@@ -47,41 +47,50 @@ func processPostShortcodes(content string) (string, error) {
 	matches := re.FindAllString(content, -1)
 
 	for _, match := range matches {
-		shortcodeResult, err := executeShortcode(match)
+		shortcode := parseShortcode(match)
+		result, err := executeShortcode(shortcode)
 		if err != nil {
 			return "", nil
 		}
-		content = strings.Replace(content, match, shortcodeResult, -1)
+		content = strings.Replace(content, match, result, -1)
 	}
 
 	return content, nil
 }
 
-func executeShortcode(shortcode string) (string, error) {
-	shortcode = strings.ReplaceAll(shortcode, ShortcodeStart, "")
-	shortcode = strings.ReplaceAll(shortcode, ShortcodeEnd, "")
-	shortcode = strings.TrimSpace(shortcode)
-	tokens := strings.Split(shortcode, " ")
+func parseShortcode(text string) Shortcode {
+	siteMetadata := getDefaultSiteMetadata()
 
-	// gather named arguments
-	namedArgs := make(map[string]string)
+	text = strings.ReplaceAll(text, ShortcodeStart, "")
+	text = strings.ReplaceAll(text, ShortcodeEnd, "")
+	text = strings.TrimSpace(text)
+
+	tokens := strings.Split(text, " ")
+	shortcodeType := tokens[0]
+
+	// gather named args
+	shortcodeArgs := make(map[string]string)
 	for _, arg := range tokens[1:] {
 		split := strings.Split(arg, "=")
 		argName := split[0]
 		argValue := split[1]
 		argValue = strings.ReplaceAll(argValue, "\"", "")
-		namedArgs[argName] = argValue
+		shortcodeArgs[argName] = argValue
 	}
 
+	return Shortcode{siteMetadata, shortcodeType, shortcodeArgs}
+}
+
+func executeShortcode(shortcode Shortcode) (string, error) {
 	tmpl, err := template.ParseFiles("./site/_shortcodes/image.html.template")
 	if err != nil {
-		log.Println("Error parsing template for shortcode: " + shortcode)
+		log.Println("Error parsing template for shortcode!")
 		return "", err
 	}
 
 	var output bytes.Buffer
-	if err := tmpl.ExecuteTemplate(&output, "image", namedArgs); err != nil {
-		log.Println("Error executing template for shortcode: " + shortcode)
+	if err := tmpl.ExecuteTemplate(&output, "image", shortcode); err != nil {
+		log.Println("Error executing template for shortcode!")
 		return "", nil
 	}
 	result := output.String()

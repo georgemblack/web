@@ -40,6 +40,13 @@ type PostPublishedDate struct {
 	Seconds int64 `json:"_seconds"`
 }
 
+// Shortcode contains the data required to execute a shortcode
+type Shortcode struct {
+	SiteMetadata SiteMetadata
+	Type         string
+	Args         map[string]string
+}
+
 // Page represents a page
 type Page struct {
 	SiteData     SiteData
