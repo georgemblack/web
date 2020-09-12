@@ -9,9 +9,10 @@ import (
 
 // Constants
 const (
-	ShortcodePattern = "{{<(.*)>}}"
-	ShortcodeStart   = "{{<"
-	ShortcodeEnd     = ">}}"
+	ShortcodePattern    = "{{<(.*)>}}"
+	ShortcodeArgPattern = "[a-z]+=\"[^\"]+\""
+	ShortcodeStart      = "{{<"
+	ShortcodeEnd        = ">}}"
 )
 
 // Return the content of a post with all shortcodes executed
@@ -39,12 +40,13 @@ func parseShortcode(text string) Shortcode {
 	text = strings.ReplaceAll(text, ShortcodeEnd, "")
 	text = strings.TrimSpace(text)
 
-	tokens := strings.Split(text, " ")
-	shortcodeType := tokens[0]
+	shortcodeType := strings.Split(text, " ")[0]
+	re := regexp.MustCompile(ShortcodeArgPattern)
+	tokens := re.FindAllString(text, -1)
 
 	// gather named args
 	shortcodeArgs := make(map[string]string)
-	for _, arg := range tokens[1:] {
+	for _, arg := range tokens {
 		split := strings.Split(arg, "=")
 		argName := split[0]
 		argValue := split[1]
@@ -62,11 +64,11 @@ func executeShortcode(shortcode Shortcode) (string, error) {
 		return "", err
 	}
 
-	var output bytes.Buffer
-	if err := tmpl.ExecuteTemplate(&output, shortcode.Type, shortcode); err != nil {
+	var buf bytes.Buffer
+	if err := tmpl.ExecuteTemplate(&buf, shortcode.Type, shortcode); err != nil {
 		log.Println("Error executing template for post shortcode!")
 		return "", nil
 	}
-	result := output.String()
+	result := buf.String()
 	return result, nil
 }
