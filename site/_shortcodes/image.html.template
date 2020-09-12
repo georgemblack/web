@@ -1,0 +1,10 @@
+{{ define "image" }}
+<picture>
+  {{ if .webp }}
+  <source srcset="https://media.georgeblack.me/{{ .webp }}" type="image/webp">
+  {{ end }}
+  {{ if .jpg }}
+  <img src="https://media.georgeblack.me/{{ .jpg }}" {{ if .alt }}alt="{{ .alt }}" {{ end }} type="image/jpeg">
+  {{ end }}
+</picture>
+{{ end }}
