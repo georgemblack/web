@@ -1,13 +1,13 @@
 {{ define "image" }}
 <picture>
-  {{ if .Args.avif }}
-  <source srcset="{{ .SiteMetadata.MediaURL }}/{{ .Args.avif }}" type="image/avif">
+  {{ if .Data.Shortcode.Args.avif }}
+  <source srcset="{{ .SiteMetadata.MediaURL }}/{{ .Data.Shortcode.Args.avif }}" type="image/avif">
   {{ end }}
-  {{ if .Args.webp }}
-  <source srcset="{{ .SiteMetadata.MediaURL }}/{{ .Args.webp }}" type="image/webp">
+  {{ if .Data.Shortcode.Args.webp }}
+  <source srcset="{{ .SiteMetadata.MediaURL }}/{{ .Data.Shortcode.Args.webp }}" type="image/webp">
   {{ end }}
-  {{ if .Args.jpg }}
-  <img src="{{ .SiteMetadata.MediaURL }}/{{ .Args.jpg }}" {{ if .Args.alt }}alt="{{ .Args.alt }}" {{ end }} type="image/jpeg">
+  {{ if .Data.Shortcode.Args.jpg }}
+  <img src="{{ .SiteMetadata.MediaURL }}/{{ .Data.Shortcode.Args.jpg }}" {{ if .Data.Shortcode.Args.alt }}alt="{{ .Data.Shortcode.Args.alt }}" {{ end }} type="image/jpeg">
   {{ end }}
 </picture>
 {{ end }}

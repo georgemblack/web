@@ -1,5 +1,31 @@
 package web
 
+// Builder is the top level struct passed into each template
+type Builder struct {
+	SiteMetadata SiteMetadata
+	SiteContent  SiteContent
+	Data         map[string]interface{}
+}
+
+// SiteMetadata represents site metadata
+type SiteMetadata struct {
+	Name             string
+	URL              string
+	MediaURL         string
+	Author           string
+	Description      string
+	AuthorEmail      string
+	AuthorTwitter    string
+	Timezone         string
+	ExcerptSeparator string
+}
+
+// SiteContent represents site content
+type SiteContent struct {
+	Posts Posts
+	Likes Likes
+}
+
 // Likes represents a list of likes
 type Likes struct {
 	Likes []Like
@@ -42,48 +68,8 @@ type PostPublishedDate struct {
 
 // Shortcode contains the data required to execute a shortcode
 type Shortcode struct {
-	SiteMetadata SiteMetadata
-	Type         string
-	Args         map[string]string
-}
-
-// Page represents a page
-type Page struct {
-	SiteData     SiteData
-	SiteMetadata SiteMetadata
-	PageMetadata PageMetadata
-}
-
-// PostPage represents a post page
-type PostPage struct {
-	SiteData     SiteData
-	SiteMetadata SiteMetadata
-	PageMetadata PageMetadata
-	Post         Post
-}
-
-// PageMetadata represents a single page's metadata
-type PageMetadata struct {
-	Title string
-}
-
-// SiteData represents site data
-type SiteData struct {
-	Posts Posts
-	Likes Likes
-}
-
-// SiteMetadata represents site metadata
-type SiteMetadata struct {
-	Name             string
-	URL              string
-	MediaURL         string
-	Author           string
-	Description      string
-	AuthorEmail      string
-	AuthorTwitter    string
-	Timezone         string
-	ExcerptSeparator string
+	Type string
+	Args map[string]string
 }
 
 func getDefaultSiteMetadata() SiteMetadata {

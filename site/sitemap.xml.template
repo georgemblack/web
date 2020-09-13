@@ -13,7 +13,7 @@
   <url>
     <loc>{{ .SiteMetadata.URL }}/archive</loc>
   </url>
-  {{- range .SiteData.Posts.Posts }}
+  {{- range .SiteContent.Posts.Posts }}
   <url>
     <loc>{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}</loc>
   </url>

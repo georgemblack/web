@@ -10,22 +10,30 @@
     title="George Black's blog feed"
     href="{{ .SiteMetadata.URL }}/feeds/main.xml"
   />
-  {{ if .PageMetadata.Title }}
-    <title>{{ .PageMetadata.Title }} | {{ .SiteMetadata.Name }}</title>
+  {{ if .Data.PageTitle }}
+  <title>{{ .Data.PageTitle }} | {{ .SiteMetadata.Name }}</title>
   {{ else }}
-    <title>{{ .SiteMetadata.Name }}</title>
+  <title>{{ .SiteMetadata.Name }}</title>
   {{ end }}
   <!-- Twitter card data -->
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="{{ .SiteMetadata.AuthorTwitter }}" />
-  <meta name="twitter:title" content="{{ .PageMetadata.Title }} | {{ .SiteMetadata.Name }}" />
+  {{ if .Data.PageTitle }}
+  <meta name="twitter:title" content="{{ .Data.PageTitle }} | {{ .SiteMetadata.Name }}" />
+  {{ else }}
+  <meta name="twitter:title" content="{{ .SiteMetadata.Name }}" />
+  {{ end }}
   <meta name="twitter:description" content="{{ .SiteMetadata.Description }}" />
   <meta name="twitter:image" content="{{ .SiteMetadata.URL }}/images/profile.jpg" />
   <meta name="twitter:image:alt" content="{{ .SiteMetadata.Author }} profile" />
   <meta name="twitter:url" content="{{ .SiteMetadata.URL }}" />
   <meta name="twitter:creator" content="{{ .SiteMetadata.AuthorTwitter }}" />
   <!-- Open Graph tags -->
-  <meta property="og:title" content="{{ .PageMetadata.Title }} | {{ .SiteMetadata.Name }}" />
+  {{ if .Data.PageTitle }}
+  <meta property="og:title" content="{{ .Data.PageTitle }} | {{ .SiteMetadata.Name }}" />
+  {{ else }}
+  <meta property="og:title" content="{{ .SiteMetadata.Name }}" />
+  {{ end }}
   <meta property="og:url" content="{{ .SiteMetadata.URL }}" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="{{ .SiteMetadata.URL }}/images/profile.jpg" />

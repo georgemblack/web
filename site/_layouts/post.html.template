@@ -6,9 +6,9 @@
     {{ template "header" . }}
     <main class="post">
       <article>
-        <h1>{{ .Post.Metadata.Title }}</h1>
-        <p class="subtitle">{{ .Post.Published.Seconds | secondsToFormattedDate }}</p>
-        {{ .Post.Content }}
+        <h1>{{ .Data.Post.Metadata.Title }}</h1>
+        <p class="subtitle">{{ .Data.Post.Published.Seconds | secondsToFormattedDate }}</p>
+        {{ .Data.Post.Content }}
       </article>
     </main>
     {{ template "footer" . }}

@@ -15,7 +15,7 @@
   <icon>/icons/atom-feed-icon.png</icon>
   <generator version="1.0">George&#39;s custom build engine 1.0</generator>
   <rights>Copyright © {{ currentYear }}, George Black</rights>
-  {{- range .SiteData.Likes.Likes }}
+  {{- range .SiteContent.Likes.Likes }}
   <entry>
     <id>{{ $root.SiteMetadata.URL }}/{{ . | getLikePath }}</id>
     <title>{{ .Title }}</title>

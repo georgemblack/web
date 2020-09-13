@@ -4,7 +4,7 @@
   <body>
     {{ template "header" . }}
     <main>
-      {{ range .SiteData.Posts.Posts }}
+      {{ range .SiteContent.Posts.Posts }}
       {{ $hasExcerpt := . | hasExcerpt }}
       <article style="margin-bottom: 6em;">
         <h1><a href="/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></h1>

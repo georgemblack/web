@@ -34,8 +34,6 @@ func processPostShortcodes(content string) (string, error) {
 
 // Parse a shortcode from string
 func parseShortcode(text string) Shortcode {
-	siteMetadata := getDefaultSiteMetadata()
-
 	text = strings.ReplaceAll(text, ShortcodeStart, "")
 	text = strings.ReplaceAll(text, ShortcodeEnd, "")
 	text = strings.TrimSpace(text)
@@ -54,19 +52,26 @@ func parseShortcode(text string) Shortcode {
 		shortcodeArgs[argName] = argValue
 	}
 
-	return Shortcode{siteMetadata, shortcodeType, shortcodeArgs}
+	return Shortcode{shortcodeType, shortcodeArgs}
 }
 
 // Return HTML to replace shortcode
 func executeShortcode(shortcode Shortcode) (string, error) {
+	builder := Builder{}
+	builder.SiteMetadata = getDefaultSiteMetadata()
+	builder.Data = make(map[string]interface{})
+
+	builder.Data["Shortcode"] = shortcode
+
 	tmpl, err := getShortcodeTemplate()
 	if err != nil {
 		return "", err
 	}
 
 	var buf bytes.Buffer
-	if err := tmpl.ExecuteTemplate(&buf, shortcode.Type, shortcode); err != nil {
+	if err := tmpl.ExecuteTemplate(&buf, shortcode.Type, builder); err != nil {
 		log.Println("Error executing template for post shortcode!")
+		log.Println(err)
 		return "", nil
 	}
 	result := buf.String()

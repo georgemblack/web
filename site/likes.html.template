@@ -7,7 +7,7 @@
       <h1>Likes</h1>
       <p>Think of these as bookmarks – maybe retweets? I’m not sure! They are links I find interesting. You can also follow this page <a href="{{ .SiteMetadata.URL }}/feeds/likes.xml">via RSS</a>.</p>
       <div class="card-list">
-        {{ range .SiteData.Likes.Likes }}
+        {{ range .SiteContent.Likes.Likes }}
         <div class="card">
           <p class="supertitle">{{ .Timestamp.Seconds | secondsToFormattedDate }}</p>
           <h2><a href="{{ .URL }}">{{ .Title }}</a></h2>

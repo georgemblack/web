@@ -4,7 +4,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -14,10 +13,12 @@ const (
 	DistDirectory = "dist"
 )
 
+var outputDirectory string
+
 // Build starts build process
 func Build() (string, error) {
 	buildID := getBuildID()
-	outputDirectory := DistDirectory + "/" + buildID
+	outputDirectory = DistDirectory + "/" + buildID
 
 	log.Println("Starting build: " + buildID)
 	log.Println("Collecting web data...")
@@ -42,142 +43,66 @@ func Build() (string, error) {
 	}
 	log.Println("Processing content for " + strconv.Itoa(len(likes.Likes)) + " post(s)")
 
-	siteData := SiteData{posts, likes}
 	siteMetadata := getDefaultSiteMetadata()
+	siteContent := SiteContent{posts, likes}
 
 	// build index page
-	index := Page{}
-	index.SiteData = siteData
-	index.SiteMetadata = siteMetadata
-	index.PageMetadata = PageMetadata{}
+	builder := Builder{}
+	builder.SiteMetadata = siteMetadata
+	builder.SiteContent = siteContent
+	builder.Data = make(map[string]interface{})
 
-	log.Println("Executing template: index.html.template")
-
-	tmpl, err := getStandardTemplateWith("./site/index.html.template")
-	if err != nil {
+	if err := buildIndexPage(builder); err != nil {
+		log.Println("Error while building index page")
 		return "", err
 	}
-
-	file, err := os.Create(outputDirectory + "/index.html")
-	if err != nil {
-		return "", err
-	}
-	defer file.Close()
-
-	tmpl.ExecuteTemplate(file, "index.html.template", index)
 
 	// build standard pages
-	filePaths, err := matchSiteFiles(`site/[a-z]*\.html\.template`)
-	if err != nil {
+	builder = Builder{}
+	builder.SiteMetadata = siteMetadata
+	builder.SiteContent = siteContent
+	builder.Data = make(map[string]interface{})
+
+	if err := buildStandardPages(builder); err != nil {
+		log.Println("Error while building standard pages")
 		return "", err
 	}
-	for _, path := range filePaths {
-		if isIndex(path) {
-			continue
-		}
 
-		fileName := filepath.Base(path)
-		pageName := strings.ReplaceAll(fileName, ".html.template", "")
-		page := Page{}
-		page.SiteData = siteData
-		page.SiteMetadata = siteMetadata
-		page.PageMetadata = PageMetadata{strings.Title(pageName)}
+	// build feeds
+	builder = Builder{}
+	builder.SiteMetadata = siteMetadata
+	builder.SiteContent = siteContent
+	builder.Data = make(map[string]interface{})
 
-		log.Println("Executing template: " + fileName)
-
-		tmpl, err := getStandardTemplateWith(path)
-		if err != nil {
-			return "", err
-		}
-
-		os.MkdirAll(outputDirectory+"/"+pageName, 0700)
-		output, err := os.Create(outputDirectory + "/" + pageName + "/index.html")
-		if err != nil {
-			return "", err
-		}
-		defer output.Close()
-
-		tmpl.ExecuteTemplate(output, fileName, page)
-	}
-
-	// build atom feeds
-	os.MkdirAll(outputDirectory+"/feeds", 0700)
-	filePaths, err = matchSiteFiles(`site\/_feeds/[a-z]*\.(xml|json)\.template`)
-	if err != nil {
+	if err := buildFeeds(builder); err != nil {
+		log.Println("Error while building feeds")
 		return "", err
-	}
-	for _, path := range filePaths {
-		fileName := filepath.Base(path)
-		outputName := strings.ReplaceAll(fileName, ".template", "")
-		feed := Page{}
-		feed.SiteData = siteData
-		feed.SiteMetadata = siteMetadata
-
-		log.Println("Executing template: " + fileName)
-
-		tmpl, err := getStandardTemplateWith(path)
-		if err != nil {
-			return "", err
-		}
-
-		output, err := os.Create(outputDirectory + "/feeds/" + outputName)
-		if err != nil {
-			return "", err
-		}
-		defer output.Close()
-
-		tmpl.ExecuteTemplate(output, fileName, feed)
 	}
 
 	// build sitemap
-	sitemap := Page{}
-	sitemap.SiteData = siteData
-	sitemap.SiteMetadata = siteMetadata
-	sitemap.PageMetadata = PageMetadata{}
+	builder = Builder{}
+	builder.SiteMetadata = siteMetadata
+	builder.SiteContent = siteContent
+	builder.Data = make(map[string]interface{})
 
-	log.Println("Executing template: sitemap.xml.template")
-
-	tmpl, err = getStandardTemplateWith("./site/sitemap.xml.template")
-	if err != nil {
+	if err := buildSitemap(builder); err != nil {
+		log.Println("Error while building sitemap")
 		return "", err
 	}
-
-	sitemapFile, err := os.Create(outputDirectory + "/sitemap.xml")
-	if err != nil {
-		return "", err
-	}
-	defer sitemapFile.Close()
-
-	tmpl.ExecuteTemplate(sitemapFile, "sitemap.xml.template", sitemap)
 
 	// build post pages
-	for _, post := range posts.Posts {
-		path := getPostPath(post)
-		postPage := PostPage{}
-		postPage.SiteData = siteData
-		postPage.SiteMetadata = siteMetadata
-		postPage.PageMetadata = getPageMetadataForPost(post)
-		postPage.Post = post
+	builder = Builder{}
+	builder.SiteMetadata = siteMetadata
+	builder.SiteContent = siteContent
+	builder.Data = make(map[string]interface{})
 
-		log.Println("Executing template for post: " + post.Metadata.Title)
-
-		tmpl, err := getStandardTemplate()
-		if err != nil {
-			return "", err
-		}
-
-		os.MkdirAll(outputDirectory+"/"+path, 0700)
-		file, err := os.Create(outputDirectory + "/" + path + "/" + "index.html")
-		if err != nil {
-			return "", err
-		}
-		defer file.Close()
-
-		tmpl.ExecuteTemplate(file, "post", postPage)
+	if err := buildPostPages(builder); err != nil {
+		log.Println("Error while building post pages")
+		return "", err
 	}
 
 	log.Println("Copying static files to destination...")
-	filePaths, err = staticSiteFiles()
+	filePaths, err := staticSiteFiles()
 	if err != nil {
 		return "", err
 	}
