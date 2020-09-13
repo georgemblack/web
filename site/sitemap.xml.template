@@ -1,0 +1,21 @@
+{{- $root := . -}}
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{{ .SiteMetadata.URL }}</loc>
+  </url>
+  <url>
+    <loc>{{ .SiteMetadata.URL }}/about</loc>
+  </url>
+  <url>
+    <loc>{{ .SiteMetadata.URL }}/likes</loc>
+  </url>
+  <url>
+    <loc>{{ .SiteMetadata.URL }}/archive</loc>
+  </url>
+  {{- range .SiteData.Posts.Posts }}
+  <url>
+    <loc>{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}</loc>
+  </url>
+  {{- end }}
+</urlset> 

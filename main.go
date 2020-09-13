@@ -51,7 +51,7 @@ func Build() (string, error) {
 	index.SiteMetadata = siteMetadata
 	index.PageMetadata = PageMetadata{}
 
-	log.Println("Executing template: " + "index.html.template")
+	log.Println("Executing template: index.html.template")
 
 	tmpl, err := getStandardTemplateWith("./site/index.html.template")
 	if err != nil {
@@ -128,6 +128,27 @@ func Build() (string, error) {
 
 		tmpl.ExecuteTemplate(output, fileName, feed)
 	}
+
+	// build sitemap
+	sitemap := Page{}
+	sitemap.SiteData = siteData
+	sitemap.SiteMetadata = siteMetadata
+	sitemap.PageMetadata = PageMetadata{}
+
+	log.Println("Executing template: sitemap.xml.template")
+
+	tmpl, err = getStandardTemplateWith("./site/sitemap.xml.template")
+	if err != nil {
+		return "", err
+	}
+
+	sitemapFile, err := os.Create(outputDirectory + "/sitemap.xml")
+	if err != nil {
+		return "", err
+	}
+	defer sitemapFile.Close()
+
+	tmpl.ExecuteTemplate(sitemapFile, "sitemap.xml.template", sitemap)
 
 	// build post pages
 	for _, post := range posts.Posts {

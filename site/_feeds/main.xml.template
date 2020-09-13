@@ -13,7 +13,7 @@
   <link href="{{ .SiteMetadata.URL }}" rel="alternate" type="text/html" />
   <link href="{{ .SiteMetadata.URL }}/feeds/main.xml" rel="self" type="application/atom+xml" />
   <icon>/icons/atom-feed-icon.png</icon>
-  <generator version="1.0">George's custom build engine 1.0</generator>
+  <generator version="1.0">George&#39;s custom build engine 1.0</generator>
   <rights>Copyright © {{ currentYear }}, George Black</rights>
   {{- range .SiteData.Posts.Posts }}
   <entry>
