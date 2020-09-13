@@ -14,7 +14,7 @@ func getStandardTemplate() (*template.Template, error) {
 
 	tmpl := template.New("").Funcs(templateFuncMap())
 
-	filePaths, err := matchSiteFiles(`./site\/(_layouts|_partials)/[a-z]*\.html\.template`)
+	filePaths, err := matchSiteFiles(`site\/(_layouts|_partials)/[a-z]*\.html\.template`)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func getShortcodeTemplate() (*template.Template, error) {
 
 	tmpl := template.New("").Funcs(templateFuncMap())
 
-	filePaths, err := matchSiteFiles(`./site\/\_shortcodes/[a-z]*\.html\.template`)
+	filePaths, err := matchSiteFiles(`site\/\_shortcodes/[a-z]*\.html\.template`)
 	if err != nil {
 		return nil, err
 	}
