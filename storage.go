@@ -55,8 +55,8 @@ func updateCloudStorage(buildID string) error {
 		}
 		existingKey := attrs.Name
 		match := false
-		for _, filePath := range filesToUpload {
-			key := strings.Replace(filePath, buildDir+"/", "", 1)
+		for _, path := range filesToUpload {
+			key := strings.Replace(path, buildDir+"/", "", 1)
 			if key == existingKey {
 				match = true
 				break
@@ -68,16 +68,16 @@ func updateCloudStorage(buildID string) error {
 	}
 
 	// upload files
-	for _, filePath := range filesToUpload {
-		log.Println("Uploading to cloud storage: " + filePath)
+	for _, path := range filesToUpload {
+		log.Println("Uploading to cloud storage: " + path)
 
-		file, err := os.Open(filePath)
+		file, err := os.Open(path)
 		if err != nil {
 			return err
 		}
 		defer file.Close()
 
-		key := strings.Replace(filePath, buildDir+"/", "", 1)
+		key := strings.Replace(path, buildDir+"/", "", 1)
 		writer := bucket.Object(key).NewWriter(clientContext)
 		if _, err = io.Copy(writer, file); err != nil {
 			return err
