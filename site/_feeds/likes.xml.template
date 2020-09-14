@@ -24,7 +24,6 @@
     <link href="{{ .URL }}" rel="alternate" type="text/html" title="{{ .Title }}" />
     <content type="html" xml:base="{{ $root.SiteMetadata.URL }}" xml:lang="en">
       &lt;p&gt;Like of: &lt;a href=&quot;{{ .URL }}&quot;&gt;{{ .Title }}&lt;/a&gt;&lt;/p&gt;
-      &lt;hr&gt;
       &lt;p&gt;&lt;em&gt;Please note: a “like” of a page does not explicitly imply my endorsement of its contents.&lt;/em&gt;&lt;/p&gt;
     </content>
   </entry>
