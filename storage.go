@@ -23,7 +23,7 @@ func updateCloudStorage(buildID string) error {
 	if err != nil {
 		return err
 	}
-	bucketName := getEnv("CLOUD_STORAGE_BUCKET", "test-bucket.georgeblack.me")
+	bucketName := getEnv("CLOUD_STORAGE_BUCKET", "test-bucket.george.black")
 	bucket := client.Bucket(bucketName)
 
 	// list files from build output

@@ -1,6 +1,6 @@
 # Web Builder
 
-Web Builder is a container that performs static site builds for [georgeblack.me](https://georgeblack.me). Its primary build function performs the following:
+Web Builder is a container that performs static site builds for [george.black](https://george.black). Its primary build function performs the following:
 
 1. Fetch data from API
 2. Use data to execute templates

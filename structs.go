@@ -75,11 +75,11 @@ type Shortcode struct {
 func getDefaultSiteMetadata() SiteMetadata {
 	metadata := SiteMetadata{}
 	metadata.Name = "George Black"
-	metadata.URL = "https://georgeblack.me"
-	metadata.MediaURL = "https://media.georgeblack.me"
+	metadata.URL = "https://george.black"
+	metadata.MediaURL = "https://media.george.black"
 	metadata.Author = "George Black"
 	metadata.Description = "George is a software engineer working in Chicago, with a small home on the internet."
-	metadata.AuthorEmail = "contact@georgeblack.me"
+	metadata.AuthorEmail = "contact@george.black"
 	metadata.AuthorTwitter = "@georgeblackme"
 	metadata.Timezone = "America/Chicago"
 	metadata.ExcerptSeparator = "<!--more-->"

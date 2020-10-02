@@ -8,7 +8,7 @@
   <author>
     <name>{{ .SiteMetadata.Name }}</name>
     <uri>{{ .SiteMetadata.URL }}</uri>
-    <email>contact@georgeblack.me</email>
+    <email>contact@george.black</email>
   </author>
   <link href="{{ .SiteMetadata.URL }}" rel="alternate" type="text/html" />
   <link href="{{ .SiteMetadata.URL }}/feeds/likes.xml" rel="self" type="application/atom+xml" />

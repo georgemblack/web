@@ -8,7 +8,7 @@
   <author>
     <name>{{ .SiteMetadata.Name }}</name>
     <uri>{{ .SiteMetadata.URL }}</uri>
-    <email>contact@georgeblack.me</email>
+    <email>contact@george.black</email>
   </author>
   <link href="{{ .SiteMetadata.URL }}" rel="alternate" type="text/html" />
   <link href="{{ .SiteMetadata.URL }}/feeds/main.xml" rel="self" type="application/atom+xml" />
@@ -24,7 +24,7 @@
     <link href="{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}" rel="alternate" type="text/html" title="{{ .Metadata.Title }}" />
     <content type="html" xml:base="{{ $root.SiteMetadata.URL }}" xml:lang="en">
       {{ .Content | escapeHTML }}
-      &lt;p&gt;&lt;a href=&quot;mailto:contact@georgeblack.me?subject=Re: {{ .Metadata.Title }}&quot;&gt;Reply via Email&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;&lt;a href=&quot;mailto:contact@george.black?subject=Re: {{ .Metadata.Title }}&quot;&gt;Reply via Email&lt;/a&gt;&lt;/p&gt;
     </content>
   </entry>
   {{- end }}
