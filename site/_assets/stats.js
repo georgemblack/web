@@ -10,7 +10,7 @@ window.onload = function analytics() {
     windowInnerWidth: window.innerWidth,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
   }
-  fetch('https://views.george.black', {
+  fetch('https://stats.george.black', {
     method: 'POST',
     mode: 'cors',
     headers: {
