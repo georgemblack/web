@@ -35,7 +35,7 @@
 @media screen and (prefers-color-scheme: dark) {
   :root {
     /* general purpose colors */
-    --background-color: #282c35;
+    --background-color: #292929;
     --blockquote-border-color: #313641;
     --line-separator-color: #313641;
 
