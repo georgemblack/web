@@ -233,6 +233,20 @@ footer {
 }
 
 /* ==========================================================================
+   Homepage
+   ========================================================================== */
+.read-more-button p {
+  display: inline-block;
+  padding: 0 0.65em;
+  background-color: var(--line-separator-color);
+  border-radius: 2.5em;
+}
+
+.read-more-button:hover p {
+  background-color: var(--link-hover-color);
+}
+
+/* ==========================================================================
    About Page
    ========================================================================== */
 .about {
