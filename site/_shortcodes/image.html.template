@@ -7,10 +7,10 @@
   <source srcset="{{ .SiteMetadata.MediaURL }}/{{ .Data.Shortcode.Args.webp }}" type="image/webp">
   {{ end }}
   {{ if .Data.Shortcode.Args.jpg }}
-  <img src="{{ .SiteMetadata.MediaURL }}/{{ .Data.Shortcode.Args.jpg }}" {{ if .Data.Shortcode.Args.alt }}alt="{{ .Data.Shortcode.Args.alt }}" {{ end }} type="image/jpeg">
+  <img src="{{ .SiteMetadata.MediaURL }}/{{ .Data.Shortcode.Args.jpg }}" {{ if .Data.Shortcode.Args.alt }}alt="{{ .Data.Shortcode.Args.alt }}" {{ end }}>
   {{ end }}
   {{ if .Data.Shortcode.Args.png }}
-  <img src="{{ .SiteMetadata.MediaURL }}/{{ .Data.Shortcode.Args.png }}" {{ if .Data.Shortcode.Args.alt }}alt="{{ .Data.Shortcode.Args.alt }}" {{ end }} type="image/png">
+  <img src="{{ .SiteMetadata.MediaURL }}/{{ .Data.Shortcode.Args.png }}" {{ if .Data.Shortcode.Args.alt }}alt="{{ .Data.Shortcode.Args.alt }}" {{ end }}>
   {{ end }}
 </picture>
 {{ end }}
