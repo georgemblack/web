@@ -7,8 +7,8 @@
   --reading-max-width: 38rem;
 
   /* primary fonts */
-  --primary-font: -apple-system, system-ui, sans-serif;
-  --primary-font-rounded: ui-rounded, -apple-system, system-ui, sans-serif;
+  --primary-font: system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
+  --primary-font-rounded: ui-rounded, system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;;
 
   /* font weights */
   --font-weight-bold: 900;
