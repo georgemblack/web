@@ -9,10 +9,10 @@ import (
 
 // Constants
 const (
-	ShortcodePattern    = "{{<(.*)>}}"
+	ShortcodePattern    = "{{{(.*)}}}"
 	ShortcodeArgPattern = "[a-z]+=\"[^\"]+\""
-	ShortcodeStart      = "{{<"
-	ShortcodeEnd        = ">}}"
+	ShortcodeStart      = "{{{"
+	ShortcodeEnd        = "}}}"
 )
 
 // Return the content of a post with all shortcodes executed
