@@ -2,6 +2,7 @@ package web
 
 import (
 	"bytes"
+	"html"
 	"log"
 	"regexp"
 	"strings"
@@ -34,6 +35,7 @@ func processPostShortcodes(content string) (string, error) {
 
 // Parse a shortcode from string
 func parseShortcode(text string) Shortcode {
+	text = html.UnescapeString(text) // revert chars escaped by markdown parser
 	text = strings.ReplaceAll(text, ShortcodeStart, "")
 	text = strings.ReplaceAll(text, ShortcodeEnd, "")
 	text = strings.TrimSpace(text)
