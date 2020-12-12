@@ -4,12 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="{{ .SiteMetadata.Description }}" />
   <meta name="author" content="{{ .SiteMetadata.Author }}" />
-  <link
-    rel="alternate"
-    type="application/atom+xml"
-    title="George Black's blog feed"
-    href="{{ .SiteMetadata.URL }}/feeds/main.xml"
-  />
+  <link rel="alternate" title="George Black's blog feed" type="application/feed+json" href="https://george.black/feeds/main.json" />
   {{- if .Data.PageTitle }}
   <title>{{ .Data.PageTitle }} | {{ .SiteMetadata.Name }}</title>
   {{- else }}
