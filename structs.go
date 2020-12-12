@@ -72,6 +72,40 @@ type Shortcode struct {
 	Args map[string]string
 }
 
+// JSONFeed is the top level object for a JSON feed
+type JSONFeed struct {
+	Version     string
+	Title       string
+	HomePageURL string
+	FeedURL     string
+	Description string
+	UserComment string
+	Icon        string
+	Favicon     string
+	Authors     []JSONFeedAuthor
+	Language    string
+	Items       []JSONFeedItem
+}
+
+// JSONFeedAuthor represents a single item in a JSON feed
+type JSONFeedAuthor struct {
+	Name   string
+	URL    string
+	Avatar string
+}
+
+// JSONFeedItem represents a single item in a JSON feed
+type JSONFeedItem struct {
+	ID            string
+	URL           string
+	ExternalURL   string
+	Title         string
+	ContentHTML   string
+	DatePublished string
+	DateModified  string
+	Tags          string
+}
+
 func getDefaultSiteMetadata() SiteMetadata {
 	metadata := SiteMetadata{}
 	metadata.Name = "George Black"
