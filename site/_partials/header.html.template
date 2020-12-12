@@ -1,6 +1,7 @@
 {{ define "header" }}
 <header>
-  <h1><a href="/">gb</a></h1>
+  <h1 class="view-large"><a href="/">george.black</a></h1>
+  <h1 class="view-small"><a href="/">gb</a></h1>
   <nav>
     <a href="/">Home</a>
     <a href="/about">About</a>
