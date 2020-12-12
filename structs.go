@@ -74,36 +74,36 @@ type Shortcode struct {
 
 // JSONFeed is the top level object for a JSON feed
 type JSONFeed struct {
-	Version     string
-	Title       string
-	HomePageURL string
-	FeedURL     string
-	Description string
-	UserComment string
-	Icon        string
-	Favicon     string
-	Authors     []JSONFeedAuthor
-	Language    string
-	Items       []JSONFeedItem
+	Version     string           `json:"version"`
+	Title       string           `json:"title"`
+	HomePageURL string           `json:"home_page_url"`
+	FeedURL     string           `json:"feed_url"`
+	Description string           `json:"description"`
+	UserComment string           `json:"user_comment"`
+	Icon        string           `json:"icon"`
+	Favicon     string           `json:"favicon"`
+	Authors     []JSONFeedAuthor `json:"authors"`
+	Language    string           `json:"language"`
+	Items       []JSONFeedItem   `json:"items"`
 }
 
 // JSONFeedAuthor represents a single item in a JSON feed
 type JSONFeedAuthor struct {
-	Name   string
-	URL    string
-	Avatar string
+	Name   string `json:"name"`
+	URL    string `json:"url"`
+	Avatar string `json:"avatar"`
 }
 
 // JSONFeedItem represents a single item in a JSON feed
 type JSONFeedItem struct {
-	ID            string
-	URL           string
-	ExternalURL   string
-	Title         string
-	ContentHTML   string
-	DatePublished string
-	DateModified  string
-	Tags          string
+	ID            string `json:"id"`
+	URL           string `json:"url"`
+	ExternalURL   string `json:"external_url"`
+	Title         string `json:"title"`
+	ContentHTML   string `json:"content_html"`
+	DatePublished string `json:"date_published"`
+	DateModified  string `json:"date_modified"`
+	Tags          string `json:"tags"`
 }
 
 func getDefaultSiteMetadata() SiteMetadata {
