@@ -1,6 +1,6 @@
 {{ define "header" }}
 <header>
-  <h1><a href="/">GB</a></h1>
+  <h1><a href="/">gb</a></h1>
   <nav>
     <a href="/">Home</a>
     <a href="/about">About</a>
