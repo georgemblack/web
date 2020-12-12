@@ -258,6 +258,7 @@ footer {
 }
 
 .read-more-button:hover p {
+  color: var(--background-color);
   background-color: var(--link-hover-color);
 }
 
