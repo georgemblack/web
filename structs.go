@@ -98,12 +98,10 @@ type JSONFeedAuthor struct {
 type JSONFeedItem struct {
 	ID            string `json:"id"`
 	URL           string `json:"url"`
-	ExternalURL   string `json:"external_url"`
 	Title         string `json:"title"`
 	ContentHTML   string `json:"content_html"`
 	DatePublished string `json:"date_published"`
 	DateModified  string `json:"date_modified"`
-	Tags          string `json:"tags"`
 }
 
 func getDefaultSiteMetadata() SiteMetadata {

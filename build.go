@@ -1,6 +1,8 @@
 package web
 
 import (
+	"bytes"
+	"encoding/json"
 	"log"
 	"os"
 	"path/filepath"
@@ -94,7 +96,7 @@ func buildPostPages(builder Builder) error {
 	return nil
 }
 
-func buildFeeds(builder Builder) error {
+func buildAtomFeeds(builder Builder) error {
 	os.MkdirAll(outputDirectory+"/feeds", 0700)
 
 	paths, err := matchSiteFiles(`site\/_feeds/[a-z]*\.(xml|json)\.template`)
@@ -122,6 +124,65 @@ func buildFeeds(builder Builder) error {
 		if err := tmpl.ExecuteTemplate(output, fileName, builder); err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func buildJSONFeeds(builder Builder) error {
+	posts := builder.SiteContent.Posts.Posts
+	meta := builder.SiteMetadata
+
+	// feed authors
+	author := JSONFeedAuthor{}
+	author.Name = "George Black"
+	author.URL = builder.SiteMetadata.URL
+	author.Avatar = builder.SiteMetadata.URL + "/icons/json-feed-avatar.jpg"
+	authors := []JSONFeedAuthor{author}
+
+	// feed items
+	items := make([]JSONFeedItem, len(posts))
+	for i, post := range posts {
+		item := JSONFeedItem{}
+		item.ID = meta.URL + "/" + getPostPath(post)
+		item.URL = meta.URL + "/" + getPostPath(post)
+		item.Title = post.Metadata.Title
+		item.ContentHTML = post.Content
+		item.DatePublished = secondsToISOTimestamp(post.Published.Seconds)
+		item.DateModified = secondsToISOTimestamp(post.Published.Seconds)
+		items[i] = item
+	}
+
+	// feed
+	feed := JSONFeed{}
+	feed.Version = "https://jsonfeed.org/version/1.1"
+	feed.Title = builder.SiteMetadata.Name
+	feed.HomePageURL = builder.SiteMetadata.URL
+	feed.FeedURL = builder.SiteMetadata.URL + "/feeds/main.json"
+	feed.Description = builder.SiteMetadata.Description
+	feed.UserComment = "Hello friend! You've found my JSON feed! You can use this to follow my blog in a feed reader, such as NetNewsWire."
+	feed.Icon = builder.SiteMetadata.URL + "/icons/json-feed-icon.png"
+	feed.Favicon = builder.SiteMetadata.URL + "/icons/json-feed-icon.png"
+	feed.Authors = authors
+	feed.Language = "en-US"
+	feed.Items = items
+
+	out, err := os.Create(outputDirectory + "/feeds/main.json")
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	buf := new(bytes.Buffer)
+	enc := json.NewEncoder(buf)
+	enc.SetEscapeHTML(false)
+	err = enc.Encode(feed)
+	if err != nil {
+		return err
+	}
+	_, err = out.WriteString(buf.String())
+	if err != nil {
+		return err
 	}
 
 	return nil

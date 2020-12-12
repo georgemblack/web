@@ -53,8 +53,12 @@ func Build() (string, error) {
 		log.Println("Error while building standard pages")
 		return "", err
 	}
-	if err := buildFeeds(newBuilder()); err != nil {
-		log.Println("Error while building feeds")
+	if err := buildAtomFeeds(newBuilder()); err != nil {
+		log.Println("Error while building Atom feeds")
+		return "", err
+	}
+	if err := buildJSONFeeds(newBuilder()); err != nil {
+		log.Println("Error while building JSON feeds")
 		return "", err
 	}
 	if err := buildSitemap(newBuilder()); err != nil {

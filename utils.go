@@ -45,6 +45,10 @@ func getYearStrFromSeconds(seconds int64) string {
 	return strconv.Itoa(timestamp.Year())
 }
 
+func secondsToISOTimestamp(seconds int64) string {
+	return time.Unix(seconds, 0).Format(time.RFC3339)
+}
+
 func isIndex(path string) bool {
 	fileName := filepath.Base(path)
 	return strings.HasPrefix(fileName, "index.html")

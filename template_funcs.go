@@ -25,7 +25,7 @@ func HasExcerpt(post Post) bool {
 
 // SecondsToISOTimestamp is a template function
 func SecondsToISOTimestamp(seconds int64) string {
-	return time.Unix(seconds, 0).Format(time.RFC3339)
+	return secondsToISOTimestamp(seconds)
 }
 
 // SecondsToFormattedDate is a template function
