@@ -17,7 +17,7 @@
   /* general purpose colors */
   --background-color: #f0ece9;
   --blockquote-border-color: #fe5546;
-  --line-separator-color: #e0e0e0;
+  --line-separator-color: rgba(0, 0, 0, 0.05);
 
   /* header colors */
   --nav-link-color: rgba(0, 0, 0, 0.5);
@@ -39,7 +39,7 @@
     /* general purpose colors */
     --background-color: #282c35;
     --blockquote-border-color: #313641;
-    --line-separator-color: #313641;
+    --line-separator-color: rgba(255, 255, 255, 0.05);
 
     /* header colors */
     --nav-link-color: rgba(255, 255, 255, 0.5);
@@ -47,11 +47,11 @@
 
     /* text colors */
     --header-color: #dddddd;
-    --header-link-color: #ffa7c4;
-    --header-link-hover-color: #dd7d9d;
+    --header-link-color: #ffa7a7;
+    --header-link-hover-color: #e09999;
     --body-color: #f7f7f7;
-    --link-color: #ffa7c4;
-    --link-hover-color: #dd7d9d;
+    --link-color: #ffa7a7;
+    --link-hover-color: #e09999;
     --faded-text-color: rgba(255, 255, 255, 0.4);
   }
 }
