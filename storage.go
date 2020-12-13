@@ -12,6 +12,47 @@ import (
 	"google.golang.org/api/iterator"
 )
 
+var contentTypeMap = map[string]string{
+	"aac":   "audio/aac",
+	"arc":   "application/x-freearc",
+	"avi":   "video/x-msvideo",
+	"css":   "text/css",
+	"csv":   "text/csv",
+	"doc":   "application/msword",
+	"docx":  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+	"gz":    "application/gzip",
+	"gpx":   "application/gpx+xml",
+	"gif":   "image/gif",
+	"html":  "text/html",
+	"ico":   "image/vnd.microsoft.icon",
+	"ics":   "text/calendar",
+	"jpeg":  "image/jpeg",
+	"jpg":   "image/jpeg",
+	"js":    "text/javascript",
+	"json":  "application/json",
+	"mid":   "audio/x-midi",
+	"midi":  "audio/x-midi",
+	"mpeg":  "video/mpeg",
+	"png":   "image/png",
+	"pdf":   "application/pdf",
+	"rar":   "application/vnd.rar",
+	"rtf":   "application/rtf",
+	"sh":    "application/x-sh",
+	"svg":   "image/svg+xml",
+	"tar":   "application/x-tar",
+	"tif":   "image/tiff",
+	"tiff":  "image/tiff",
+	"txt":   "text/plain",
+	"usdz":  "model/usd",
+	"wav":   "audio/wav",
+	"weba":  "audio/webm",
+	"webm":  "video/webm",
+	"webp":  "image/webp",
+	"xhtml": "application/xhtml+xml",
+	"xml":   "application/xml",
+	"zip":   "application/zip",
+}
+
 func updateCloudStorage(buildID string) error {
 	buildDir := "dist/" + buildID
 	var filesToUpload []string
@@ -79,6 +120,7 @@ func updateCloudStorage(buildID string) error {
 
 		key := strings.Replace(path, buildDir+"/", "", 1)
 		writer := bucket.Object(key).NewWriter(clientContext)
+		writer.ContentType = getContentType(path)
 		if _, err = io.Copy(writer, file); err != nil {
 			return err
 		}
@@ -96,4 +138,13 @@ func updateCloudStorage(buildID string) error {
 	}
 
 	return nil
+}
+
+func getContentType(path string) string {
+	extension := filepath.Ext(path)
+	name := path[0 : len(path)-len(extension)]
+	if val, ok := contentTypeMap[name]; ok {
+		return val
+	}
+	return "application/octet-stream"
 }
