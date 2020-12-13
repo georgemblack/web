@@ -176,6 +176,7 @@ func buildJSONFeeds(builder Builder) error {
 	buf := new(bytes.Buffer)
 	enc := json.NewEncoder(buf)
 	enc.SetEscapeHTML(false)
+	enc.SetIndent("", "  ")
 	err = enc.Encode(feed)
 	if err != nil {
 		return err
