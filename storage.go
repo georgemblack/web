@@ -121,6 +121,7 @@ func updateCloudStorage(buildID string) error {
 		key := strings.Replace(path, buildDir+"/", "", 1)
 		writer := bucket.Object(key).NewWriter(clientContext)
 		writer.ContentType = getContentType(path)
+		writer.CacheControl = getCacheControl(path)
 		if _, err = io.Copy(writer, file); err != nil {
 			return err
 		}
@@ -140,11 +141,31 @@ func updateCloudStorage(buildID string) error {
 	return nil
 }
 
-func getContentType(path string) string {
-	extension := filepath.Ext(path)
+func getContentType(key string) string {
+	extension := filepath.Ext(key)
 	name := strings.Replace(extension, ".", "", 1)
 	if contentType, ok := contentTypeMap[name]; ok {
 		return contentType
 	}
 	return "application/octet-stream"
+}
+
+func getCacheControl(key string) string {
+	return "public, max-age=" + getCacheMaxAge(key)
+}
+
+func getCacheMaxAge(key string) string {
+	split := strings.Split(key, ".")
+	extension := split[len(split)-1]
+	for _, ext := range [...]string{"html", "xml", "json", "txt"} {
+		if extension == ext {
+			return "900"
+		}
+	}
+	for _, ext := range [...]string{"js", "css"} {
+		if extension == ext {
+			return "172800"
+		}
+	}
+	return "2592000"
 }
