@@ -142,9 +142,9 @@ func updateCloudStorage(buildID string) error {
 
 func getContentType(path string) string {
 	extension := filepath.Ext(path)
-	name := path[0 : len(path)-len(extension)]
-	if val, ok := contentTypeMap[name]; ok {
-		return val
+	name := strings.Replace(extension, ".", "", 1)
+	if contentType, ok := contentTypeMap[name]; ok {
+		return contentType
 	}
 	return "application/octet-stream"
 }

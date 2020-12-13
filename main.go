@@ -105,8 +105,7 @@ func Build() (string, error) {
 // Publish will upload site to destination
 func Publish(buildID string) error {
 	log.Println("Starting publish for build: " + buildID)
-	err := updateCloudStorage(buildID)
-	if err != nil {
+	if err := updateCloudStorage(buildID); err != nil {
 		return err
 	}
 
