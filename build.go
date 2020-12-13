@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -131,17 +132,16 @@ func buildAtomFeeds(builder Builder) error {
 
 func buildJSONFeeds(builder Builder) error {
 	posts := builder.SiteContent.Posts.Posts
+	likes := builder.SiteContent.Likes.Likes
 	meta := builder.SiteMetadata
 
-	// feed authors
 	author := JSONFeedAuthor{}
 	author.Name = "George Black"
 	author.URL = builder.SiteMetadata.URL
 	author.Avatar = builder.SiteMetadata.URL + "/icons/json-feed-avatar.jpg"
 	authors := []JSONFeedAuthor{author}
 
-	// feed items
-	items := make([]JSONFeedItem, len(posts))
+	postItems := make([]JSONFeedItem, len(posts))
 	for i, post := range posts {
 		item := JSONFeedItem{}
 		item.ID = meta.URL + "/" + getPostPath(post)
@@ -150,10 +150,26 @@ func buildJSONFeeds(builder Builder) error {
 		item.ContentHTML = post.Content
 		item.DatePublished = secondsToISOTimestamp(post.Published.Seconds)
 		item.DateModified = secondsToISOTimestamp(post.Published.Seconds)
-		items[i] = item
+		postItems[i] = item
 	}
 
-	// feed
+	likeItems := make([]JSONFeedItem, len(likes))
+	for i, like := range likes {
+		item := JSONFeedItem{}
+		item.ID = meta.URL + "/" + getLikePath(like)
+		item.ExternalURL = like.URL
+		item.Title = like.Title
+		item.ContentHTML = "<p>Like of: <a href=\"" + like.URL + "\">" + like.Title + "</a></p>"
+		item.DatePublished = secondsToISOTimestamp(like.Timestamp.Seconds)
+		item.DateModified = secondsToISOTimestamp(like.Timestamp.Seconds)
+		likeItems[i] = item
+	}
+
+	feedItems := append(postItems, likeItems...)
+	sort.SliceStable(feedItems, func(i, j int) bool {
+		return feedItems[i].DatePublished > feedItems[j].DatePublished
+	})
+
 	feed := JSONFeed{}
 	feed.Version = "https://jsonfeed.org/version/1.1"
 	feed.Title = builder.SiteMetadata.Name
@@ -165,9 +181,9 @@ func buildJSONFeeds(builder Builder) error {
 	feed.Favicon = builder.SiteMetadata.URL + "/icons/json-feed-icon.png"
 	feed.Authors = authors
 	feed.Language = "en-US"
-	feed.Items = items
+	feed.Items = feedItems
 
-	out, err := os.Create(outputDirectory + "/feeds/main.json")
+	out, err := os.Create(outputDirectory + "/feed.json")
 	if err != nil {
 		return err
 	}

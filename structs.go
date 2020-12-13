@@ -97,8 +97,9 @@ type JSONFeedAuthor struct {
 // JSONFeedItem represents a single item in a JSON feed
 type JSONFeedItem struct {
 	ID            string `json:"id"`
-	URL           string `json:"url"`
-	Title         string `json:"title"`
+	URL           string `json:"url,omitempty"`
+	ExternalURL   string `json:"external_url,omitempty"`
+	Title         string `json:"title,omitempty"`
 	ContentHTML   string `json:"content_html"`
 	DatePublished string `json:"date_published"`
 	DateModified  string `json:"date_modified"`
