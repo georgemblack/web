@@ -12,47 +12,6 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-var contentTypeMap = map[string]string{
-	"aac":   "audio/aac",
-	"arc":   "application/x-freearc",
-	"avi":   "video/x-msvideo",
-	"css":   "text/css",
-	"csv":   "text/csv",
-	"doc":   "application/msword",
-	"docx":  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-	"gz":    "application/gzip",
-	"gpx":   "application/gpx+xml",
-	"gif":   "image/gif",
-	"html":  "text/html",
-	"ico":   "image/vnd.microsoft.icon",
-	"ics":   "text/calendar",
-	"jpeg":  "image/jpeg",
-	"jpg":   "image/jpeg",
-	"js":    "text/javascript",
-	"json":  "application/json",
-	"mid":   "audio/x-midi",
-	"midi":  "audio/x-midi",
-	"mpeg":  "video/mpeg",
-	"png":   "image/png",
-	"pdf":   "application/pdf",
-	"rar":   "application/vnd.rar",
-	"rtf":   "application/rtf",
-	"sh":    "application/x-sh",
-	"svg":   "image/svg+xml",
-	"tar":   "application/x-tar",
-	"tif":   "image/tiff",
-	"tiff":  "image/tiff",
-	"txt":   "text/plain",
-	"usdz":  "model/usd",
-	"wav":   "audio/wav",
-	"weba":  "audio/webm",
-	"webm":  "video/webm",
-	"webp":  "image/webp",
-	"xhtml": "application/xhtml+xml",
-	"xml":   "application/xml",
-	"zip":   "application/zip",
-}
-
 func updateCloudStorage(buildID string) error {
 	buildDir := "dist/" + buildID
 	var filesToUpload []string
@@ -120,8 +79,6 @@ func updateCloudStorage(buildID string) error {
 
 		key := strings.Replace(path, buildDir+"/", "", 1)
 		writer := bucket.Object(key).NewWriter(clientContext)
-		writer.ContentType = getContentType(path)
-		writer.CacheControl = getCacheControl(path)
 		if _, err = io.Copy(writer, file); err != nil {
 			return err
 		}
@@ -139,33 +96,4 @@ func updateCloudStorage(buildID string) error {
 	}
 
 	return nil
-}
-
-func getContentType(key string) string {
-	extension := filepath.Ext(key)
-	name := strings.Replace(extension, ".", "", 1)
-	if contentType, ok := contentTypeMap[name]; ok {
-		return contentType
-	}
-	return "application/octet-stream"
-}
-
-func getCacheControl(key string) string {
-	return "public, max-age=" + getCacheMaxAge(key)
-}
-
-func getCacheMaxAge(key string) string {
-	split := strings.Split(key, ".")
-	extension := split[len(split)-1]
-	for _, ext := range [...]string{"html", "xml", "json", "txt"} {
-		if extension == ext {
-			return "900"
-		}
-	}
-	for _, ext := range [...]string{"js", "css"} {
-		if extension == ext {
-			return "172800"
-		}
-	}
-	return "2592000"
 }
