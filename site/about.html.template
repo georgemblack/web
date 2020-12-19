@@ -23,7 +23,7 @@
       <h2>Links</h2>
       <ul>
         <li><a href="/archive/">Archive</a></li>
-        <li><a href="https://george.black/feeds/main.xml">RSS Feed</a></li>
+        <li><a href="https://george.black/feed.json">JONS Feed</a> (<a href="https://www.jsonfeed.org">What is a JSON feed?</a>)</li>
       </ul>
       <h2>Social Things</h2>
       <ul>
@@ -32,7 +32,7 @@
         <li><a href="https://www.linkedin.com/in/georgemblack/">LinkedIn</a></li>
       </ul>
       <h2>Tech Stuff</h2>
-      <p>This site is hosted on <a href="https://workers.cloudflare.com">Cloudflare Workers</a>. Additional components are hosted on <a href="https://cloud.google.com">Google Cloud Platform</a>.</p>
+      <p>This site is hosted on a tiny server running on <a href="https://cloud.google.com">Google Cloud Platform</a>.</p>
       <p>The CSS is written by hand. Do you like it?</p>
     </main>
     {{ template "footer" . }}
