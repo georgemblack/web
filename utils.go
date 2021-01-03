@@ -21,9 +21,8 @@ func getBuildID() string {
 }
 
 func getPostPath(post Post) string {
-	slug := getSlugFromTitle(post.Metadata.Title)
 	year := getYearStrFromSeconds(post.Published.Seconds)
-	return year + "/" + slug
+	return year + "/" + post.Metadata.Slug
 }
 
 func getLikePath(like Like) string {

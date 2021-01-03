@@ -59,6 +59,7 @@ type Post struct {
 // PostMetadata represents a post's metadata
 type PostMetadata struct {
 	Title string
+	Slug  string
 }
 
 // PostPublishedDate represents a UTC timestamp of when the post was published
