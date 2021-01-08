@@ -183,7 +183,7 @@ func buildJSONFeeds(builder Builder) error {
 	feed.Language = "en-US"
 	feed.Items = feedItems
 
-	out, err := os.Create(outputDirectory + "/feed.json")
+	out, err := os.Create(outputDirectory + "/feeds/main.json")
 	if err != nil {
 		return err
 	}
