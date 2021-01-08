@@ -5,6 +5,7 @@
   <meta name="description" content="{{ .SiteMetadata.Description }}" />
   <meta name="author" content="{{ .SiteMetadata.Author }}" />
   <link rel="alternate" title="George Black's blog feed" type="application/feed+json" href="{{ .SiteMetadata.URL }}/feeds/main.json" />
+  <link rel="alternate" title="George Black's blog feed" type="application/atom+xml" href="{{ .SiteMetadata.URL }}/feeds/main.xml" />
   {{- if .Data.PageTitle }}
   <title>{{ .Data.PageTitle }} | {{ .SiteMetadata.Name }}</title>
   {{- else }}
