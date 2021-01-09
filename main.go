@@ -13,18 +13,19 @@ const (
 	DistDirectory = "dist"
 )
 
-var outputDirectory string
 var siteContent SiteContent
 
 // Build starts build process
 func Build() (string, error) {
 	buildID := getBuildID()
-	outputDirectory = DistDirectory + "/" + buildID
 
 	log.Println("Starting build: " + buildID)
-	log.Println("Collecting web data...")
 
-	os.MkdirAll(outputDirectory, 0700)
+	log.Println("Cleaning build directory...")
+	os.RemoveAll(DistDirectory)
+	os.MkdirAll(DistDirectory, 0700)
+
+	log.Println("Collecting web data...")
 
 	posts, err := getPublishedPosts()
 	if err != nil {
@@ -40,7 +41,7 @@ func Build() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	log.Println("Processing content for " + strconv.Itoa(len(likes.Likes)) + " post(s)")
+	log.Println("Processing content for " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 
 	siteContent = SiteContent{posts, likes}
 
@@ -76,7 +77,7 @@ func Build() (string, error) {
 		return "", err
 	}
 	for _, path := range paths {
-		destPath := strings.Replace(path, "site", outputDirectory, 1)
+		destPath := strings.Replace(path, "site", DistDirectory, 1)
 		split := strings.Split(destPath, "/")
 		destDir := strings.Join(split[:len(split)-1], "/")
 
@@ -105,7 +106,7 @@ func Build() (string, error) {
 // Publish will upload site to destination
 func Publish(buildID string) error {
 	log.Println("Starting publish for build: " + buildID)
-	if err := updateCloudStorage(buildID); err != nil {
+	if err := updateCloudStorage(); err != nil {
 		return err
 	}
 

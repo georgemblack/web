@@ -18,7 +18,7 @@ func buildIndexPage(builder Builder) error {
 		return err
 	}
 
-	file, err := os.Create(outputDirectory + "/index.html")
+	file, err := os.Create(DistDirectory + "/index.html")
 	if err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func buildStandardPages(builder Builder) error {
 
 		log.Println("Executing template: " + fileName)
 
-		os.MkdirAll(outputDirectory+"/"+pageName, 0700)
+		os.MkdirAll(DistDirectory+"/"+pageName, 0700)
 		builder.Data["PageTitle"] = strings.Title(pageName)
 
 		tmpl, err := getStandardTemplateWith(path)
@@ -54,7 +54,7 @@ func buildStandardPages(builder Builder) error {
 			return err
 		}
 
-		output, err := os.Create(outputDirectory + "/" + pageName + "/index.html")
+		output, err := os.Create(DistDirectory + "/" + pageName + "/index.html")
 		if err != nil {
 			return err
 		}
@@ -71,7 +71,7 @@ func buildStandardPages(builder Builder) error {
 func buildPostPages(builder Builder) error {
 	for _, post := range builder.SiteContent.Posts.Posts {
 		path := getPostPath(post)
-		os.MkdirAll(outputDirectory+"/"+path, 0700)
+		os.MkdirAll(DistDirectory+"/"+path, 0700)
 
 		builder.Data["PageTitle"] = post.Metadata.Title
 		builder.Data["Post"] = post
@@ -83,7 +83,7 @@ func buildPostPages(builder Builder) error {
 			return err
 		}
 
-		file, err := os.Create(outputDirectory + "/" + path + "/" + "index.html")
+		file, err := os.Create(DistDirectory + "/" + path + "/" + "index.html")
 		if err != nil {
 			return err
 		}
@@ -98,7 +98,7 @@ func buildPostPages(builder Builder) error {
 }
 
 func buildAtomFeed(builder Builder) error {
-	os.MkdirAll(outputDirectory+"/feeds", 0700)
+	os.MkdirAll(DistDirectory+"/feeds", 0700)
 
 	paths, err := matchSiteFiles(`site\/_feeds/[a-z]*\.(xml|json)\.template`)
 	if err != nil {
@@ -116,7 +116,7 @@ func buildAtomFeed(builder Builder) error {
 			return err
 		}
 
-		output, err := os.Create(outputDirectory + "/feeds/" + outputName)
+		output, err := os.Create(DistDirectory + "/feeds/" + outputName)
 		if err != nil {
 			return err
 		}
@@ -183,7 +183,7 @@ func buildJSONFeed(builder Builder) error {
 	feed.Language = "en-US"
 	feed.Items = feedItems
 
-	out, err := os.Create(outputDirectory + "/feeds/main.json")
+	out, err := os.Create(DistDirectory + "/feeds/main.json")
 	if err != nil {
 		return err
 	}
@@ -213,7 +213,7 @@ func buildSitemap(builder Builder) error {
 		return err
 	}
 
-	sitemapFile, err := os.Create(outputDirectory + "/sitemap.xml")
+	sitemapFile, err := os.Create(DistDirectory + "/sitemap.xml")
 	if err != nil {
 		return err
 	}

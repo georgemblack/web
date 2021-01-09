@@ -12,8 +12,7 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-func updateCloudStorage(buildID string) error {
-	buildDir := "dist/" + buildID
+func updateCloudStorage() error {
 	var filesToUpload []string
 	var keysToDelete []string
 
@@ -27,7 +26,7 @@ func updateCloudStorage(buildID string) error {
 	bucket := client.Bucket(bucketName)
 
 	// list files from build output
-	err = filepath.Walk(buildDir, func(path string, info os.FileInfo, err error) error {
+	err = filepath.Walk(DistDirectory, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -56,7 +55,7 @@ func updateCloudStorage(buildID string) error {
 		existingKey := attrs.Name
 		match := false
 		for _, path := range filesToUpload {
-			key := strings.Replace(path, buildDir+"/", "", 1)
+			key := strings.Replace(path, DistDirectory+"/", "", 1)
 			if key == existingKey {
 				match = true
 				break
@@ -77,7 +76,7 @@ func updateCloudStorage(buildID string) error {
 		}
 		defer file.Close()
 
-		key := strings.Replace(path, buildDir+"/", "", 1)
+		key := strings.Replace(path, DistDirectory+"/", "", 1)
 		writer := bucket.Object(key).NewWriter(clientContext)
 		if _, err = io.Copy(writer, file); err != nil {
 			return err
