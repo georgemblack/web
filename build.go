@@ -97,7 +97,7 @@ func buildPostPages(builder Builder) error {
 	return nil
 }
 
-func buildAtomFeeds(builder Builder) error {
+func buildAtomFeed(builder Builder) error {
 	os.MkdirAll(outputDirectory+"/feeds", 0700)
 
 	paths, err := matchSiteFiles(`site\/_feeds/[a-z]*\.(xml|json)\.template`)
@@ -130,7 +130,7 @@ func buildAtomFeeds(builder Builder) error {
 	return nil
 }
 
-func buildJSONFeeds(builder Builder) error {
+func buildJSONFeed(builder Builder) error {
 	posts := builder.SiteContent.Posts.Posts
 	likes := builder.SiteContent.Likes.Likes
 	meta := builder.SiteMetadata
