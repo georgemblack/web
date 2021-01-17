@@ -19,7 +19,7 @@ func getStandardTemplate() (*template.Template, error) {
 		return nil, err
 	}
 	for _, path := range filePaths {
-		_, err = tmpl.ParseFiles(path)
+		_, err = tmpl.ParseFS(siteFiles, path)
 		if err != nil {
 			return nil, err
 		}
@@ -34,7 +34,7 @@ func getStandardTemplateWith(tmplPath string) (*template.Template, error) {
 	if err != nil {
 		return nil, err
 	}
-	return tmpl.ParseFiles(tmplPath)
+	return tmpl.ParseFS(siteFiles, tmplPath)
 }
 
 func getShortcodeTemplate() (*template.Template, error) {

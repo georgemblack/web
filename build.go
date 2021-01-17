@@ -13,7 +13,7 @@ import (
 func buildIndexPage(builder Builder) error {
 	log.Println("Executing template: index.html.template")
 
-	tmpl, err := getStandardTemplateWith("./site/index.html.template")
+	tmpl, err := getStandardTemplateWith("site/index.html.template")
 	if err != nil {
 		return err
 	}
@@ -208,7 +208,7 @@ func buildJSONFeed(builder Builder) error {
 func buildSitemap(builder Builder) error {
 	log.Println("Executing template: sitemap.xml.template")
 
-	tmpl, err := getStandardTemplateWith("./site/sitemap.xml.template")
+	tmpl, err := getStandardTemplateWith("site/sitemap.xml.template")
 	if err != nil {
 		return err
 	}
