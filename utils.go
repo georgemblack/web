@@ -57,7 +57,12 @@ func isIndex(path string) bool {
 func matchSiteFiles(pattern string) ([]string, error) {
 	var matches []string
 	re := regexp.MustCompile(pattern)
-	err := filepath.Walk("site", func(path string, info os.FileInfo, err error) error {
+
+	err := fs.WalkDir(siteFiles, "site", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return nil
+		}
+		info, err := fs.Stat(siteFiles, path)
 		if err != nil {
 			return err
 		}
@@ -72,6 +77,7 @@ func matchSiteFiles(pattern string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return matches, nil
 }
 
