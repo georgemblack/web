@@ -2,13 +2,12 @@ package web
 
 import (
 	"embed"
+	_ "embed" // Runs embed at compile time
 	"log"
 	"os"
 	"strconv"
 	"strings"
 )
-
-import _ "embed" // Runs embed at compile time
 
 // Constants
 const (
@@ -86,7 +85,7 @@ func Build() (string, error) {
 		split := strings.Split(destPath, "/")
 		destDir := strings.Join(split[:len(split)-1], "/")
 
-		srcFile, err := siteFiles.ReadFile(path)
+		srcData, err := siteFiles.ReadFile(path)
 		if err != nil {
 			return "", err
 		}
@@ -97,7 +96,7 @@ func Build() (string, error) {
 			return "", err
 		}
 		defer destFile.Close()
-		_, err = destFile.Write(srcFile)
+		_, err = destFile.Write(srcData)
 		if err != nil {
 			return "", err
 		}
