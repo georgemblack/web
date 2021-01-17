@@ -2,7 +2,6 @@ package web
 
 import (
 	"embed"
-	"io"
 	"log"
 	"os"
 	"strconv"
@@ -87,11 +86,10 @@ func Build() (string, error) {
 		split := strings.Split(destPath, "/")
 		destDir := strings.Join(split[:len(split)-1], "/")
 
-		srcFile, err := os.Open(path)
+		srcFile, err := siteFiles.ReadFile(path)
 		if err != nil {
 			return "", err
 		}
-		defer srcFile.Close()
 
 		os.MkdirAll(destDir, 0700)
 		destFile, err := os.Create(destPath)
@@ -99,7 +97,7 @@ func Build() (string, error) {
 			return "", err
 		}
 		defer destFile.Close()
-		_, err = io.Copy(destFile, srcFile)
+		_, err = destFile.Write(srcFile)
 		if err != nil {
 			return "", err
 		}
