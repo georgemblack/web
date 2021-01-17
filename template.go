@@ -49,7 +49,7 @@ func getShortcodeTemplate() (*template.Template, error) {
 		return nil, err
 	}
 	for _, path := range filePaths {
-		_, err = tmpl.ParseFiles(path)
+		_, err = tmpl.ParseFS(siteFiles, path)
 		if err != nil {
 			return nil, err
 		}
