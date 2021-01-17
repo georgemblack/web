@@ -1,6 +1,7 @@
 package web
 
 import (
+	"embed"
 	"io"
 	"log"
 	"os"
@@ -8,12 +9,17 @@ import (
 	"strings"
 )
 
+import _ "embed" // Runs embed at compile time
+
 // Constants
 const (
 	DistDirectory = "dist"
 )
 
 var siteContent SiteContent
+
+//go:embed site/*
+var siteFiles embed.FS
 
 // Build starts build process
 func Build() (string, error) {
