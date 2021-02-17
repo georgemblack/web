@@ -2,7 +2,6 @@ package web
 
 import (
 	"embed"
-	_ "embed" // Runs embed at compile time
 	"log"
 	"os"
 	"strconv"
