@@ -97,39 +97,6 @@ func buildPostPages(builder Builder) error {
 	return nil
 }
 
-func buildAtomFeed(builder Builder) error {
-	os.MkdirAll(DistDirectory+"/feeds", 0700)
-
-	paths, err := matchSiteFiles(`site\/_feeds/[a-z]*\.(xml|json)\.template`)
-	if err != nil {
-		return err
-	}
-
-	for _, path := range paths {
-		fileName := filepath.Base(path)
-		outputName := strings.ReplaceAll(fileName, ".template", "")
-
-		log.Println("Executing template: " + fileName)
-
-		tmpl, err := getStandardTemplateWith(path)
-		if err != nil {
-			return err
-		}
-
-		output, err := os.Create(DistDirectory + "/feeds/" + outputName)
-		if err != nil {
-			return err
-		}
-		defer output.Close()
-
-		if err := tmpl.ExecuteTemplate(output, fileName, builder); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 func buildJSONFeed(builder Builder) error {
 	posts := builder.SiteContent.Posts.Posts
 	likes := builder.SiteContent.Likes.Likes
