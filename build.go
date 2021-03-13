@@ -46,7 +46,10 @@ func buildStandardPages(builder Builder) error {
 
 		log.Println("Executing template: " + fileName)
 
-		os.MkdirAll(DistDirectory+"/"+pageName, 0700)
+		err := os.MkdirAll(DistDirectory+"/"+pageName, 0700)
+		if err != nil {
+			return err
+		}
 		builder.Data["PageTitle"] = strings.Title(pageName)
 
 		tmpl, err := getStandardTemplateWith(path)
@@ -71,7 +74,10 @@ func buildStandardPages(builder Builder) error {
 func buildPostPages(builder Builder) error {
 	for _, post := range builder.SiteContent.Posts.Posts {
 		path := getPostPath(post)
-		os.MkdirAll(DistDirectory+"/"+path, 0700)
+		err := os.MkdirAll(DistDirectory+"/"+path, 0700)
+		if err != nil {
+			return err
+		}
 
 		builder.Data["PageTitle"] = post.Metadata.Title
 		builder.Data["Post"] = post
@@ -98,6 +104,11 @@ func buildPostPages(builder Builder) error {
 }
 
 func buildJSONFeed(builder Builder) error {
+	err := os.MkdirAll(DistDirectory+"/feeds", 0700)
+	if err != nil {
+		return err
+	}
+	
 	posts := builder.SiteContent.Posts.Posts
 	likes := builder.SiteContent.Likes.Likes
 	meta := builder.SiteMetadata

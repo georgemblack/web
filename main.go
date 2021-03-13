@@ -26,7 +26,10 @@ func Build() (string, error) {
 
 	log.Println("Cleaning build directory...")
 	os.RemoveAll(DistDirectory)
-	os.MkdirAll(DistDirectory, 0700)
+	err := os.MkdirAll(DistDirectory, 0700)
+	if err != nil {
+		return "", err
+	}
 
 	log.Println("Collecting web data...")
 
@@ -85,7 +88,10 @@ func Build() (string, error) {
 			return "", err
 		}
 
-		os.MkdirAll(destDir, 0700)
+		err = os.MkdirAll(destDir, 0700)
+		if err != nil {
+			return "", err
+		}
 		destFile, err := os.Create(destPath)
 		if err != nil {
 			return "", err
