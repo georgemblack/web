@@ -7,8 +7,7 @@ window.onload = function analytics() {
     hostname: window.location.hostname,
     pathname: window.location.pathname,
     referrer: window.document.referrer,
-    windowInnerWidth: window.innerWidth,
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    windowInnerWidth: window.innerWidth
   }
   fetch('https://stats.george.black', {
     method: 'POST',
