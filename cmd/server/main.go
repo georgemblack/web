@@ -40,7 +40,10 @@ func main() {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		w.Write(respBody)
+		_, err = w.Write(respBody)
+		if err != nil {
+			log.Println(err)
+		}
 	})
 
 	log.Println("Listening on " + port)
