@@ -3,6 +3,7 @@ package web
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -38,22 +39,22 @@ func getAPIAuthToken() (string, error) {
 
 	req, err := http.NewRequest("POST", authEndpoint, nil)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Could not build http request; %w", err)
 	}
 	req.SetBasicAuth(getAPIUsername(), getAPIPassword())
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("HTTP request failed; %w", err)
 	}
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		return "", errors.New("Invalid status code from API: " + strconv.Itoa(resp.StatusCode))
+		return "", errors.New("Invalid status code from api: " + strconv.Itoa(resp.StatusCode))
 	}
 	defer resp.Body.Close()
 
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		return "", nil
+		return "", fmt.Errorf("Failed to decode http response body; %w", err)
 	}
 
 	token, ok := data["token"].(string)
@@ -92,24 +93,24 @@ func getAllLikes() (Likes, error) {
 
 	authToken, err := getAPIAuthToken()
 	if err != nil {
-		return Likes{}, err
+		return Likes{}, fmt.Errorf("Failed to fetch auth token; %w", err)
 	}
 
 	req, err := http.NewRequest("GET", likesEndpoint, nil)
 	if err != nil {
-		return Likes{}, err
+		return Likes{}, fmt.Errorf("Could not build http request; %w", err)
 	}
 	req.Header.Set("Authorization", authToken)
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return Likes{}, err
+		return Likes{}, fmt.Errorf("HTTP request failed; %w", err)
 	}
 	defer resp.Body.Close()
 
 	err = json.NewDecoder(resp.Body).Decode(&likes)
 	if err != nil {
-		return Likes{}, err
+		return Likes{}, fmt.Errorf("Failed to decode http response body; %w", err)
 	}
 
 	return likes, nil
@@ -122,12 +123,12 @@ func getPublishedPosts() (Posts, error) {
 
 	authToken, err := getAPIAuthToken()
 	if err != nil {
-		return Posts{}, err
+		return Posts{}, fmt.Errorf("Failed to fetch auth token; %w", err)
 	}
 
 	req, err := http.NewRequest("GET", postsEndpoint, nil)
 	if err != nil {
-		return Posts{}, err
+		return Posts{}, fmt.Errorf("Could not build http request; %w", err)
 	}
 
 	// URL params and headers
@@ -138,13 +139,13 @@ func getPublishedPosts() (Posts, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return Posts{}, err
+		return Posts{}, fmt.Errorf("HTTP request failed; %w", err)
 	}
 	defer resp.Body.Close()
 
 	err = json.NewDecoder(resp.Body).Decode(&posts)
 	if err != nil {
-		return Posts{}, err
+		return Posts{}, fmt.Errorf("Failed to decode response body; %w", err)
 	}
 
 	return posts, nil

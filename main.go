@@ -2,6 +2,7 @@ package web
 
 import (
 	"embed"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -28,24 +29,24 @@ func Build() (string, error) {
 	os.RemoveAll(DistDirectory)
 	err := os.MkdirAll(DistDirectory, 0700)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Failed to create dist directory; %w", err)
 	}
 
 	log.Println("Collecting web data...")
 
 	posts, err := getPublishedPosts()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Failed to fetch published posts; %w", err)
 	}
 	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 	likes, err := getAllLikes()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Failed to fetch likes; %w", err)
 	}
 	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
 	posts, err = processPostsContent(posts)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Failed to process post content; %w", err)
 	}
 	log.Println("Processing content for " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 
@@ -53,30 +54,25 @@ func Build() (string, error) {
 
 	// begin build steps
 	if err := buildIndexPage(newBuilder()); err != nil {
-		log.Println("Error while building index page")
-		return "", err
+		return "", fmt.Errorf("Failed to build index page; %w", err)
 	}
 	if err := buildStandardPages(newBuilder()); err != nil {
-		log.Println("Error while building standard pages")
-		return "", err
+		return "", fmt.Errorf("Failed to build standard pages; %w", err)
 	}
 	if err := buildJSONFeed(newBuilder()); err != nil {
-		log.Println("Error while building JSON feeds")
-		return "", err
+		return "", fmt.Errorf("Failed to build JSON feed; %w", err)
 	}
 	if err := buildSitemap(newBuilder()); err != nil {
-		log.Println("Error while building sitemap")
-		return "", err
+		return "", fmt.Errorf("Failed to build sitemap; %w", err)
 	}
 	if err := buildPostPages(newBuilder()); err != nil {
-		log.Println("Error while building post pages")
-		return "", err
+		return "", fmt.Errorf("Failed to build post pages; %w", err)
 	}
 
 	log.Println("Copying static files to destination...")
 	paths, err := staticSiteFiles()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Failed while gathering static files; %w", err)
 	}
 	for _, path := range paths {
 		destPath := strings.Replace(path, "site", DistDirectory, 1)
@@ -85,21 +81,21 @@ func Build() (string, error) {
 
 		srcData, err := siteFiles.ReadFile(path)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("Failed to read file %v; %w", path, err)
 		}
 
 		err = os.MkdirAll(destDir, 0700)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("Failed to create directory %v; %w", destDir, err)
 		}
 		destFile, err := os.Create(destPath)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("Failed to create file %v; %w", destPath, err)
 		}
 		defer destFile.Close()
 		_, err = destFile.Write(srcData)
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("Failed to write file %v; %w", destPath, err)
 		}
 	}
 
@@ -111,7 +107,7 @@ func Build() (string, error) {
 func Publish(buildID string) error {
 	log.Println("Starting publish for build: " + buildID)
 	if err := updateCloudStorage(); err != nil {
-		return err
+		return fmt.Errorf("Failed to update cloud storage; %w", err)
 	}
 
 	log.Println("Completed publish for build: " + buildID)

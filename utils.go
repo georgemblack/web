@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -64,7 +65,7 @@ func matchSiteFiles(pattern string) ([]string, error) {
 		}
 		info, err := fs.Stat(siteFiles, path)
 		if err != nil {
-			return err
+			return fmt.Errorf("Could not get stats info for file %v; %w", path, err)
 		}
 		if info.IsDir() {
 			return nil
@@ -75,7 +76,7 @@ func matchSiteFiles(pattern string) ([]string, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to walk site directory; %w", err)
 	}
 
 	return matches, nil
@@ -90,7 +91,7 @@ func staticSiteFiles() ([]string, error) {
 		}
 		info, err := fs.Stat(siteFiles, path)
 		if err != nil {
-			return err
+			return fmt.Errorf("Could not get stats info for file %v; %w", path, err)
 		}
 		if info.IsDir() {
 			return nil
@@ -105,7 +106,7 @@ func staticSiteFiles() ([]string, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to walk site directory; %w", err)
 	}
 
 	return matches, nil

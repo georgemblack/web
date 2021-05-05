@@ -3,6 +3,7 @@ package web
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -15,17 +16,17 @@ func buildIndexPage(builder Builder) error {
 
 	tmpl, err := getStandardTemplateWith("site/index.html.template")
 	if err != nil {
-		return err
+		return fmt.Errorf("Could not get standard template; %w", err)
 	}
 
 	file, err := os.Create(DistDirectory + "/index.html")
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to create file; %w", err)
 	}
 	defer file.Close()
 
 	if err := tmpl.ExecuteTemplate(file, "index.html.template", builder); err != nil {
-		return err
+		return fmt.Errorf("Failed to execute template; %w", err)
 	}
 	return nil
 }
@@ -33,7 +34,7 @@ func buildIndexPage(builder Builder) error {
 func buildStandardPages(builder Builder) error {
 	paths, err := matchSiteFiles(`site/[a-z]*\.html\.template`)
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to match site files; %w", err)
 	}
 
 	for _, path := range paths {
@@ -48,23 +49,23 @@ func buildStandardPages(builder Builder) error {
 
 		err := os.MkdirAll(DistDirectory+"/"+pageName, 0700)
 		if err != nil {
-			return err
+			return fmt.Errorf("Failed to create directory; %w", err)
 		}
 		builder.Data["PageTitle"] = strings.Title(pageName)
 
 		tmpl, err := getStandardTemplateWith(path)
 		if err != nil {
-			return err
+			return fmt.Errorf("Could not get standard template; %w", err)
 		}
 
 		output, err := os.Create(DistDirectory + "/" + pageName + "/index.html")
 		if err != nil {
-			return err
+			return fmt.Errorf("Failed to create file; %w", err)
 		}
 		defer output.Close()
 
 		if err := tmpl.ExecuteTemplate(output, fileName, builder); err != nil {
-			return err
+			return fmt.Errorf("Failed to execute template; %w", err)
 		}
 	}
 
@@ -76,7 +77,7 @@ func buildPostPages(builder Builder) error {
 		path := getPostPath(post)
 		err := os.MkdirAll(DistDirectory+"/"+path, 0700)
 		if err != nil {
-			return err
+			return fmt.Errorf("Failed to create directory; %w", err)
 		}
 
 		builder.Data["PageTitle"] = post.Metadata.Title
@@ -86,17 +87,17 @@ func buildPostPages(builder Builder) error {
 
 		tmpl, err := getStandardTemplate()
 		if err != nil {
-			return err
+			return fmt.Errorf("Could not get standard template; %w", err)
 		}
 
 		file, err := os.Create(DistDirectory + "/" + path + "/" + "index.html")
 		if err != nil {
-			return err
+			return fmt.Errorf("Failed to create file; %w", err)
 		}
 		defer file.Close()
 
 		if err := tmpl.ExecuteTemplate(file, "post", builder); err != nil {
-			return err
+			return fmt.Errorf("Failed to execute template; %w", err)
 		}
 	}
 
@@ -106,9 +107,9 @@ func buildPostPages(builder Builder) error {
 func buildJSONFeed(builder Builder) error {
 	err := os.MkdirAll(DistDirectory+"/feeds", 0700)
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to create directory; %w", err)
 	}
-	
+
 	posts := builder.SiteContent.Posts.Posts
 	likes := builder.SiteContent.Likes.Likes
 	meta := builder.SiteMetadata
@@ -163,7 +164,7 @@ func buildJSONFeed(builder Builder) error {
 
 	out, err := os.Create(DistDirectory + "/feeds/main.json")
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to create directory; %w", err)
 	}
 	defer out.Close()
 
@@ -173,11 +174,11 @@ func buildJSONFeed(builder Builder) error {
 	enc.SetIndent("", "  ")
 	err = enc.Encode(feed)
 	if err != nil {
-		return err
+		return fmt.Errorf("Could not encode feed data to JSON; %w", err)
 	}
 	_, err = out.WriteString(buf.String())
 	if err != nil {
-		return err
+		return fmt.Errorf("Could not generate JSON feed as string; %w", err)
 	}
 
 	return nil
@@ -188,17 +189,17 @@ func buildSitemap(builder Builder) error {
 
 	tmpl, err := getStandardTemplateWith("site/sitemap.xml.template")
 	if err != nil {
-		return err
+		return fmt.Errorf("Could not get standard template; %w", err)
 	}
 
 	sitemapFile, err := os.Create(DistDirectory + "/sitemap.xml")
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to create file; %w", err)
 	}
 	defer sitemapFile.Close()
 
 	if err := tmpl.ExecuteTemplate(sitemapFile, "sitemap.xml.template", builder); err != nil {
-		return err
+		return fmt.Errorf("Failed to execute template; %w", err)
 	}
 	return nil
 }

@@ -2,6 +2,7 @@ package web
 
 import (
 	"bytes"
+	"fmt"
 	"html"
 	"log"
 	"regexp"
@@ -25,7 +26,7 @@ func processPostShortcodes(content string) (string, error) {
 		shortcode := parseShortcode(match)
 		result, err := executeShortcode(shortcode)
 		if err != nil {
-			return "", nil
+			return "", fmt.Errorf("Failed to execute shortcode %v; %w", match, err)
 		}
 		content = strings.Replace(content, match, result, -1)
 	}
@@ -67,12 +68,12 @@ func executeShortcode(shortcode Shortcode) (string, error) {
 
 	tmpl, err := getShortcodeTemplate()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Could not get shortcode template; %w", err)
 	}
 
 	var buf bytes.Buffer
 	if err := tmpl.ExecuteTemplate(&buf, shortcode.Type, builder); err != nil {
-		log.Println("Error executing template for post shortcode!")
+		err = fmt.Errorf("Error executing template for post shortcode; %w", err)
 		log.Println(err)
 		return "", nil
 	}

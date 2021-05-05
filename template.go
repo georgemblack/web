@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"text/template"
 )
 
@@ -16,12 +17,12 @@ func getStandardTemplate() (*template.Template, error) {
 
 	filePaths, err := matchSiteFiles(`site\/(_layouts|_partials)/[a-z]*\.html\.template`)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Could not match site files; %w", err)
 	}
 	for _, path := range filePaths {
 		_, err = tmpl.ParseFS(siteFiles, path)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to parse template %v; %w", path, err)
 		}
 	}
 
@@ -32,7 +33,7 @@ func getStandardTemplate() (*template.Template, error) {
 func getStandardTemplateWith(tmplPath string) (*template.Template, error) {
 	tmpl, err := getStandardTemplate()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Could not get standard template; %w", err)
 	}
 	return tmpl.ParseFS(siteFiles, tmplPath)
 }
@@ -46,12 +47,12 @@ func getShortcodeTemplate() (*template.Template, error) {
 
 	filePaths, err := matchSiteFiles(`site\/\_shortcodes/[a-z]*\.html\.template`)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Could not match site files; %w", err)
 	}
 	for _, path := range filePaths {
 		_, err = tmpl.ParseFS(siteFiles, path)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to parse template %v; %w", path, err)
 		}
 	}
 
