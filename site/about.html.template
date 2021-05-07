@@ -36,8 +36,8 @@
         <li><a href="https://twitter.com/georgeblackm">Twitter</a></li>
         <li><a href="https://www.linkedin.com/in/georgemblack/">LinkedIn</a></li>
       </ul>
-      <h2>Tech Stuff</h2>
-      <p>This site is hosted on a tiny server running on <a href="https://cloud.google.com">Google Cloud Platform</a>.</p>
+      <h2>Colophon</h2>
+      <p>This site is powered by <a href="https://workers.cloudflare.com">Cloudflare Workers</a>, and built using a custom <a href="https://github.com/georgemblack/web">static site generator</a>. Most components are hosted on <a href="https://cloud.google.com">Google Cloud Platform</a>.</p>
       <p>The CSS is written by hand. Do you like it?</p>
     </main>
     {{ template "footer" . }}
