@@ -16,7 +16,8 @@
 
   /* general purpose colors */
   --background-color: #f0ece9;
-  --blockquote-border-color: #fe5546;
+  --background-offset-color: #e4e1de;
+  --blockquote-border-color: #e4e1de;
   --line-separator-color: rgba(0, 0, 0, 0.05);
 
   /* header colors */
@@ -38,6 +39,7 @@
   :root {
     /* general purpose colors */
     --background-color: #282c35;
+    --background-offset-color: #313641;
     --blockquote-border-color: #313641;
     --line-separator-color: rgba(255, 255, 255, 0.05);
 
@@ -285,14 +287,26 @@ footer {
   margin-right: auto;
 }
 
-.profile {
+.about .profile {
   max-width: 16em;
   margin: 0 auto;
 }
 
-.profile img {
+.about .profile img {
   margin: 0;
   border-radius: 100%;
+}
+
+.about .search input {
+  width: 100%;
+  margin: 1em 0 0 0;
+  padding: 0.75em 1em;
+  box-sizing: border-box;
+  font-size: 1em;
+  color: var(--body-color);
+  background-color: var(--background-offset-color);
+  border: none;
+  border-radius: 0.5em;
 }
 
 /* ==========================================================================
