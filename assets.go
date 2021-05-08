@@ -2,7 +2,6 @@ package web
 
 import (
 	"fmt"
-	"io/ioutil"
 
 	"github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/css"
@@ -10,7 +9,7 @@ import (
 
 func getDefaultSiteAssets() (SiteAssets, error) {
 	assets := SiteAssets{}
-	stylesheet, err := ioutil.ReadFile("site/_assets/main.css")
+	stylesheet, err := siteFiles.ReadFile("site/_assets/main.css")
 	if err != nil {
 		return assets, fmt.Errorf("Failed to read primary stylesheet; %w", err)
 	}
