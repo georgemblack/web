@@ -3,6 +3,7 @@ package web
 // Builder is the top level struct passed into each template
 type Builder struct {
 	SiteMetadata SiteMetadata
+	SiteAssets   SiteAssets
 	SiteContent  SiteContent
 	Data         map[string]interface{}
 }
@@ -18,6 +19,11 @@ type SiteMetadata struct {
 	AuthorTwitter    string
 	Timezone         string
 	ExcerptSeparator string
+}
+
+// SiteAssets represents site assets
+type SiteAssets struct {
+	PrimaryStylesheet string
 }
 
 // SiteContent represents site content

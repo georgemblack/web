@@ -53,19 +53,39 @@ func Build() (string, error) {
 	siteContent = SiteContent{posts, likes}
 
 	// begin build steps
-	if err := buildIndexPage(newBuilder()); err != nil {
+	builder, err := newBuilder()
+	if err != nil {
+		return "", fmt.Errorf("Could not create builder; %w", err)
+	}
+	if err := buildIndexPage(builder); err != nil {
 		return "", fmt.Errorf("Failed to build index page; %w", err)
 	}
-	if err := buildStandardPages(newBuilder()); err != nil {
+	builder, err = newBuilder()
+	if err != nil {
+		return "", fmt.Errorf("Could not create builder; %w", err)
+	}
+	if err := buildStandardPages(builder); err != nil {
 		return "", fmt.Errorf("Failed to build standard pages; %w", err)
 	}
-	if err := buildJSONFeed(newBuilder()); err != nil {
+	builder, err = newBuilder()
+	if err != nil {
+		return "", fmt.Errorf("Could not create builder; %w", err)
+	}
+	if err := buildJSONFeed(builder); err != nil {
 		return "", fmt.Errorf("Failed to build JSON feed; %w", err)
 	}
-	if err := buildSitemap(newBuilder()); err != nil {
+	builder, err = newBuilder()
+	if err != nil {
+		return "", fmt.Errorf("Could not create builder; %w", err)
+	}
+	if err := buildSitemap(builder); err != nil {
 		return "", fmt.Errorf("Failed to build sitemap; %w", err)
 	}
-	if err := buildPostPages(newBuilder()); err != nil {
+	builder, err = newBuilder()
+	if err != nil {
+		return "", fmt.Errorf("Could not create builder; %w", err)
+	}
+	if err := buildPostPages(builder); err != nil {
 		return "", fmt.Errorf("Failed to build post pages; %w", err)
 	}
 
@@ -114,10 +134,17 @@ func Publish(buildID string) error {
 	return nil
 }
 
-func newBuilder() Builder {
+func newBuilder() (Builder, error) {
 	builder := Builder{}
+
+	assets, err := getDefaultSiteAssets()
+	if err != nil {
+		return builder, fmt.Errorf("Failed to generate default site assets; %w", err)
+	}
+
 	builder.SiteMetadata = getDefaultSiteMetadata()
+	builder.SiteAssets = assets
 	builder.SiteContent = siteContent
 	builder.Data = make(map[string]interface{})
-	return builder
+	return builder, nil
 }
