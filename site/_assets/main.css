@@ -226,8 +226,18 @@ main video {
 }
 
 main img {
-  max-width: var(--reading-max-width);
   width: 100%;
+  max-width: var(--reading-max-width);
+}
+
+main figcaption {
+  width: 100%;
+  max-width: var(--reading-max-width);
+  padding: 0.25em 1em;
+  box-sizing: border-box;
+  text-align: center;
+  font-style: italic;
+  color: var(--faded-text-color);
 }
 
 main blockquote {
