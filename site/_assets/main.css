@@ -38,7 +38,7 @@
 @media screen and (prefers-color-scheme: dark) {
   :root {
     /* general purpose colors */
-    --background-color: #282c35;
+    --background-color: #101212;
     --background-offset-color: #313641;
     --blockquote-border-color: #313641;
     --line-separator-color: rgba(255, 255, 255, 0.05);
@@ -49,11 +49,11 @@
 
     /* text colors */
     --header-color: #dddddd;
-    --header-link-color: #ffa7a7;
-    --header-link-hover-color: #e09999;
+    --header-link-color: #799cff;
+    --header-link-hover-color: #5e84ff;
     --body-color: #f7f7f7;
-    --link-color: #ffa7a7;
-    --link-hover-color: #e09999;
+    --link-color: #799cff;
+    --link-hover-color: #5e84ff;
     --faded-text-color: rgba(255, 255, 255, 0.4);
   }
 }
