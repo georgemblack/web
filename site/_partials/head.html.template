@@ -33,6 +33,9 @@
   <meta property="og:type" content="website" />
   <meta property="og:image" content="{{ .SiteMetadata.URL }}/images/profile.jpg" />
   <meta property="og:description" content="{{ .SiteMetadata.Description }}" />
+  <!-- Theme colors (Safari navbar)-->
+  <meta name="theme-color" content="#f0ece9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#101212" media="(prefers-color-scheme: dark)" />
   <!-- Icons -->
   <link
     rel="apple-touch-icon"
@@ -56,7 +59,6 @@
   <link rel="shortcut icon" href="/icons/favicon.ico" />
   <meta name="msapplication-TileColor" content="#21a9ff" />
   <meta name="msapplication-config" content="/icons/browserconfig.xml" />
-  <meta name="theme-color" content="#ffffff" />
   <!-- Inline styles -->
   <style>
     {{ .SiteAssets.PrimaryStylesheet }}
