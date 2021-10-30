@@ -173,10 +173,12 @@ header h1 a:hover {
 nav {
   font-size: 1.125em;
   font-weight: var(--font-weight-bold);
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75em;
 }
 
 nav a {
-  margin: 0 0 0 0.75em;
   color: var(--nav-link-color);
 }
 
@@ -186,8 +188,16 @@ nav a:hover {
 
 /* medium break-point */
 @media screen and (max-width: 58em) {
-  nav a {
-    margin: 0 0 0 0.65em;
+  nav {
+    gap: 0.65em;
+  }
+}
+
+/* small break-point */
+@media screen and (max-width: 22.5em) {
+  nav {
+    font-size: 1em;
+    gap: 0.5em;
   }
 }
 
