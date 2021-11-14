@@ -227,8 +227,8 @@ main p {
 main ul,
 main ol {
   max-width: var(--reading-max-width);
-  margin: 0 0 0 2em;
-  padding: 1em 0 0 0;
+  margin: 1em 0 0 0;
+  padding: 0 0 0 1em;
   line-height: 180%;
 }
 
