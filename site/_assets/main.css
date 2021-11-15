@@ -229,7 +229,7 @@ main ul,
 main ol {
   max-width: var(--reading-max-width);
   margin: 1em 0 0 0;
-  padding: 0 0 0 1em;
+  padding: 0 0 0 2em;
   line-height: 180%;
 }
 
