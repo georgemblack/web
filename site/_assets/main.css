@@ -233,6 +233,11 @@ main ol {
   line-height: 180%;
 }
 
+main li {
+  line-height: 180%;
+  text-rendering: optimizeLegibility;
+}
+
 main img,
 main video {
   border-radius: 0.25em;
