@@ -29,7 +29,7 @@ func getAPIPassword() string {
 func getAPIAuthToken() (string, error) {
 	client := &http.Client{}
 	authEndpoint := getAPIEndpoint() + "/auth"
-	var data map[string]interface{}
+	var data map[string]any
 
 	// does token already exist?
 	if authToken != "" && isValidAuthToken(authToken) {

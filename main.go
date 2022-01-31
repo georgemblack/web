@@ -145,6 +145,6 @@ func newBuilder() (Builder, error) {
 	builder.SiteMetadata = getDefaultSiteMetadata()
 	builder.SiteAssets = assets
 	builder.SiteContent = siteContent
-	builder.Data = make(map[string]interface{})
+	builder.Data = make(map[string]any)
 	return builder, nil
 }

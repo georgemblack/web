@@ -5,7 +5,7 @@ type Builder struct {
 	SiteMetadata SiteMetadata
 	SiteAssets   SiteAssets
 	SiteContent  SiteContent
-	Data         map[string]interface{}
+	Data         map[string]any
 }
 
 // SiteMetadata represents site metadata

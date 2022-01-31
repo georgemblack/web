@@ -62,7 +62,7 @@ func parseShortcode(text string) Shortcode {
 func executeShortcode(shortcode Shortcode) (string, error) {
 	builder := Builder{}
 	builder.SiteMetadata = getDefaultSiteMetadata()
-	builder.Data = make(map[string]interface{})
+	builder.Data = make(map[string]any)
 
 	builder.Data["Shortcode"] = shortcode
 
