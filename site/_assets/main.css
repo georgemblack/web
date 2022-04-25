@@ -7,8 +7,10 @@
   --reading-max-width: 38rem;
 
   /* primary fonts */
-  --primary-font: system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
-  --primary-font-rounded: ui-rounded, system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;;
+  --primary-font: system-ui, -apple-system, BlinkMacSystemFont, Roboto,
+    Helvetica, sans-serif;
+  --primary-font-rounded: ui-rounded, system-ui, -apple-system,
+    BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
 
   /* font weights */
   --font-weight-bold: 900;
@@ -115,15 +117,11 @@ h3 {
   color: var(--header-color);
 }
 
-h1 a,
-h2 a,
-h3 a {
+:is(h1, h2, h3) a {
   color: var(--header-link-color);
 }
 
-h1 a:hover,
-h2 a:hover,
-h3 a:hover {
+:is(h1, h2, h3) a:hover {
   color: var(--header-link-hover-color);
 }
 
@@ -213,8 +211,7 @@ main h1 {
   margin-top: 1em;
 }
 
-main h2,
-main h3 {
+main :is(h2, h3) {
   margin-top: 2em;
 }
 
@@ -225,8 +222,7 @@ main p {
   text-rendering: optimizeLegibility;
 }
 
-main ul,
-main ol {
+main :is(ul, ol) {
   max-width: var(--reading-max-width);
   margin: 1em 0 0 0;
   padding: 0 0 0 2em;
@@ -238,8 +234,7 @@ main li {
   text-rendering: optimizeLegibility;
 }
 
-main img,
-main video {
+main :is(img, video) {
   border-radius: 0.25em;
 }
 
@@ -348,9 +343,7 @@ footer {
   border-top: 1px solid var(--line-separator-color);
 }
 
-.card h2,
-.card .supertitle,
-.card .subtitle {
+.card :is(h2, .supertitle, .subtitle) {
   margin-top: 0;
 }
 
