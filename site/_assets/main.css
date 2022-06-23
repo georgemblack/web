@@ -243,7 +243,11 @@ main img {
   max-width: var(--reading-max-width);
 }
 
-main figcaption {
+main figure {
+  margin: 1.25em 0 0 0;
+}
+
+main figcaption p {
   width: 100%;
   max-width: var(--reading-max-width);
   padding: 0.25em 1em;
