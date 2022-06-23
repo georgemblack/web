@@ -250,6 +250,7 @@ main figure {
 main figcaption p {
   width: 100%;
   max-width: var(--reading-max-width);
+  margin: 0;
   padding: 0.25em 1em;
   text-align: center;
   font-style: italic;
