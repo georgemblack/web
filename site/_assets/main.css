@@ -248,14 +248,14 @@ main figure {
 }
 
 main figcaption p {
-  font-size: 0.85em;
+  font-size: 1em;
   width: 100%;
   max-width: var(--reading-max-width);
   margin: 0;
   padding: 0.25em 1em;
   text-align: center;
   font-style: italic;
-  line-height: 100%;
+  line-height: normal;
   color: var(--faded-text-color);
 }
 
