@@ -6,7 +6,6 @@ require (
 	cloud.google.com/go/storage v1.18.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/tdewolff/minify/v2 v2.9.22
-	github.com/yuin/goldmark v1.4.1
 	google.golang.org/api v0.58.0
 )
 

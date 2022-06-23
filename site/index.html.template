@@ -5,16 +5,11 @@
     {{ template "header" . }}
     <main>
       {{ range .SiteContent.Posts.Posts }}
-      {{ $hasExcerpt := . | hasExcerpt }}
       <article style="margin-bottom: 6em;">
         <h1><a href="/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></h1>
         <p class="subtitle">{{ .Published.Seconds | secondsToFormattedDate }}</p>
-        {{ if $hasExcerpt }}
-        {{ .Content | getPostExcerpt }}
+        {{ .PreviewContent }}
         <a class="read-more-button" href="/{{ . | getPostPath }}"><p>Read More &#8594;</p></a>
-        {{ else }}
-        {{ .Content }}
-        {{ end }}
       </article>
       {{ end }}
       <p><a href="/archive">Go to Archive</a></p>

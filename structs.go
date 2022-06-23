@@ -57,9 +57,21 @@ type Posts struct {
 
 // Post represents a single post
 type Post struct {
-	Metadata  PostMetadata
-	Content   string
-	Published PostPublishedDate
+	Metadata       PostMetadata
+	Content        string
+	PreviewContent string
+	Published      PostPublishedDate
+}
+
+// ContentAPIRequest represents a request to the ContentAPI
+type ContentAPIRequest struct {
+	Content string `json:"content"`
+}
+
+// ContentAPIRequest represents a response from the ContentAPI
+type ContentAPIResponse struct {
+	HTML        string `json:"html"`
+	PreviewHTML string `json:"htmlPreview"`
 }
 
 // PostMetadata represents a post's metadata
