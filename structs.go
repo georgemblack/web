@@ -85,12 +85,6 @@ type PostPublishedDate struct {
 	Seconds int64 `json:"_seconds"`
 }
 
-// Shortcode contains the data required to execute a shortcode
-type Shortcode struct {
-	Type string
-	Args map[string]string
-}
-
 // JSONFeed is the top level object for a JSON feed
 type JSONFeed struct {
 	Version     string           `json:"version"`
