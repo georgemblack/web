@@ -1,27 +1,37 @@
 steps:
-  - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'us-east1-docker.pkg.dev/$PROJECT_ID/private/web-builder:$COMMIT_SHA', '.' ]
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'us-east1-docker.pkg.dev/$PROJECT_ID/private/web-builder:$COMMIT_SHA']
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "us-east1-docker.pkg.dev/$PROJECT_ID/private/web-builder:$COMMIT_SHA",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "us-east1-docker.pkg.dev/$PROJECT_ID/private/web-builder:$COMMIT_SHA",
+      ]
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: gcloud
     args:
-    - 'run'
-    - 'deploy'
-    - 'web-builder'
-    - '--image'
-    - 'us-east1-docker.pkg.dev/$PROJECT_ID/private/web-builder:$COMMIT_SHA'
-    - '--region'
-    - 'us-east1'
-    - '--concurrency'
-    - '1'
-    - '--max-instances'
-    - '1'
-    - '--memory'
-    - '256Mi'
-    - '--platform'
-    - 'managed'
-    - '--service-account'
-    - 'web-builder-service@oceanblue.iam.gserviceaccount.com'
+      - "run"
+      - "deploy"
+      - "web-builder"
+      - "--image"
+      - "us-east1-docker.pkg.dev/$PROJECT_ID/private/web-builder:$COMMIT_SHA"
+      - "--region"
+      - "us-east1"
+      - "--concurrency"
+      - "1"
+      - "--max-instances"
+      - "1"
+      - "--memory"
+      - "512Mi"
+      - "--platform"
+      - "managed"
+      - "--service-account"
+      - "web-builder-service@oceanblue.iam.gserviceaccount.com"
 images:
-  - 'us-east1-docker.pkg.dev/$PROJECT_ID/private/web-builder:$COMMIT_SHA'
+  - "us-east1-docker.pkg.dev/$PROJECT_ID/private/web-builder:$COMMIT_SHA"
