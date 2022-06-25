@@ -129,6 +129,9 @@ func Publish(buildID string) error {
 	if err := updateCloudStorage(); err != nil {
 		return fmt.Errorf("Failed to update cloud storage; %w", err)
 	}
+	if err := updateR2Storage(); err != nil {
+		return fmt.Errorf("Failed to update R2 storage; %w", err)
+	}
 
 	log.Println("Completed publish for build: " + buildID)
 	return nil
