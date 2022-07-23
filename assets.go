@@ -3,12 +3,13 @@ package web
 import (
 	"fmt"
 
+	"github.com/georgemblack/web/pkg/types"
 	"github.com/tdewolff/minify/v2"
 	"github.com/tdewolff/minify/v2/css"
 )
 
-func getDefaultSiteAssets() (SiteAssets, error) {
-	assets := SiteAssets{}
+func getDefaultSiteAssets() (types.SiteAssets, error) {
+	assets := types.SiteAssets{}
 	stylesheet, err := siteFiles.ReadFile("site/_assets/main.css")
 	if err != nil {
 		return assets, fmt.Errorf("Failed to read primary stylesheet; %w", err)

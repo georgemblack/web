@@ -9,9 +9,11 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/georgemblack/web/pkg/types"
 )
 
-func buildIndexPage(builder Builder) error {
+func buildIndexPage(builder types.Builder) error {
 	log.Println("Executing template: index.html.template")
 
 	tmpl, err := getStandardTemplateWith("site/index.html.template")
@@ -31,7 +33,7 @@ func buildIndexPage(builder Builder) error {
 	return nil
 }
 
-func buildStandardPages(builder Builder) error {
+func buildStandardPages(builder types.Builder) error {
 	paths, err := matchSiteFiles(`site/[a-z]*\.html\.template`)
 	if err != nil {
 		return fmt.Errorf("Failed to match site files; %w", err)
@@ -72,7 +74,7 @@ func buildStandardPages(builder Builder) error {
 	return nil
 }
 
-func buildPostPages(builder Builder) error {
+func buildPostPages(builder types.Builder) error {
 	for _, post := range builder.SiteContent.Posts.Posts {
 		path := getPostPath(post)
 		err := os.MkdirAll(DistDirectory+"/"+path, 0700)
@@ -104,7 +106,7 @@ func buildPostPages(builder Builder) error {
 	return nil
 }
 
-func buildJSONFeed(builder Builder) error {
+func buildJSONFeed(builder types.Builder) error {
 	err := os.MkdirAll(DistDirectory+"/feeds", 0700)
 	if err != nil {
 		return fmt.Errorf("Failed to create directory; %w", err)
@@ -114,27 +116,27 @@ func buildJSONFeed(builder Builder) error {
 	likes := builder.SiteContent.Likes.Likes
 	meta := builder.SiteMetadata
 
-	author := JSONFeedAuthor{}
+	author := types.JSONFeedAuthor{}
 	author.Name = "George Black"
 	author.URL = builder.SiteMetadata.URL
 	author.Avatar = builder.SiteMetadata.URL + "/icons/json-feed-avatar.jpg"
-	authors := []JSONFeedAuthor{author}
+	authors := []types.JSONFeedAuthor{author}
 
-	postItems := make([]JSONFeedItem, len(posts))
+	postItems := make([]types.JSONFeedItem, len(posts))
 	for i, post := range posts {
-		item := JSONFeedItem{}
+		item := types.JSONFeedItem{}
 		item.ID = meta.URL + "/" + getPostPath(post)
 		item.URL = meta.URL + "/" + getPostPath(post)
 		item.Title = post.Metadata.Title
-		item.ContentHTML = post.Content
+		item.ContentHTML = post.ContentHTML
 		item.DatePublished = secondsToISOTimestamp(post.Published.Seconds)
 		item.DateModified = secondsToISOTimestamp(post.Published.Seconds)
 		postItems[i] = item
 	}
 
-	likeItems := make([]JSONFeedItem, len(likes))
+	likeItems := make([]types.JSONFeedItem, len(likes))
 	for i, like := range likes {
-		item := JSONFeedItem{}
+		item := types.JSONFeedItem{}
 		item.ID = meta.URL + "/" + getLikePath(like)
 		item.ExternalURL = like.URL
 		item.Title = like.Title
@@ -149,7 +151,7 @@ func buildJSONFeed(builder Builder) error {
 		return feedItems[i].DatePublished > feedItems[j].DatePublished
 	})
 
-	feed := JSONFeed{}
+	feed := types.JSONFeed{}
 	feed.Version = "https://jsonfeed.org/version/1.1"
 	feed.Title = builder.SiteMetadata.Name
 	feed.HomePageURL = builder.SiteMetadata.URL
@@ -184,7 +186,7 @@ func buildJSONFeed(builder Builder) error {
 	return nil
 }
 
-func buildSitemap(builder Builder) error {
+func buildSitemap(builder types.Builder) error {
 	log.Println("Executing template: sitemap.xml.template")
 
 	tmpl, err := getStandardTemplateWith("site/sitemap.xml.template")

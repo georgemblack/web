@@ -8,7 +8,7 @@
       <article style="margin-bottom: 6em;">
         <h1><a href="/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></h1>
         <p class="subtitle">{{ .Published.Seconds | secondsToFormattedDate }}</p>
-        {{ .PreviewContent }}
+        {{ .ContentHTMLPreview }}
         <a class="read-more-button" href="/{{ . | getPostPath }}"><p>Read More &#8594;</p></a>
       </article>
       {{ end }}

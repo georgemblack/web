@@ -9,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/georgemblack/web/pkg/types"
 )
 
 func getEnv(key, fallback string) string {
@@ -22,12 +24,12 @@ func getBuildID() string {
 	return time.Now().UTC().Format("2006-01-02-15-04-05")
 }
 
-func getPostPath(post Post) string {
+func getPostPath(post types.Post) string {
 	year := getYearStrFromSeconds(post.Published.Seconds)
 	return year + "/" + post.Metadata.Slug
 }
 
-func getLikePath(like Like) string {
+func getLikePath(like types.Like) string {
 	slug := getSlugFromTitle(like.Title)
 	year := getYearStrFromSeconds(like.Timestamp.Seconds)
 	return year + "/" + slug
@@ -110,4 +112,18 @@ func staticSiteFiles() ([]string, error) {
 	}
 
 	return matches, nil
+}
+
+func getDefaultSiteMetadata() types.SiteMetadata {
+	metadata := types.SiteMetadata{}
+	metadata.Name = "George Black"
+	metadata.URL = "https://george.black"
+	metadata.MediaURL = "https://media.george.black"
+	metadata.Author = "George Black"
+	metadata.Description = "George is a software engineer working in Chicago, with a small home on the internet."
+	metadata.AuthorEmail = "contact@george.black"
+	metadata.AuthorTwitter = "@georgeblackme"
+	metadata.Timezone = "America/Chicago"
+	metadata.ExcerptSeparator = "<!--more-->"
+	return metadata
 }

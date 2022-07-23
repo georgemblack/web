@@ -7,6 +7,9 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/georgemblack/web/pkg/api"
+	"github.com/georgemblack/web/pkg/types"
 )
 
 // Constants
@@ -14,7 +17,7 @@ const (
 	DistDirectory = "dist"
 )
 
-var siteContent SiteContent
+var siteContent types.SiteContent
 
 //go:embed site/*
 var siteFiles embed.FS
@@ -34,23 +37,18 @@ func Build() (string, error) {
 
 	log.Println("Collecting web data...")
 
-	posts, err := getPublishedPosts()
+	posts, err := api.GetPublishedPosts()
 	if err != nil {
 		return "", fmt.Errorf("Failed to fetch published posts; %w", err)
 	}
 	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
-	likes, err := getAllLikes()
+	likes, err := api.GetAllLikes()
 	if err != nil {
 		return "", fmt.Errorf("Failed to fetch likes; %w", err)
 	}
 	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
-	posts, err = processPostsContent(posts)
-	if err != nil {
-		return "", fmt.Errorf("Failed to process post content; %w", err)
-	}
-	log.Println("Processing content for " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 
-	siteContent = SiteContent{posts, likes}
+	siteContent = types.SiteContent{posts, likes}
 
 	// begin build steps
 	builder, err := newBuilder()
@@ -126,9 +124,6 @@ func Build() (string, error) {
 // Publish will upload site to destination
 func Publish(buildID string) error {
 	log.Println("Starting publish for build: " + buildID)
-	if err := updateCloudStorage(); err != nil {
-		return fmt.Errorf("Failed to update cloud storage; %w", err)
-	}
 	if err := updateR2Storage(); err != nil {
 		return fmt.Errorf("Failed to update R2 storage; %w", err)
 	}
@@ -137,8 +132,8 @@ func Publish(buildID string) error {
 	return nil
 }
 
-func newBuilder() (Builder, error) {
-	builder := Builder{}
+func newBuilder() (types.Builder, error) {
+	builder := types.Builder{}
 
 	assets, err := getDefaultSiteAssets()
 	if err != nil {

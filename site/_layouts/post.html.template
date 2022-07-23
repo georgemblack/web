@@ -8,7 +8,7 @@
       <article>
         <h1>{{ .Data.Post.Metadata.Title }}</h1>
         <p class="subtitle">{{ .Data.Post.Published.Seconds | secondsToFormattedDate }}</p>
-        {{ .Data.Post.Content }}
+        {{ .Data.Post.ContentHTML }}
       </article>
     </main>
     {{ template "footer" . }}

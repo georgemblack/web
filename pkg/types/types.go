@@ -1,4 +1,4 @@
-package web
+package types
 
 // Builder is the top level struct passed into each template
 type Builder struct {
@@ -57,10 +57,11 @@ type Posts struct {
 
 // Post represents a single post
 type Post struct {
-	Metadata       PostMetadata
-	Content        string
-	PreviewContent string
-	Published      PostPublishedDate
+	Metadata           PostMetadata
+	Content            string
+	ContentHTML        string
+	ContentHTMLPreview string
+	Published          PostPublishedDate
 }
 
 // ContentAPIRequest represents a request to the ContentAPI
@@ -116,18 +117,4 @@ type JSONFeedItem struct {
 	ContentHTML   string `json:"content_html"`
 	DatePublished string `json:"date_published"`
 	DateModified  string `json:"date_modified"`
-}
-
-func getDefaultSiteMetadata() SiteMetadata {
-	metadata := SiteMetadata{}
-	metadata.Name = "George Black"
-	metadata.URL = "https://george.black"
-	metadata.MediaURL = "https://media.george.black"
-	metadata.Author = "George Black"
-	metadata.Description = "George is a software engineer working in Chicago, with a small home on the internet."
-	metadata.AuthorEmail = "contact@george.black"
-	metadata.AuthorTwitter = "@georgeblackme"
-	metadata.Timezone = "America/Chicago"
-	metadata.ExcerptSeparator = "<!--more-->"
-	return metadata
 }

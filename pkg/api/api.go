@@ -1,4 +1,4 @@
-package web
+package api
 
 import (
 	"encoding/json"
@@ -6,13 +6,22 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/georgemblack/web/pkg/types"
 )
 
 var authToken string
+
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
+}
 
 func getAPIEndpoint() string {
 	return getEnv("API_ENDPOINT", "http://localhost:9000")
@@ -86,49 +95,49 @@ func isValidAuthToken(authToken string) bool {
 	return false
 }
 
-func getAllLikes() (Likes, error) {
+func GetAllLikes() (types.Likes, error) {
 	client := &http.Client{}
 	likesEndpoint := getAPIEndpoint() + "/likes"
-	var likes Likes
+	var likes types.Likes
 
 	authToken, err := getAPIAuthToken()
 	if err != nil {
-		return Likes{}, fmt.Errorf("Failed to fetch auth token; %w", err)
+		return types.Likes{}, fmt.Errorf("Failed to fetch auth token; %w", err)
 	}
 
 	req, err := http.NewRequest("GET", likesEndpoint, nil)
 	if err != nil {
-		return Likes{}, fmt.Errorf("Could not build http request; %w", err)
+		return types.Likes{}, fmt.Errorf("Could not build http request; %w", err)
 	}
 	req.Header.Set("Authorization", authToken)
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return Likes{}, fmt.Errorf("HTTP request failed; %w", err)
+		return types.Likes{}, fmt.Errorf("HTTP request failed; %w", err)
 	}
 	defer resp.Body.Close()
 
 	err = json.NewDecoder(resp.Body).Decode(&likes)
 	if err != nil {
-		return Likes{}, fmt.Errorf("Failed to decode http response body; %w", err)
+		return types.Likes{}, fmt.Errorf("Failed to decode http response body; %w", err)
 	}
 
 	return likes, nil
 }
 
-func getPublishedPosts() (Posts, error) {
+func GetPublishedPosts() (types.Posts, error) {
 	client := &http.Client{}
 	postsEndpoint := getAPIEndpoint() + "/posts"
-	var posts Posts
+	var posts types.Posts
 
 	authToken, err := getAPIAuthToken()
 	if err != nil {
-		return Posts{}, fmt.Errorf("Failed to fetch auth token; %w", err)
+		return types.Posts{}, fmt.Errorf("Failed to fetch auth token; %w", err)
 	}
 
 	req, err := http.NewRequest("GET", postsEndpoint, nil)
 	if err != nil {
-		return Posts{}, fmt.Errorf("Could not build http request; %w", err)
+		return types.Posts{}, fmt.Errorf("Could not build http request; %w", err)
 	}
 
 	// URL params and headers
@@ -139,13 +148,13 @@ func getPublishedPosts() (Posts, error) {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return Posts{}, fmt.Errorf("HTTP request failed; %w", err)
+		return types.Posts{}, fmt.Errorf("HTTP request failed; %w", err)
 	}
 	defer resp.Body.Close()
 
 	err = json.NewDecoder(resp.Body).Decode(&posts)
 	if err != nil {
-		return Posts{}, fmt.Errorf("Failed to decode response body; %w", err)
+		return types.Posts{}, fmt.Errorf("Failed to decode response body; %w", err)
 	}
 
 	return posts, nil

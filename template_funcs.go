@@ -6,6 +6,8 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/georgemblack/web/pkg/types"
 )
 
 // CurrentISOTimestamp is a template function
@@ -19,7 +21,7 @@ func CurrentYear() string {
 }
 
 // HasExcerpt is a template function
-func HasExcerpt(post Post) bool {
+func HasExcerpt(post types.Post) bool {
 	return strings.Contains(post.Content, "<!--more-->")
 }
 
@@ -34,7 +36,7 @@ func SecondsToFormattedDate(seconds int64) string {
 }
 
 // GetPostPath is a template function
-func GetPostPath(post Post) string {
+func GetPostPath(post types.Post) string {
 	return getPostPath(post)
 }
 
@@ -44,7 +46,7 @@ func GetPostExcerpt(content string) string {
 }
 
 // GetLikePath is a template function
-func GetLikePath(like Like) string {
+func GetLikePath(like types.Like) string {
 	return getLikePath(like)
 }
 
