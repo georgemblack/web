@@ -1,8 +1,6 @@
-package service
+package types
 
-import (
-	"io"
-)
+import "io"
 
 type Writer interface {
 	Write(key string, content io.Reader) error

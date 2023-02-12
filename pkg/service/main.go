@@ -54,9 +54,11 @@ func Build() (string, error) {
 	}
 	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
 
-	siteContent = types.SiteContent{posts, likes}
+	siteContent = types.SiteContent{Posts: posts, Likes: likes}
 
-	// begin build steps
+	// execute builders
+
+	// begin legacy build steps
 	builder, err := newBuilder()
 	if err != nil {
 		return "", fmt.Errorf("Could not create builder; %w", err)
@@ -148,8 +150,8 @@ func Publish(buildID string) error {
 	return nil
 }
 
-func newBuilder() (types.Builder, error) {
-	builder := types.Builder{}
+func newBuilder() (types.BuildData, error) {
+	builder := types.BuildData{}
 
 	assets, err := getDefaultSiteAssets()
 	if err != nil {

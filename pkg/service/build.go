@@ -13,7 +13,9 @@ import (
 	"github.com/georgemblack/web/pkg/types"
 )
 
-func buildIndexPage(builder types.Builder) error {
+type IndexBuilder struct{}
+
+func buildIndexPage(builder types.BuildData) error {
 	log.Println("Executing template: index.html.template")
 
 	tmpl, err := getStandardTemplateWith("site/index.html.template")
@@ -33,7 +35,7 @@ func buildIndexPage(builder types.Builder) error {
 	return nil
 }
 
-func buildStandardPages(builder types.Builder) error {
+func buildStandardPages(builder types.BuildData) error {
 	paths, err := matchSiteFiles(`site/[a-z]*\.html\.template`)
 	if err != nil {
 		return fmt.Errorf("Failed to match site files; %w", err)
@@ -74,7 +76,7 @@ func buildStandardPages(builder types.Builder) error {
 	return nil
 }
 
-func buildPostPages(builder types.Builder) error {
+func buildPostPages(builder types.BuildData) error {
 	for _, post := range builder.SiteContent.Posts.Posts {
 		path := getPostPath(post)
 		err := os.MkdirAll(DistDirectory+"/"+path, 0700)
@@ -106,7 +108,7 @@ func buildPostPages(builder types.Builder) error {
 	return nil
 }
 
-func buildJSONFeed(builder types.Builder) error {
+func buildJSONFeed(builder types.BuildData) error {
 	err := os.MkdirAll(DistDirectory+"/feeds", 0700)
 	if err != nil {
 		return fmt.Errorf("Failed to create directory; %w", err)
@@ -186,7 +188,7 @@ func buildJSONFeed(builder types.Builder) error {
 	return nil
 }
 
-func buildSitemap(builder types.Builder) error {
+func buildSitemap(builder types.BuildData) error {
 	log.Println("Executing template: sitemap.xml.template")
 
 	tmpl, err := getStandardTemplateWith("site/sitemap.xml.template")

@@ -2,8 +2,8 @@ package types
 
 import "fmt"
 
-// Builder is the top level struct passed into each template
-type Builder struct {
+// BuildData is the top level struct passed into each template
+type BuildData struct {
 	SiteMetadata SiteMetadata
 	SiteAssets   SiteAssets
 	SiteContent  SiteContent
