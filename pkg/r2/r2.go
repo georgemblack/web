@@ -7,12 +7,24 @@ import (
 	"github.com/georgemblack/web/pkg/types"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type Service struct {
 	Config conf.Config
 }
 
+// Write implements the Writer interface.
+func (r2 *Service) Write(key string, content io.Reader) error {
+	return r2.Put(key, content)
+}
+
+// WriteString implements the Writer interface.
+func (r2 *Service) WriteString(key string, content string) error {
+	return r2.Put(key, strings.NewReader(content))
+}
+
+// Put writes a single object to the R2 storage bucket.
 func (r2 *Service) Put(key string, object io.Reader) error {
 	client := &http.Client{}
 	url := fmt.Sprintf("%s/%s", r2.Config.R2Endpoint, key)
@@ -30,6 +42,7 @@ func (r2 *Service) Put(key string, object io.Reader) error {
 	return nil
 }
 
+// List returns a full list of keys available in the R2 storage bucket.
 func (r2 *Service) List() (ListResponse, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", r2.Config.R2Endpoint, nil)
@@ -52,6 +65,7 @@ func (r2 *Service) List() (ListResponse, error) {
 	return result, nil
 }
 
+// Delete deletes a given object in the R2 storage bucket.
 func (r2 *Service) Delete(key string) (err error) {
 	client := &http.Client{}
 	url := fmt.Sprintf("%s, %s", r2.Config.R2Endpoint, key)
