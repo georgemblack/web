@@ -1,4 +1,4 @@
 {
   "assetsBucket": "web-assets.george.black",
-  "r2Endpoint": "https://web-bucket.george.black"
+  "r2Endpoint": "https://web-bucket-staging.george.black"
 }

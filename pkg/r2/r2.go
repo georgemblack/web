@@ -10,6 +10,10 @@ import (
 	"strings"
 )
 
+type ListResponse struct {
+	Keys []string `json:"keys"`
+}
+
 type Service struct {
 	Config conf.Config
 }
@@ -54,7 +58,7 @@ func (r2 *Service) List() (ListResponse, error) {
 	if err != nil {
 		return ListResponse{}, types.WrapErr(err, "http request failed")
 	}
-	resp.Body.Close()
+	defer resp.Body.Close()
 
 	var result ListResponse
 	err = json.NewDecoder(resp.Body).Decode(&result)
@@ -78,11 +82,7 @@ func (r2 *Service) Delete(key string) (err error) {
 	if err != nil {
 		return types.WrapErr(err, "http request failed")
 	}
-	defer resp.Body.Close()
+	resp.Body.Close()
 
 	return nil
-}
-
-type ListResponse struct {
-	Keys []string `json:"keys"`
 }

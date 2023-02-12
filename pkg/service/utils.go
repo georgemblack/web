@@ -3,7 +3,6 @@ package service
 import (
 	"fmt"
 	"io/fs"
-	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -12,13 +11,6 @@ import (
 
 	"github.com/georgemblack/web/pkg/types"
 )
-
-func getEnv(key, fallback string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	}
-	return fallback
-}
 
 func getBuildID() string {
 	return time.Now().UTC().Format("2006-01-02-15-04-05")
