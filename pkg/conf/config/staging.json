@@ -1,3 +1,4 @@
 {
-  "assetsBucket": "web-assets-staging.george.black"
+  "assetsBucket": "web-assets-staging.george.black",
+  "r2Endpoint": "http://localhost:9000"
 }

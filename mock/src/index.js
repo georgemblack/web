@@ -20,4 +20,9 @@ app.get("/posts", async (req, res) => {
   res.status(200).send({ posts: posts });
 });
 
+// Requests to R2 cloud storage
+app.put("/", async (req, res) => {
+  res.status(200).send();
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));

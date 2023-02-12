@@ -3,80 +3,72 @@ package r2
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/georgemblack/web/pkg/conf"
+	"github.com/georgemblack/web/pkg/types"
 	"io"
 	"net/http"
-	"os"
 )
 
-type R2ListResponse struct {
-	Keys []string `json:"keys"`
+type Service struct {
+	Config conf.Config
 }
 
-func getAPIEndpoint() string {
-	return getEnv("R2_API_ENDPOINT", "http://localhost:9000")
-}
-
-func getAccessToken() string {
-	return getEnv("R2_ACCESS_TOKEN", "bogus")
-}
-
-func ListKeys() (R2ListResponse, error) {
+func (r2 *Service) Put(key string, object io.Reader) error {
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", getAPIEndpoint(), nil)
+	url := fmt.Sprintf("%s/%s", r2.Config.R2Endpoint, key)
+	req, err := http.NewRequest("PUT", url, object)
 	if err != nil {
-		return R2ListResponse{}, fmt.Errorf("Could not build http request; %w", err)
+		return types.WrapErr(err, "failed to build http request")
 	}
-	req.Header.Set("X-Access-Token", getAccessToken())
+	req.Header.Set("X-Access-Token", r2.Config.R2AccessToken)
 	resp, err := client.Do(req)
 	if err != nil {
-		return R2ListResponse{}, fmt.Errorf("HTTP request failed; %w", err)
+		return types.WrapErr(err, "http request failed")
 	}
-	defer resp.Body.Close()
+	resp.Body.Close()
 
-	var result R2ListResponse
+	return nil
+}
+
+func (r2 *Service) List() (ListResponse, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", r2.Config.R2Endpoint, nil)
+	if err != nil {
+		return ListResponse{}, types.WrapErr(err, "failed to build http request")
+	}
+	req.Header.Set("X-Access-Token", r2.Config.R2AccessToken)
+	resp, err := client.Do(req)
+	if err != nil {
+		return ListResponse{}, types.WrapErr(err, "http request failed")
+	}
+	resp.Body.Close()
+
+	var result ListResponse
 	err = json.NewDecoder(resp.Body).Decode(&result)
 	if err != nil {
-		return R2ListResponse{}, fmt.Errorf("Failed to decode response body; %w", err)
+		return ListResponse{}, types.WrapErr(err, "failed to decode response body")
 	}
 
 	return result, nil
 }
 
-func PutObject(key string, object io.Reader) (err error) {
+func (r2 *Service) Delete(key string) (err error) {
 	client := &http.Client{}
-	req, err := http.NewRequest("PUT", getAPIEndpoint()+"/"+key, object)
+	url := fmt.Sprintf("%s, %s", r2.Config.R2Endpoint, key)
+	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
-		return fmt.Errorf("Could not build http request; %w", err)
+		return types.WrapErr(err, "failed to build http request")
 	}
-	req.Header.Set("X-Access-Token", getAccessToken())
+	req.Header.Set("X-Access-Token", r2.Config.R2AccessToken)
 	resp, err := client.Do(req)
 	if err != nil {
-		return fmt.Errorf("HTTP request failed; %w", err)
+		return types.WrapErr(err, "http request failed")
 	}
 	defer resp.Body.Close()
 
 	return nil
 }
 
-func DeleteObject(key string) (err error) {
-	client := &http.Client{}
-	req, err := http.NewRequest("DELETE", getAPIEndpoint()+"/"+key, nil)
-	if err != nil {
-		return fmt.Errorf("Could not build http request; %w", err)
-	}
-	req.Header.Set("X-Access-Token", getAccessToken())
-	resp, err := client.Do(req)
-	if err != nil {
-		return fmt.Errorf("HTTP request failed; %w", err)
-	}
-	defer resp.Body.Close()
-
-	return nil
-}
-
-func getEnv(key, fallback string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	}
-	return fallback
+type ListResponse struct {
+	Keys []string `json:"keys"`
 }

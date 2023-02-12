@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"github.com/georgemblack/web/pkg/conf"
+	"github.com/georgemblack/web/pkg/r2"
 	"log"
 	"os"
 	"strconv"
@@ -26,12 +27,12 @@ var siteFiles embed.FS
 func Build() (string, error) {
 	buildID := getBuildID()
 
-	log.Println("Starting build: " + buildID)
-
 	_, err := conf.LoadConfig()
 	if err != nil {
 		return "", fmt.Errorf("failed to load configuration; %w", err)
 	}
+
+	log.Println("Starting build: " + buildID)
 
 	log.Println("Cleaning build directory...")
 	os.RemoveAll(DistDirectory)
@@ -129,7 +130,17 @@ func Build() (string, error) {
 // Publish will upload site to destination
 func Publish(buildID string) error {
 	log.Println("Starting publish for build: " + buildID)
-	if err := updateR2Storage(); err != nil {
+
+	config, err := conf.LoadConfig()
+	if err != nil {
+		return fmt.Errorf("failed to load configuration; %w", err)
+	}
+
+	r2Service := r2.Service{
+		Config: config,
+	}
+
+	if err := updateR2Storage(r2Service); err != nil {
 		return fmt.Errorf("Failed to update R2 storage; %w", err)
 	}
 

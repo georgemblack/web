@@ -10,7 +10,7 @@ import (
 	"github.com/georgemblack/web/pkg/r2"
 )
 
-func updateR2Storage() error {
+func updateR2Storage(r2Service r2.Service) error {
 	var filesToUpload []string
 	var keysToDelete []string
 
@@ -31,7 +31,7 @@ func updateR2Storage() error {
 
 	// iterate through existing object keys in R2 storage
 	// mark object for deletion if not represented in build output
-	resp, err := r2.ListKeys()
+	resp, err := r2Service.List()
 	if err != nil {
 		return fmt.Errorf("Failed to list keys in r2; %w", err)
 	}
@@ -64,7 +64,7 @@ func updateR2Storage() error {
 		defer file.Close()
 
 		key := strings.Replace(path, DistDirectory+"/", "", 1)
-		if err := r2.PutObject(key, file); err != nil {
+		if err := r2Service.Put(key, file); err != nil {
 			return fmt.Errorf("Failed to upload to r2 %v; %w", path, err)
 		}
 	}
@@ -73,7 +73,7 @@ func updateR2Storage() error {
 	log.Println(keysToDelete)
 	for _, key := range keysToDelete {
 		log.Println("Deleting unused key from r2: " + key)
-		if err := r2.DeleteObject(key); err != nil {
+		if err := r2Service.Delete(key); err != nil {
 			return fmt.Errorf("Failed to delete key %v; %w", key, err)
 		}
 	}
