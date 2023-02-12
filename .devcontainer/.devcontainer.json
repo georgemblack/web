@@ -1,8 +1,9 @@
 {
-  "name": "Web API",
+  "name": "Web Builder",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "containerEnv": {
-    "GOOGLE_APPLICATION_CREDENTIALS": "google-application-credentials.json"
+    "GOOGLE_APPLICATION_CREDENTIALS": "google-application-credentials.json",
+    "ENVIRONMENT": "staging"
   },
   "postCreateCommand": "echo \"$GOOGLE_APPLICATION_CREDENTIALS_CONTENTS\" > google-application-credentials.json"
 }

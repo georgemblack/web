@@ -3,6 +3,7 @@ package service
 import (
 	"embed"
 	"fmt"
+	"github.com/georgemblack/web/pkg/conf"
 	"log"
 	"os"
 	"strconv"
@@ -12,7 +13,6 @@ import (
 	"github.com/georgemblack/web/pkg/types"
 )
 
-// Constants
 const (
 	DistDirectory = "dist"
 )
@@ -28,9 +28,14 @@ func Build() (string, error) {
 
 	log.Println("Starting build: " + buildID)
 
+	_, err := conf.LoadConfig()
+	if err != nil {
+		return "", fmt.Errorf("failed to load configuration; %w", err)
+	}
+
 	log.Println("Cleaning build directory...")
 	os.RemoveAll(DistDirectory)
-	err := os.MkdirAll(DistDirectory, 0700)
+	err = os.MkdirAll(DistDirectory, 0700)
 	if err != nil {
 		return "", fmt.Errorf("Failed to create dist directory; %w", err)
 	}
