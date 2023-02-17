@@ -1,9 +1,5 @@
 {
   "name": "Web Builder",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "remoteEnv": {
-    "GOOGLE_APPLICATION_CREDENTIALS": "google-application-credentials.json",
-    "ENVIRONMENT": "staging"
-  },
-  "postCreateCommand": "echo \"$GOOGLE_APPLICATION_CREDENTIALS_CONTENTS\" > google-application-credentials.json"
+  "postCreateCommand": "./.devcontainer/startup.sh"
 }
