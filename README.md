@@ -8,11 +8,12 @@ Web Builder is a container that performs static site builds for [george.black](h
 
 ## Running Locally
 
-For running locally, you will need credentials with access to Google Cloud Storage. You may also need to set the environment:
+To start in Codespaces (until I figure out how to do this automatically):
 
 ```
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
+export GOOGLE_APPLICATION_CREDENTIALS=google-application-credentials.json
 export ENVIRONMENT=staging
+echo "$GOOGLE_APPLICATION_CREDENTIALS_CONTENTS" > google-application-credentials.json
 ```
 
 To start the server locally, run:

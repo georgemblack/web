@@ -1,5 +1,4 @@
 {
   "name": "Web Builder",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "postCreateCommand": "./.devcontainer/startup.sh"
 }
