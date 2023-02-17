@@ -25,13 +25,6 @@ func main() {
 			return
 		}
 
-		err = service.Publish(buildID)
-		if err != nil {
-			log.Println(err)
-			http.Error(w, "Publish failed", http.StatusInternalServerError)
-			return
-		}
-
 		respBody, err := json.Marshal(Build{buildID})
 		if err != nil {
 			log.Println(err)

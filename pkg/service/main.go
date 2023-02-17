@@ -1,14 +1,16 @@
 package service
 
 import (
+	"bytes"
 	"embed"
 	"fmt"
-	"github.com/georgemblack/web/pkg/conf"
-	"github.com/georgemblack/web/pkg/r2"
 	"log"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/georgemblack/web/pkg/conf"
+	"github.com/georgemblack/web/pkg/r2"
 
 	"github.com/georgemblack/web/pkg/api"
 	"github.com/georgemblack/web/pkg/types"
@@ -27,7 +29,9 @@ var siteFiles embed.FS
 func Build() (string, error) {
 	buildID := getBuildID()
 
-	_, err := conf.LoadConfig()
+	log.Println("Loading configuration...")
+
+	config, err := conf.LoadConfig()
 	if err != nil {
 		return "", fmt.Errorf("failed to load configuration; %w", err)
 	}
@@ -38,90 +42,107 @@ func Build() (string, error) {
 	os.RemoveAll(DistDirectory)
 	err = os.MkdirAll(DistDirectory, 0700)
 	if err != nil {
-		return "", fmt.Errorf("Failed to create dist directory; %w", err)
+		return "", fmt.Errorf("failed to create dist directory; %w", err)
 	}
 
 	log.Println("Collecting web data...")
 
 	posts, err := api.GetPublishedPosts()
 	if err != nil {
-		return "", fmt.Errorf("Failed to fetch published posts; %w", err)
+		return "", fmt.Errorf("failed to fetch published posts; %w", err)
 	}
 	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 	likes, err := api.GetAllLikes()
 	if err != nil {
-		return "", fmt.Errorf("Failed to fetch likes; %w", err)
+		return "", fmt.Errorf("failed to fetch likes; %w", err)
 	}
 	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
 
 	siteContent = types.SiteContent{Posts: posts, Likes: likes}
 
-	// execute builders
+	log.Println("Executing build steps...")
 
-	// begin legacy build steps
-	builder, err := newBuilder()
-	if err != nil {
-		return "", fmt.Errorf("Could not create builder; %w", err)
-	}
-	if err := buildIndexPage(builder); err != nil {
-		return "", fmt.Errorf("Failed to build index page; %w", err)
-	}
-	builder, err = newBuilder()
-	if err != nil {
-		return "", fmt.Errorf("Could not create builder; %w", err)
-	}
-	if err := buildStandardPages(builder); err != nil {
-		return "", fmt.Errorf("Failed to build standard pages; %w", err)
-	}
-	builder, err = newBuilder()
-	if err != nil {
-		return "", fmt.Errorf("Could not create builder; %w", err)
-	}
-	if err := buildJSONFeed(builder); err != nil {
-		return "", fmt.Errorf("Failed to build JSON feed; %w", err)
-	}
-	builder, err = newBuilder()
-	if err != nil {
-		return "", fmt.Errorf("Could not create builder; %w", err)
-	}
-	if err := buildSitemap(builder); err != nil {
-		return "", fmt.Errorf("Failed to build sitemap; %w", err)
-	}
-	builder, err = newBuilder()
-	if err != nil {
-		return "", fmt.Errorf("Could not create builder; %w", err)
-	}
-	if err := buildPostPages(builder); err != nil {
-		return "", fmt.Errorf("Failed to build post pages; %w", err)
-	}
+	var files []types.SiteFile
 
-	log.Println("Copying static files to destination...")
+	buildData, err := newBuildData()
+	if err != nil {
+		return "", types.WrapErr(err, "failed to create build data")
+	}
+	toAdd, err := BuildIndexPage(buildData)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to build index page")
+	}
+	files = append(files, toAdd...)
+
+	buildData, err = newBuildData()
+	if err != nil {
+		return "", types.WrapErr(err, "failed to create build data")
+	}
+	toAdd, err = BuildStandardPages(buildData)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to build standard pages")
+	}
+	files = append(files, toAdd...)
+
+	buildData, err = newBuildData()
+	if err != nil {
+		return "", types.WrapErr(err, "failed to create build data")
+	}
+	toAdd, err = BuildPostPages(buildData)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to build post pages")
+	}
+	files = append(files, toAdd...)
+
+	buildData, err = newBuildData()
+	if err != nil {
+		return "", types.WrapErr(err, "failed to create build data")
+	}
+	toAdd, err = BuildJSONFeed(buildData)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to build JSON feed")
+	}
+	files = append(files, toAdd...)
+
+	buildData, err = newBuildData()
+	if err != nil {
+		return "", types.WrapErr(err, "failed to create build data")
+	}
+	toAdd, err = BuildSitemap(buildData)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to build sitemap")
+	}
+	files = append(files, toAdd...)
+
+	log.Println("Aggregating static files to destination...")
+
 	paths, err := staticSiteFiles()
 	if err != nil {
-		return "", fmt.Errorf("Failed while gathering static files; %w", err)
+		return "", types.WrapErr(err, "failed while generating static files")
 	}
 	for _, path := range paths {
-		destPath := strings.Replace(path, "site", DistDirectory, 1)
-		split := strings.Split(destPath, "/")
-		destDir := strings.Join(split[:len(split)-1], "/")
-
 		srcData, err := siteFiles.ReadFile(path)
 		if err != nil {
-			return "", fmt.Errorf("Failed to read file %v; %w", path, err)
+			return "", types.WrapErr(err, fmt.Sprintf("failed to read file %v", path))
 		}
 
-		err = os.MkdirAll(destDir, 0700)
+		files = append(files, types.SiteFile{
+			Key:  strings.TrimPrefix(path, "site/"),
+			Data: srcData,
+		})
+	}
+
+	log.Println("Writing files to destination...")
+
+	r2 := r2.Service{
+		Config: config,
+	}
+
+	for _, file := range files {
+		log.Println("writing file: " + file.Key)
+		err := r2.Write(file.Key, bytes.NewReader(file.Data))
 		if err != nil {
-			return "", fmt.Errorf("Failed to create directory %v; %w", destDir, err)
-		}
-		destFile, err := os.Create(destPath)
-		if err != nil {
-			return "", fmt.Errorf("Failed to create file %v; %w", destPath, err)
-		}
-		defer destFile.Close()
-		_, err = destFile.Write(srcData)
-		if err != nil {
-			return "", fmt.Errorf("Failed to write file %v; %w", destPath, err)
+			return "", types.WrapErr(err, "failed to write file")
 		}
 	}
 
@@ -129,33 +150,12 @@ func Build() (string, error) {
 	return buildID, nil
 }
 
-// Publish will upload site to destination
-func Publish(buildID string) error {
-	log.Println("Starting publish for build: " + buildID)
-
-	config, err := conf.LoadConfig()
-	if err != nil {
-		return fmt.Errorf("failed to load configuration; %w", err)
-	}
-
-	r2Service := r2.Service{
-		Config: config,
-	}
-
-	if err := updateR2Storage(r2Service); err != nil {
-		return fmt.Errorf("Failed to update R2 storage; %w", err)
-	}
-
-	log.Println("Completed publish for build: " + buildID)
-	return nil
-}
-
-func newBuilder() (types.BuildData, error) {
+func newBuildData() (types.BuildData, error) {
 	builder := types.BuildData{}
 
 	assets, err := getDefaultSiteAssets()
 	if err != nil {
-		return builder, fmt.Errorf("Failed to generate default site assets; %w", err)
+		return builder, fmt.Errorf("failed to generate default site assets; %w", err)
 	}
 
 	builder.SiteMetadata = getDefaultSiteMetadata()

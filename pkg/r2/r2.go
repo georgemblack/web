@@ -3,11 +3,12 @@ package r2
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/georgemblack/web/pkg/conf"
-	"github.com/georgemblack/web/pkg/types"
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/georgemblack/web/pkg/conf"
+	"github.com/georgemblack/web/pkg/types"
 )
 
 type ListResponse struct {
@@ -40,6 +41,9 @@ func (r2 *Service) Put(key string, object io.Reader) error {
 	resp, err := client.Do(req)
 	if err != nil {
 		return types.WrapErr(err, "http request failed")
+	}
+	if resp.StatusCode != http.StatusCreated {
+		return fmt.Errorf("unexpected status code: %s", resp.Status)
 	}
 	resp.Body.Close()
 

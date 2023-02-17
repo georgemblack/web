@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -13,32 +12,33 @@ import (
 	"github.com/georgemblack/web/pkg/types"
 )
 
-type IndexBuilder struct{}
-
-func buildIndexPage(builder types.BuildData) error {
-	log.Println("Executing template: index.html.template")
+func BuildIndexPage(data types.BuildData) ([]types.SiteFile, error) {
+	log.Println("building index page")
 
 	tmpl, err := getStandardTemplateWith("site/index.html.template")
 	if err != nil {
-		return fmt.Errorf("Could not get standard template; %w", err)
+		return nil, fmt.Errorf("failed to get standard template; %w", err)
 	}
 
-	file, err := os.Create(DistDirectory + "/index.html")
-	if err != nil {
-		return fmt.Errorf("Failed to create file; %w", err)
+	var buf bytes.Buffer
+	if err := tmpl.ExecuteTemplate(&buf, "index.html.template", data); err != nil {
+		return nil, fmt.Errorf("failed to execute template; %w", err)
 	}
-	defer file.Close()
 
-	if err := tmpl.ExecuteTemplate(file, "index.html.template", builder); err != nil {
-		return fmt.Errorf("Failed to execute template; %w", err)
-	}
-	return nil
+	return []types.SiteFile{
+		{
+			Key:  "index.html",
+			Data: buf.Bytes(),
+		},
+	}, nil
 }
 
-func buildStandardPages(builder types.BuildData) error {
+func BuildStandardPages(data types.BuildData) ([]types.SiteFile, error) {
+	var files []types.SiteFile
+
 	paths, err := matchSiteFiles(`site/[a-z]*\.html\.template`)
 	if err != nil {
-		return fmt.Errorf("Failed to match site files; %w", err)
+		return files, types.WrapErr(err, "failed to match site files")
 	}
 
 	for _, path := range paths {
@@ -51,77 +51,66 @@ func buildStandardPages(builder types.BuildData) error {
 
 		log.Println("Executing template: " + fileName)
 
-		err := os.MkdirAll(DistDirectory+"/"+pageName, 0700)
-		if err != nil {
-			return fmt.Errorf("Failed to create directory; %w", err)
-		}
-		builder.Data["PageTitle"] = strings.Title(pageName)
+		data.Data["PageTitle"] = strings.Title(pageName)
 
 		tmpl, err := getStandardTemplateWith(path)
 		if err != nil {
-			return fmt.Errorf("Could not get standard template; %w", err)
+			return files, types.WrapErr(err, "failed to get standard template")
 		}
 
-		output, err := os.Create(DistDirectory + "/" + pageName + "/index.html")
-		if err != nil {
-			return fmt.Errorf("Failed to create file; %w", err)
+		var buf bytes.Buffer
+		if err := tmpl.ExecuteTemplate(&buf, fileName, data); err != nil {
+			return files, types.WrapErr(err, "failed to execute template")
 		}
-		defer output.Close()
 
-		if err := tmpl.ExecuteTemplate(output, fileName, builder); err != nil {
-			return fmt.Errorf("Failed to execute template; %w", err)
-		}
+		files = append(files, types.SiteFile{
+			Key:  pageName + "/index.html",
+			Data: buf.Bytes(),
+		})
 	}
 
-	return nil
+	return files, nil
 }
 
-func buildPostPages(builder types.BuildData) error {
-	for _, post := range builder.SiteContent.Posts.Posts {
-		path := getPostPath(post)
-		err := os.MkdirAll(DistDirectory+"/"+path, 0700)
-		if err != nil {
-			return fmt.Errorf("Failed to create directory; %w", err)
-		}
+func BuildPostPages(data types.BuildData) ([]types.SiteFile, error) {
+	var files []types.SiteFile
 
-		builder.Data["PageTitle"] = post.Metadata.Title
-		builder.Data["Post"] = post
+	for _, post := range data.SiteContent.Posts.Posts {
+		path := getPostPath(post)
+
+		data.Data["PageTitle"] = post.Metadata.Title
+		data.Data["Post"] = post
 
 		log.Println("Executing template for post: " + post.Metadata.Title)
 
 		tmpl, err := getStandardTemplate()
 		if err != nil {
-			return fmt.Errorf("Could not get standard template; %w", err)
+			return files, types.WrapErr(err, "failed to get standard template")
 		}
 
-		file, err := os.Create(DistDirectory + "/" + path + "/" + "index.html")
-		if err != nil {
-			return fmt.Errorf("Failed to create file; %w", err)
+		var buf bytes.Buffer
+		if err := tmpl.ExecuteTemplate(&buf, "post", data); err != nil {
+			return files, types.WrapErr(err, "failed to execute template")
 		}
-		defer file.Close()
 
-		if err := tmpl.ExecuteTemplate(file, "post", builder); err != nil {
-			return fmt.Errorf("Failed to execute template; %w", err)
-		}
+		files = append(files, types.SiteFile{
+			Key:  path + "/index.html",
+			Data: buf.Bytes(),
+		})
 	}
 
-	return nil
+	return files, nil
 }
 
-func buildJSONFeed(builder types.BuildData) error {
-	err := os.MkdirAll(DistDirectory+"/feeds", 0700)
-	if err != nil {
-		return fmt.Errorf("Failed to create directory; %w", err)
-	}
-
-	posts := builder.SiteContent.Posts.Posts
-	likes := builder.SiteContent.Likes.Likes
-	meta := builder.SiteMetadata
+func BuildJSONFeed(data types.BuildData) ([]types.SiteFile, error) {
+	posts := data.SiteContent.Posts.Posts
+	likes := data.SiteContent.Likes.Likes
+	meta := data.SiteMetadata
 
 	author := types.JSONFeedAuthor{}
 	author.Name = "George Black"
-	author.URL = builder.SiteMetadata.URL
-	author.Avatar = builder.SiteMetadata.URL + "/icons/json-feed-avatar.jpg"
+	author.URL = data.SiteMetadata.URL
+	author.Avatar = data.SiteMetadata.URL + "/icons/json-feed-avatar.jpg"
 	authors := []types.JSONFeedAuthor{author}
 
 	postItems := make([]types.JSONFeedItem, len(posts))
@@ -155,55 +144,51 @@ func buildJSONFeed(builder types.BuildData) error {
 
 	feed := types.JSONFeed{}
 	feed.Version = "https://jsonfeed.org/version/1.1"
-	feed.Title = builder.SiteMetadata.Name
-	feed.HomePageURL = builder.SiteMetadata.URL
-	feed.FeedURL = builder.SiteMetadata.URL + "/feeds/main.json"
-	feed.Description = builder.SiteMetadata.Description
+	feed.Title = data.SiteMetadata.Name
+	feed.HomePageURL = data.SiteMetadata.URL
+	feed.FeedURL = data.SiteMetadata.URL + "/feeds/main.json"
+	feed.Description = data.SiteMetadata.Description
 	feed.UserComment = "Hello friend! You've found my JSON feed! You can use this to follow my blog in a feed reader, such as NetNewsWire."
-	feed.Icon = builder.SiteMetadata.URL + "/icons/json-feed-icon.png"
-	feed.Favicon = builder.SiteMetadata.URL + "/icons/json-feed-icon.png"
+	feed.Icon = data.SiteMetadata.URL + "/icons/json-feed-icon.png"
+	feed.Favicon = data.SiteMetadata.URL + "/icons/json-feed-icon.png"
 	feed.Authors = authors
 	feed.Language = "en-US"
 	feed.Items = feedItems
-
-	out, err := os.Create(DistDirectory + "/feeds/main.json")
-	if err != nil {
-		return fmt.Errorf("Failed to create directory; %w", err)
-	}
-	defer out.Close()
 
 	buf := new(bytes.Buffer)
 	enc := json.NewEncoder(buf)
 	enc.SetEscapeHTML(false)
 	enc.SetIndent("", "  ")
-	err = enc.Encode(feed)
+	err := enc.Encode(feed)
 	if err != nil {
-		return fmt.Errorf("Could not encode feed data to JSON; %w", err)
-	}
-	_, err = out.WriteString(buf.String())
-	if err != nil {
-		return fmt.Errorf("Could not generate JSON feed as string; %w", err)
+		return nil, types.WrapErr(err, "failed to encode JSON feed data")
 	}
 
-	return nil
+	return []types.SiteFile{
+		{
+			Key:  "feeds/main.json",
+			Data: buf.Bytes(),
+		},
+	}, nil
 }
 
-func buildSitemap(builder types.BuildData) error {
+func BuildSitemap(data types.BuildData) ([]types.SiteFile, error) {
 	log.Println("Executing template: sitemap.xml.template")
 
 	tmpl, err := getStandardTemplateWith("site/sitemap.xml.template")
 	if err != nil {
-		return fmt.Errorf("Could not get standard template; %w", err)
+		return nil, types.WrapErr(err, "failed to get standard template")
 	}
 
-	sitemapFile, err := os.Create(DistDirectory + "/sitemap.xml")
-	if err != nil {
-		return fmt.Errorf("Failed to create file; %w", err)
+	var buf bytes.Buffer
+	if err := tmpl.ExecuteTemplate(&buf, "sitemap.xml.template", data); err != nil {
+		return nil, types.WrapErr(err, "failed to execute template")
 	}
-	defer sitemapFile.Close()
 
-	if err := tmpl.ExecuteTemplate(sitemapFile, "sitemap.xml.template", builder); err != nil {
-		return fmt.Errorf("Failed to execute template; %w", err)
-	}
-	return nil
+	return []types.SiteFile{
+		{
+			Key:  "sitemap.xml",
+			Data: buf.Bytes(),
+		},
+	}, nil
 }
