@@ -8,10 +8,11 @@ Web Builder is a container that performs static site builds for [george.black](h
 
 ## Running Locally
 
-For running locally, you will need credentials with access to Google Cloud Storage:
+For running locally, you will need credentials with access to Google Cloud Storage. You may also need to set the environment:
 
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
+export ENVIRONMENT=staging
 ```
 
 To start the server locally, run:
@@ -28,7 +29,7 @@ go run ./cmd/build/main.go
 
 ## Environment
 
-The following environment configurations are used (with dummy defaults): 
+The following environment configurations are used (with dummy defaults):
 
 ```
 PORT
