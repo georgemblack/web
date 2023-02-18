@@ -5,7 +5,6 @@ import (
 	"embed"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 
 	"github.com/georgemblack/web/pkg/conf"
@@ -28,23 +27,15 @@ var siteFiles embed.FS
 func Build() (string, error) {
 	buildID := getBuildID()
 
-	log.Println("Loading configuration...")
+	log.Println("loading configuration...")
 
 	config, err := conf.LoadConfig()
 	if err != nil {
 		return "", fmt.Errorf("failed to load configuration; %w", err)
 	}
 
-	log.Println("Starting build: " + buildID)
-
-	log.Println("Cleaning build directory...")
-	os.RemoveAll(DistDirectory)
-	err = os.MkdirAll(DistDirectory, 0700)
-	if err != nil {
-		return "", fmt.Errorf("failed to create dist directory; %w", err)
-	}
-
-	log.Println("Collecting web data...")
+	log.Println("starting build: " + buildID)
+	log.Println("collecting web data...")
 
 	posts, err := api.GetPublishedPosts()
 	if err != nil {
@@ -59,7 +50,7 @@ func Build() (string, error) {
 
 	siteContent = types.SiteContent{Posts: posts, Likes: likes}
 
-	log.Println("Executing build steps...")
+	log.Println("executing build steps...")
 
 	var files []types.SiteFile
 
@@ -125,21 +116,21 @@ func Build() (string, error) {
 	}
 	files = append(files, toAdd...)
 
-	log.Println("Writing files to destination...")
+	log.Println("writing files to destination...")
 
 	r2 := repo.R2Service{
 		Config: config,
 	}
 
 	for _, file := range files {
-		log.Println("writing file: " + file.Key)
+		log.Println("writing file to r2: " + file.Key)
 		err := r2.Write(file.Key, bytes.NewReader(file.Data))
 		if err != nil {
 			return "", types.WrapErr(err, "failed to write file")
 		}
 	}
 
-	log.Println("Completed build: " + buildID)
+	log.Println("completed build: " + buildID)
 	return buildID, nil
 }
 

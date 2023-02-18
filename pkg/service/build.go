@@ -37,6 +37,8 @@ func buildIndexPage(data types.BuildData) ([]types.SiteFile, error) {
 }
 
 func buildStandardPages(data types.BuildData) ([]types.SiteFile, error) {
+	log.Println("building standard pages")
+
 	var files []types.SiteFile
 
 	paths, err := matchSiteFiles(`site/[a-z]*\.html\.template`)
@@ -76,6 +78,8 @@ func buildStandardPages(data types.BuildData) ([]types.SiteFile, error) {
 }
 
 func buildPostPages(data types.BuildData) ([]types.SiteFile, error) {
+	log.Println("building post pages")
+
 	var files []types.SiteFile
 
 	for _, post := range data.SiteContent.Posts.Posts {
@@ -106,6 +110,8 @@ func buildPostPages(data types.BuildData) ([]types.SiteFile, error) {
 }
 
 func buildJSONFeed(data types.BuildData) ([]types.SiteFile, error) {
+	log.Println("building json feed")
+
 	posts := data.SiteContent.Posts.Posts
 	likes := data.SiteContent.Likes.Likes
 	meta := data.SiteMetadata
@@ -176,7 +182,7 @@ func buildJSONFeed(data types.BuildData) ([]types.SiteFile, error) {
 }
 
 func buildSitemap(data types.BuildData) ([]types.SiteFile, error) {
-	log.Println("Executing template: sitemap.xml.template")
+	log.Println("building sitemap")
 
 	tmpl, err := getStandardTemplateWith("site/sitemap.xml.template")
 	if err != nil {
@@ -197,6 +203,8 @@ func buildSitemap(data types.BuildData) ([]types.SiteFile, error) {
 }
 
 func buildStaticFiles(siteFiles embed.FS) ([]types.SiteFile, error) {
+	log.Println("building static files")
+
 	var files []types.SiteFile
 
 	paths, err := staticSiteFiles()
@@ -219,6 +227,8 @@ func buildStaticFiles(siteFiles embed.FS) ([]types.SiteFile, error) {
 }
 
 func buildRemoteAssets(config conf.Config) ([]types.SiteFile, error) {
+	log.Println("building remote assets")
+
 	var files []types.SiteFile
 
 	as, err := repo.NewAssetService(config)

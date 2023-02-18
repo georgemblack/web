@@ -42,7 +42,7 @@ func getAPIAuthToken() (string, error) {
 
 	// does token already exist?
 	if authToken != "" && isValidAuthToken(authToken) {
-		log.Println("Using existing auth token")
+		log.Println("using existing auth token")
 		return authToken, nil
 	}
 
