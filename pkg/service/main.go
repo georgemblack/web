@@ -7,10 +7,9 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"strings"
 
 	"github.com/georgemblack/web/pkg/conf"
-	"github.com/georgemblack/web/pkg/r2"
+	"github.com/georgemblack/web/pkg/repo"
 
 	"github.com/georgemblack/web/pkg/api"
 	"github.com/georgemblack/web/pkg/types"
@@ -68,7 +67,7 @@ func Build() (string, error) {
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create build data")
 	}
-	toAdd, err := BuildIndexPage(buildData)
+	toAdd, err := buildIndexPage(buildData)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build index page")
 	}
@@ -78,7 +77,7 @@ func Build() (string, error) {
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create build data")
 	}
-	toAdd, err = BuildStandardPages(buildData)
+	toAdd, err = buildStandardPages(buildData)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build standard pages")
 	}
@@ -88,7 +87,7 @@ func Build() (string, error) {
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create build data")
 	}
-	toAdd, err = BuildPostPages(buildData)
+	toAdd, err = buildPostPages(buildData)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build post pages")
 	}
@@ -98,7 +97,7 @@ func Build() (string, error) {
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create build data")
 	}
-	toAdd, err = BuildJSONFeed(buildData)
+	toAdd, err = buildJSONFeed(buildData)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build JSON feed")
 	}
@@ -108,33 +107,27 @@ func Build() (string, error) {
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create build data")
 	}
-	toAdd, err = BuildSitemap(buildData)
+	toAdd, err = buildSitemap(buildData)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build sitemap")
 	}
 	files = append(files, toAdd...)
 
-	log.Println("Aggregating static files to destination...")
-
-	paths, err := staticSiteFiles()
+	toAdd, err = buildStaticFiles(siteFiles)
 	if err != nil {
-		return "", types.WrapErr(err, "failed while generating static files")
+		return "", types.WrapErr(err, "failed to build static files")
 	}
-	for _, path := range paths {
-		srcData, err := siteFiles.ReadFile(path)
-		if err != nil {
-			return "", types.WrapErr(err, fmt.Sprintf("failed to read file %v", path))
-		}
+	files = append(files, toAdd...)
 
-		files = append(files, types.SiteFile{
-			Key:  strings.TrimPrefix(path, "site/"),
-			Data: srcData,
-		})
+	toAdd, err = buildRemoteAssets(config)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to build remote assets")
 	}
+	files = append(files, toAdd...)
 
 	log.Println("Writing files to destination...")
 
-	r2 := r2.Service{
+	r2 := repo.R2Service{
 		Config: config,
 	}
 

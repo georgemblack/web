@@ -2,6 +2,7 @@ package service
 
 import (
 	"bytes"
+	"embed"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -9,10 +10,12 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/georgemblack/web/pkg/conf"
+	"github.com/georgemblack/web/pkg/repo"
 	"github.com/georgemblack/web/pkg/types"
 )
 
-func BuildIndexPage(data types.BuildData) ([]types.SiteFile, error) {
+func buildIndexPage(data types.BuildData) ([]types.SiteFile, error) {
 	log.Println("building index page")
 
 	tmpl, err := getStandardTemplateWith("site/index.html.template")
@@ -33,7 +36,7 @@ func BuildIndexPage(data types.BuildData) ([]types.SiteFile, error) {
 	}, nil
 }
 
-func BuildStandardPages(data types.BuildData) ([]types.SiteFile, error) {
+func buildStandardPages(data types.BuildData) ([]types.SiteFile, error) {
 	var files []types.SiteFile
 
 	paths, err := matchSiteFiles(`site/[a-z]*\.html\.template`)
@@ -72,7 +75,7 @@ func BuildStandardPages(data types.BuildData) ([]types.SiteFile, error) {
 	return files, nil
 }
 
-func BuildPostPages(data types.BuildData) ([]types.SiteFile, error) {
+func buildPostPages(data types.BuildData) ([]types.SiteFile, error) {
 	var files []types.SiteFile
 
 	for _, post := range data.SiteContent.Posts.Posts {
@@ -102,7 +105,7 @@ func BuildPostPages(data types.BuildData) ([]types.SiteFile, error) {
 	return files, nil
 }
 
-func BuildJSONFeed(data types.BuildData) ([]types.SiteFile, error) {
+func buildJSONFeed(data types.BuildData) ([]types.SiteFile, error) {
 	posts := data.SiteContent.Posts.Posts
 	likes := data.SiteContent.Likes.Likes
 	meta := data.SiteMetadata
@@ -172,7 +175,7 @@ func BuildJSONFeed(data types.BuildData) ([]types.SiteFile, error) {
 	}, nil
 }
 
-func BuildSitemap(data types.BuildData) ([]types.SiteFile, error) {
+func buildSitemap(data types.BuildData) ([]types.SiteFile, error) {
 	log.Println("Executing template: sitemap.xml.template")
 
 	tmpl, err := getStandardTemplateWith("site/sitemap.xml.template")
@@ -191,4 +194,54 @@ func BuildSitemap(data types.BuildData) ([]types.SiteFile, error) {
 			Data: buf.Bytes(),
 		},
 	}, nil
+}
+
+func buildStaticFiles(siteFiles embed.FS) ([]types.SiteFile, error) {
+	var files []types.SiteFile
+
+	paths, err := staticSiteFiles()
+	if err != nil {
+		return nil, types.WrapErr(err, "failed while generating static files")
+	}
+	for _, path := range paths {
+		srcData, err := siteFiles.ReadFile(path)
+		if err != nil {
+			return nil, types.WrapErr(err, fmt.Sprintf("failed to read file %v", path))
+		}
+
+		files = append(files, types.SiteFile{
+			Key:  strings.TrimPrefix(path, "site/"),
+			Data: srcData,
+		})
+	}
+
+	return files, nil
+}
+
+func buildRemoteAssets(config conf.Config) ([]types.SiteFile, error) {
+	var files []types.SiteFile
+
+	as, err := repo.NewAssetService(config)
+	if err != nil {
+		return nil, types.WrapErr(err, "failed to create asset service")
+	}
+
+	keys, err := as.List()
+	if err != nil {
+		return nil, types.WrapErr(err, "failed to list assets")
+	}
+
+	for _, key := range keys {
+		obj, err := as.Get(key)
+		if err != nil {
+			return nil, types.WrapErr(err, "failed to get asset")
+		}
+
+		files = append(files, types.SiteFile{
+			Key:  fmt.Sprintf("assets/%s", key),
+			Data: obj,
+		})
+	}
+
+	return files, nil
 }
