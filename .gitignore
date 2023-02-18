@@ -1,5 +1,4 @@
 main
-dist
 node_modules
 google-application-credentials.json
 .idea

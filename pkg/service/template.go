@@ -3,6 +3,8 @@ package service
 import (
 	"fmt"
 	"text/template"
+
+	"github.com/georgemblack/web/pkg/types"
 )
 
 var standardTemplate *template.Template
@@ -16,12 +18,12 @@ func getStandardTemplate() (*template.Template, error) {
 
 	filePaths, err := matchSiteFiles(`site\/(_layouts|_partials)/[a-z]*\.html\.template`)
 	if err != nil {
-		return nil, fmt.Errorf("Could not match site files; %w", err)
+		return nil, types.WrapErr(err, "failed to match site files")
 	}
 	for _, path := range filePaths {
 		_, err = tmpl.ParseFS(siteFiles, path)
 		if err != nil {
-			return nil, fmt.Errorf("Failed to parse template %v; %w", path, err)
+			return nil, types.WrapErr(err, fmt.Sprintf("failed to parse template %v", path))
 		}
 	}
 
@@ -32,7 +34,7 @@ func getStandardTemplate() (*template.Template, error) {
 func getStandardTemplateWith(tmplPath string) (*template.Template, error) {
 	tmpl, err := getStandardTemplate()
 	if err != nil {
-		return nil, fmt.Errorf("Could not get standard template; %w", err)
+		return nil, types.WrapErr(err, "failed to get standard template")
 	}
 	return tmpl.ParseFS(siteFiles, tmplPath)
 }

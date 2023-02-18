@@ -10,12 +10,7 @@ import (
 	"github.com/georgemblack/web/pkg/conf"
 	"github.com/georgemblack/web/pkg/repo"
 
-	"github.com/georgemblack/web/pkg/api"
 	"github.com/georgemblack/web/pkg/types"
-)
-
-const (
-	DistDirectory = "dist"
 )
 
 var siteContent types.SiteContent
@@ -36,6 +31,11 @@ func Build() (string, error) {
 
 	log.Println("starting build: " + buildID)
 	log.Println("collecting web data...")
+
+	api, err := repo.NewAPIService(config)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to create api service")
+	}
 
 	posts, err := api.GetPublishedPosts()
 	if err != nil {

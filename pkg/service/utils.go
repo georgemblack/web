@@ -59,7 +59,7 @@ func matchSiteFiles(pattern string) ([]string, error) {
 		}
 		info, err := fs.Stat(siteFiles, path)
 		if err != nil {
-			return fmt.Errorf("Could not get stats info for file %v; %w", path, err)
+			return types.WrapErr(err, fmt.Sprintf("could not get stats info for file %v", path))
 		}
 		if info.IsDir() {
 			return nil
@@ -70,7 +70,7 @@ func matchSiteFiles(pattern string) ([]string, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("Failed to walk site directory; %w", err)
+		return nil, types.WrapErr(err, "failed to walk site directory")
 	}
 
 	return matches, nil
@@ -85,7 +85,7 @@ func staticSiteFiles() ([]string, error) {
 		}
 		info, err := fs.Stat(siteFiles, path)
 		if err != nil {
-			return fmt.Errorf("Could not get stats info for file %v; %w", path, err)
+			return types.WrapErr(err, fmt.Sprintf("could not get stats info for file %v", path))
 		}
 		if info.IsDir() {
 			return nil
@@ -100,7 +100,7 @@ func staticSiteFiles() ([]string, error) {
 		return nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("Failed to walk site directory; %w", err)
+		return nil, types.WrapErr(err, "failed to walk site directory")
 	}
 
 	return matches, nil

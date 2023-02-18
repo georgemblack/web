@@ -54,7 +54,7 @@ func buildStandardPages(data types.BuildData) ([]types.SiteFile, error) {
 		fileName := filepath.Base(path)
 		pageName := strings.ReplaceAll(fileName, ".html.template", "")
 
-		log.Println("Executing template: " + fileName)
+		log.Println("executing template: " + fileName)
 
 		data.Data["PageTitle"] = strings.Title(pageName)
 
@@ -88,7 +88,7 @@ func buildPostPages(data types.BuildData) ([]types.SiteFile, error) {
 		data.Data["PageTitle"] = post.Metadata.Title
 		data.Data["Post"] = post
 
-		log.Println("Executing template for post: " + post.Metadata.Title)
+		log.Println("executing template for post: " + post.Metadata.Title)
 
 		tmpl, err := getStandardTemplate()
 		if err != nil {
