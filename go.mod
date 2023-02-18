@@ -1,10 +1,9 @@
 module github.com/georgemblack/web
 
-go 1.18
+go 1.20
 
 require (
 	cloud.google.com/go/storage v1.29.0
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/tdewolff/minify/v2 v2.9.22
 	google.golang.org/api v0.106.0
 )
