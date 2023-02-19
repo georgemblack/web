@@ -1,5 +1,5 @@
 {
-  "assetsBucket": "web-assets-staging.george.black",
+  "assetsBucket": "web-staging.george.black",
   "r2Endpoint": "https://web-bucket-staging.george.black",
   "apiEndpoint": "http://localhost:9000",
   "apiUsername": "test",
