@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/georgemblack/web/pkg/service"
+	"github.com/georgemblack/web/pkg/web"
 )
 
 // Build is the return payload
@@ -18,7 +18,7 @@ func main() {
 	port := getEnv("PORT", "9002")
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		buildID, err := service.Build()
+		buildID, err := web.Build()
 		if err != nil {
 			log.Println(err)
 			http.Error(w, "Build failed", http.StatusInternalServerError)

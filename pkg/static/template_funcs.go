@@ -1,4 +1,4 @@
-package service
+package static
 
 import (
 	"html"
@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/georgemblack/web/pkg/types"
+	"github.com/georgemblack/web/pkg/util"
 )
 
 // CurrentISOTimestamp is a template function
@@ -27,7 +28,7 @@ func HasExcerpt(post types.Post) bool {
 
 // SecondsToISOTimestamp is a template function
 func SecondsToISOTimestamp(seconds int64) string {
-	return secondsToISOTimestamp(seconds)
+	return util.SecondsToISOTimestamp(seconds)
 }
 
 // SecondsToFormattedDate is a template function
@@ -37,7 +38,7 @@ func SecondsToFormattedDate(seconds int64) string {
 
 // GetPostPath is a template function
 func GetPostPath(post types.Post) string {
-	return getPostPath(post)
+	return util.GetPostPath(post)
 }
 
 // GetPostExcerpt is a template function
@@ -47,7 +48,7 @@ func GetPostExcerpt(content string) string {
 
 // GetLikePath is a template function
 func GetLikePath(like types.Like) string {
-	return getLikePath(like)
+	return util.GetLikePath(like)
 }
 
 // GetDomainFromURL is a template function

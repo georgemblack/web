@@ -1,4 +1,4 @@
-package service
+package static
 
 import (
 	"fmt"
@@ -9,14 +9,14 @@ import (
 
 var standardTemplate *template.Template
 
-func getStandardTemplate() (*template.Template, error) {
+func GetStandardTemplate() (*template.Template, error) {
 	if standardTemplate != nil {
 		return standardTemplate.Clone()
 	}
 
 	tmpl := template.New("").Funcs(templateFuncMap())
 
-	filePaths, err := matchSiteFiles(`site\/(_layouts|_partials)/[a-z]*\.html\.template`)
+	filePaths, err := MatchSiteFiles(`site\/(_layouts|_partials)/[a-z]*\.html\.template`)
 	if err != nil {
 		return nil, types.WrapErr(err, "failed to match site files")
 	}
@@ -31,8 +31,8 @@ func getStandardTemplate() (*template.Template, error) {
 	return tmpl.Clone()
 }
 
-func getStandardTemplateWith(tmplPath string) (*template.Template, error) {
-	tmpl, err := getStandardTemplate()
+func GetStandardTemplateWith(tmplPath string) (*template.Template, error) {
+	tmpl, err := GetStandardTemplate()
 	if err != nil {
 		return nil, types.WrapErr(err, "failed to get standard template")
 	}

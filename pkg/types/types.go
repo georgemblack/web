@@ -21,6 +21,12 @@ type SiteMetadata struct {
 	ExcerptSeparator string
 }
 
+// SiteFile represents any file on the site, i.e. HTML files, JSON feed, images, assets, etc.
+type SiteFile interface {
+	GetKey() string
+	GetContents() ([]byte, error)
+}
+
 // SiteAssets represents site assets
 type SiteAssets struct {
 	PrimaryStylesheet string

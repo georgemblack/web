@@ -1,55 +1,25 @@
-package service
+package static
 
 import (
+	"embed"
 	"fmt"
 	"io/fs"
-	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
-	"time"
 
 	"github.com/georgemblack/web/pkg/types"
+	"github.com/tdewolff/minify/v2"
+	"github.com/tdewolff/minify/v2/css"
 )
 
-func getBuildID() string {
-	return time.Now().UTC().Format("2006-01-02-15-04-05")
+//go:embed site/*
+var siteFiles embed.FS
+
+func SiteFiles() embed.FS {
+	return siteFiles
 }
 
-func getPostPath(post types.Post) string {
-	year := getYearStrFromSeconds(post.Published.Seconds)
-	return year + "/" + post.Metadata.Slug
-}
-
-func getLikePath(like types.Like) string {
-	slug := getSlugFromTitle(like.Title)
-	year := getYearStrFromSeconds(like.Timestamp.Seconds)
-	return year + "/" + slug
-}
-
-func getSlugFromTitle(title string) string {
-	happyCharsRegex := regexp.MustCompile("[^a-z0-9 ]")
-	slug := strings.ToLower(title)
-	slug = happyCharsRegex.ReplaceAllString(slug, "")
-	slug = strings.ReplaceAll(slug, " ", "-")
-	return slug
-}
-
-func getYearStrFromSeconds(seconds int64) string {
-	timestamp := time.Unix(seconds, 0)
-	return strconv.Itoa(timestamp.Year())
-}
-
-func secondsToISOTimestamp(seconds int64) string {
-	return time.Unix(seconds, 0).Format(time.RFC3339)
-}
-
-func isIndex(path string) bool {
-	fileName := filepath.Base(path)
-	return strings.HasPrefix(fileName, "index.html")
-}
-
-func matchSiteFiles(pattern string) ([]string, error) {
+func MatchSiteFiles(pattern string) ([]string, error) {
 	var matches []string
 	re := regexp.MustCompile(pattern)
 
@@ -76,7 +46,7 @@ func matchSiteFiles(pattern string) ([]string, error) {
 	return matches, nil
 }
 
-func staticSiteFiles() ([]string, error) {
+func StaticSiteFiles() ([]string, error) {
 	var matches []string
 
 	err := fs.WalkDir(siteFiles, "site", func(path string, d fs.DirEntry, err error) error {
@@ -106,7 +76,21 @@ func staticSiteFiles() ([]string, error) {
 	return matches, nil
 }
 
-func getDefaultSiteMetadata() types.SiteMetadata {
+func GetDefaultSiteAssets() (types.SiteAssets, error) {
+	assets := types.SiteAssets{}
+	stylesheet, err := siteFiles.ReadFile("site/_assets/main.css")
+	if err != nil {
+		return assets, types.WrapErr(err, "failed to read primary stylesheet")
+	}
+	minifiedStylesheet, err := minifyStylesheet(string(stylesheet))
+	if err != nil {
+		return assets, types.WrapErr(err, "failed to minify primary stylesheet")
+	}
+	assets.PrimaryStylesheet = string(minifiedStylesheet)
+	return assets, nil
+}
+
+func GetDefaultSiteMetadata() types.SiteMetadata {
 	metadata := types.SiteMetadata{}
 	metadata.Name = "George Black"
 	metadata.URL = "https://george.black"
@@ -118,4 +102,14 @@ func getDefaultSiteMetadata() types.SiteMetadata {
 	metadata.Timezone = "America/Chicago"
 	metadata.ExcerptSeparator = "<!--more-->"
 	return metadata
+}
+
+func minifyStylesheet(stylesheet string) (string, error) {
+	minifier := minify.New()
+	minifier.AddFunc("text/css", css.Minify)
+	minified, err := minifier.String("text/css", stylesheet)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to minify stylesheet")
+	}
+	return minified, nil
 }

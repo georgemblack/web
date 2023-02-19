@@ -1,4 +1,4 @@
-package service
+package build
 
 import (
 	"bytes"
@@ -12,13 +12,45 @@ import (
 
 	"github.com/georgemblack/web/pkg/conf"
 	"github.com/georgemblack/web/pkg/repo"
+	"github.com/georgemblack/web/pkg/static"
 	"github.com/georgemblack/web/pkg/types"
+	"github.com/georgemblack/web/pkg/util"
 )
 
-func buildIndexPage(data types.BuildData) ([]types.SiteFile, error) {
+// LocalFile represents a site file that is stored locally (within the struct)
+type LocalFile struct {
+	Key  string
+	Data []byte
+}
+
+func (file LocalFile) GetKey() string {
+	return file.Key
+}
+
+func (file LocalFile) GetContents() ([]byte, error) {
+	return file.Data, nil
+}
+
+// GCSFile represents a site file that is stored in Google Cloud Storage
+type GCSFile struct {
+	Key          string
+	GCSKey       string
+	AssetService *repo.AssetService
+}
+
+func (file GCSFile) GetKey() string {
+	return file.Key
+}
+
+func (file GCSFile) GetContents() ([]byte, error) {
+	return file.AssetService.Get(file.GCSKey)
+}
+
+// IndexPage builds the index page
+func IndexPage(data types.BuildData) (types.SiteFile, error) {
 	log.Println("building index page")
 
-	tmpl, err := getStandardTemplateWith("site/index.html.template")
+	tmpl, err := static.GetStandardTemplateWith("site/index.html.template")
 	if err != nil {
 		return nil, fmt.Errorf("failed to get standard template; %w", err)
 	}
@@ -28,26 +60,25 @@ func buildIndexPage(data types.BuildData) ([]types.SiteFile, error) {
 		return nil, fmt.Errorf("failed to execute template; %w", err)
 	}
 
-	return []types.SiteFile{
-		{
-			Key:  "index.html",
-			Data: buf.Bytes(),
-		},
+	return LocalFile{
+		Key:  "index.html",
+		Data: buf.Bytes(),
 	}, nil
 }
 
-func buildStandardPages(data types.BuildData) ([]types.SiteFile, error) {
+// StandardPages builds top-level pages that are not posts (i.e. home, about, etc)
+func StandardPages(data types.BuildData) ([]types.SiteFile, error) {
 	log.Println("building standard pages")
 
 	var files []types.SiteFile
 
-	paths, err := matchSiteFiles(`site/[a-z]*\.html\.template`)
+	paths, err := static.MatchSiteFiles(`site/[a-z]*\.html\.template`)
 	if err != nil {
 		return files, types.WrapErr(err, "failed to match site files")
 	}
 
 	for _, path := range paths {
-		if isIndex(path) {
+		if util.IsIndex(path) {
 			continue
 		}
 
@@ -58,7 +89,7 @@ func buildStandardPages(data types.BuildData) ([]types.SiteFile, error) {
 
 		data.Data["PageTitle"] = strings.Title(pageName)
 
-		tmpl, err := getStandardTemplateWith(path)
+		tmpl, err := static.GetStandardTemplateWith(path)
 		if err != nil {
 			return files, types.WrapErr(err, "failed to get standard template")
 		}
@@ -68,7 +99,7 @@ func buildStandardPages(data types.BuildData) ([]types.SiteFile, error) {
 			return files, types.WrapErr(err, "failed to execute template")
 		}
 
-		files = append(files, types.SiteFile{
+		files = append(files, LocalFile{
 			Key:  pageName + "/index.html",
 			Data: buf.Bytes(),
 		})
@@ -77,20 +108,21 @@ func buildStandardPages(data types.BuildData) ([]types.SiteFile, error) {
 	return files, nil
 }
 
-func buildPostPages(data types.BuildData) ([]types.SiteFile, error) {
+// PostPages builds a page for each post
+func PostPages(data types.BuildData) ([]types.SiteFile, error) {
 	log.Println("building post pages")
 
 	var files []types.SiteFile
 
 	for _, post := range data.SiteContent.Posts.Posts {
-		path := getPostPath(post)
+		path := util.GetPostPath(post)
 
 		data.Data["PageTitle"] = post.Metadata.Title
 		data.Data["Post"] = post
 
 		log.Println("executing template for post: " + post.Metadata.Title)
 
-		tmpl, err := getStandardTemplate()
+		tmpl, err := static.GetStandardTemplate()
 		if err != nil {
 			return files, types.WrapErr(err, "failed to get standard template")
 		}
@@ -100,7 +132,7 @@ func buildPostPages(data types.BuildData) ([]types.SiteFile, error) {
 			return files, types.WrapErr(err, "failed to execute template")
 		}
 
-		files = append(files, types.SiteFile{
+		files = append(files, LocalFile{
 			Key:  path + "/index.html",
 			Data: buf.Bytes(),
 		})
@@ -109,7 +141,8 @@ func buildPostPages(data types.BuildData) ([]types.SiteFile, error) {
 	return files, nil
 }
 
-func buildJSONFeed(data types.BuildData) ([]types.SiteFile, error) {
+// JSONFeed builds a JSON feed of all posts and likes
+func JSONFeed(data types.BuildData) (types.SiteFile, error) {
 	log.Println("building json feed")
 
 	posts := data.SiteContent.Posts.Posts
@@ -125,24 +158,24 @@ func buildJSONFeed(data types.BuildData) ([]types.SiteFile, error) {
 	postItems := make([]types.JSONFeedItem, len(posts))
 	for i, post := range posts {
 		item := types.JSONFeedItem{}
-		item.ID = meta.URL + "/" + getPostPath(post)
-		item.URL = meta.URL + "/" + getPostPath(post)
+		item.ID = meta.URL + "/" + util.GetPostPath(post)
+		item.URL = meta.URL + "/" + util.GetPostPath(post)
 		item.Title = post.Metadata.Title
 		item.ContentHTML = post.ContentHTML
-		item.DatePublished = secondsToISOTimestamp(post.Published.Seconds)
-		item.DateModified = secondsToISOTimestamp(post.Published.Seconds)
+		item.DatePublished = util.SecondsToISOTimestamp(post.Published.Seconds)
+		item.DateModified = util.SecondsToISOTimestamp(post.Published.Seconds)
 		postItems[i] = item
 	}
 
 	likeItems := make([]types.JSONFeedItem, len(likes))
 	for i, like := range likes {
 		item := types.JSONFeedItem{}
-		item.ID = meta.URL + "/" + getLikePath(like)
+		item.ID = meta.URL + "/" + util.GetLikePath(like)
 		item.ExternalURL = like.URL
 		item.Title = like.Title
 		item.ContentHTML = "<p>Like of: <a href=\"" + like.URL + "\">" + like.Title + "</a></p>"
-		item.DatePublished = secondsToISOTimestamp(like.Timestamp.Seconds)
-		item.DateModified = secondsToISOTimestamp(like.Timestamp.Seconds)
+		item.DatePublished = util.SecondsToISOTimestamp(like.Timestamp.Seconds)
+		item.DateModified = util.SecondsToISOTimestamp(like.Timestamp.Seconds)
 		likeItems[i] = item
 	}
 
@@ -173,18 +206,17 @@ func buildJSONFeed(data types.BuildData) ([]types.SiteFile, error) {
 		return nil, types.WrapErr(err, "failed to encode JSON feed data")
 	}
 
-	return []types.SiteFile{
-		{
-			Key:  "feeds/main.json",
-			Data: buf.Bytes(),
-		},
+	return LocalFile{
+		Key:  "feeds/main.json",
+		Data: buf.Bytes(),
 	}, nil
 }
 
-func buildSitemap(data types.BuildData) ([]types.SiteFile, error) {
+// Sitemap builds a sitemap
+func Sitemap(data types.BuildData) (types.SiteFile, error) {
 	log.Println("building sitemap")
 
-	tmpl, err := getStandardTemplateWith("site/sitemap.xml.template")
+	tmpl, err := static.GetStandardTemplateWith("site/sitemap.xml.template")
 	if err != nil {
 		return nil, types.WrapErr(err, "failed to get standard template")
 	}
@@ -194,39 +226,39 @@ func buildSitemap(data types.BuildData) ([]types.SiteFile, error) {
 		return nil, types.WrapErr(err, "failed to execute template")
 	}
 
-	return []types.SiteFile{
-		{
-			Key:  "sitemap.xml",
-			Data: buf.Bytes(),
-		},
+	return LocalFile{
+		Key:  "sitemap.xml",
+		Data: buf.Bytes(),
 	}, nil
 }
 
-func buildStaticFiles(siteFiles embed.FS) ([]types.SiteFile, error) {
-	log.Println("building static files")
+// LocalAssets builds static content that doesn't need to be processed
+func LocalAssets(siteFiles embed.FS) ([]types.SiteFile, error) {
+	log.Println("building local assets")
 
 	var files []types.SiteFile
 
-	paths, err := staticSiteFiles()
+	paths, err := static.StaticSiteFiles()
 	if err != nil {
 		return nil, types.WrapErr(err, "failed while generating static files")
 	}
 	for _, path := range paths {
-		srcData, err := siteFiles.ReadFile(path)
+		data, err := siteFiles.ReadFile(path)
 		if err != nil {
 			return nil, types.WrapErr(err, fmt.Sprintf("failed to read file %v", path))
 		}
 
-		files = append(files, types.SiteFile{
+		files = append(files, LocalFile{
 			Key:  strings.TrimPrefix(path, "site/"),
-			Data: srcData,
+			Data: data,
 		})
 	}
 
 	return files, nil
 }
 
-func buildRemoteAssets(config conf.Config) ([]types.SiteFile, error) {
+// RemoteAssets builds static content that needs to be fetched from a remote source
+func RemoteAssets(config conf.Config) ([]types.SiteFile, error) {
 	log.Println("building remote assets")
 
 	var files []types.SiteFile
@@ -242,14 +274,10 @@ func buildRemoteAssets(config conf.Config) ([]types.SiteFile, error) {
 	}
 
 	for _, key := range keys {
-		obj, err := as.Get(key)
-		if err != nil {
-			return nil, types.WrapErr(err, "failed to get asset")
-		}
-
-		files = append(files, types.SiteFile{
-			Key:  fmt.Sprintf("assets/%s", key),
-			Data: obj,
+		files = append(files, GCSFile{
+			Key:          fmt.Sprintf("assets/%s", key),
+			GCSKey:       key,
+			AssetService: &as,
 		})
 	}
 

@@ -1,26 +1,23 @@
-package service
+package web
 
 import (
 	"bytes"
-	"embed"
 	"fmt"
 	"log"
 	"strconv"
+	"sync"
+	"time"
 
+	"github.com/georgemblack/web/pkg/build"
 	"github.com/georgemblack/web/pkg/conf"
 	"github.com/georgemblack/web/pkg/repo"
-
+	"github.com/georgemblack/web/pkg/static"
 	"github.com/georgemblack/web/pkg/types"
 )
 
-var siteContent types.SiteContent
-
-//go:embed site/*
-var siteFiles embed.FS
-
 // Build starts build process
 func Build() (string, error) {
-	buildID := getBuildID()
+	buildID := time.Now().UTC().Format("2006-01-02-15-04-05")
 
 	log.Println("loading configuration...")
 
@@ -48,73 +45,73 @@ func Build() (string, error) {
 	}
 	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
 
-	siteContent = types.SiteContent{Posts: posts, Likes: likes}
+	siteContent := types.SiteContent{Posts: posts, Likes: likes}
 
 	log.Println("executing build steps...")
 
 	var files []types.SiteFile
 
-	buildData, err := newBuildData()
+	buildData, err := newBuildData(siteContent)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create build data")
 	}
-	toAdd, err := buildIndexPage(buildData)
+	fileToAdd, err := build.IndexPage(buildData)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build index page")
 	}
-	files = append(files, toAdd...)
+	files = append(files, fileToAdd)
 
-	buildData, err = newBuildData()
+	buildData, err = newBuildData(siteContent)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create build data")
 	}
-	toAdd, err = buildStandardPages(buildData)
+	filesToAdd, err := build.StandardPages(buildData)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build standard pages")
 	}
-	files = append(files, toAdd...)
+	files = append(files, filesToAdd...)
 
-	buildData, err = newBuildData()
+	buildData, err = newBuildData(siteContent)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create build data")
 	}
-	toAdd, err = buildPostPages(buildData)
+	filesToAdd, err = build.PostPages(buildData)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build post pages")
 	}
-	files = append(files, toAdd...)
+	files = append(files, filesToAdd...)
 
-	buildData, err = newBuildData()
+	buildData, err = newBuildData(siteContent)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create build data")
 	}
-	toAdd, err = buildJSONFeed(buildData)
+	fileToAdd, err = build.JSONFeed(buildData)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build JSON feed")
 	}
-	files = append(files, toAdd...)
+	files = append(files, fileToAdd)
 
-	buildData, err = newBuildData()
+	buildData, err = newBuildData(siteContent)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create build data")
 	}
-	toAdd, err = buildSitemap(buildData)
+	fileToAdd, err = build.Sitemap(buildData)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build sitemap")
 	}
-	files = append(files, toAdd...)
+	files = append(files, fileToAdd)
 
-	toAdd, err = buildStaticFiles(siteFiles)
+	filesToAdd, err = build.LocalAssets(static.SiteFiles())
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build static files")
 	}
-	files = append(files, toAdd...)
+	files = append(files, filesToAdd...)
 
-	toAdd, err = buildRemoteAssets(config)
+	filesToAdd, err = build.RemoteAssets(config)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build remote assets")
 	}
-	files = append(files, toAdd...)
+	files = append(files, filesToAdd...)
 
 	log.Println("writing files to destination...")
 
@@ -122,29 +119,55 @@ func Build() (string, error) {
 		Config: config,
 	}
 
-	for _, file := range files {
-		log.Println("writing file to r2: " + file.Key)
-		err := r2.Write(file.Key, bytes.NewReader(file.Data))
-		if err != nil {
-			return "", types.WrapErr(err, "failed to write file")
-		}
+	maxParallel := 25
+	if len(files) < maxParallel {
+		maxParallel = len(files)
 	}
+	numTasks := len(files)
+
+	guard := make(chan struct{}, maxParallel)
+	var wg sync.WaitGroup
+	wg.Add(numTasks)
+
+	for _, file := range files {
+		guard <- struct{}{}
+
+		go func(file types.SiteFile) error {
+			defer wg.Done()
+
+			log.Println("writing file to r2: " + file.GetKey())
+
+			contents, err := file.GetContents()
+			if err != nil {
+				return types.WrapErr(err, "failed to get file contents")
+			}
+			err = r2.Write(file.GetKey(), bytes.NewReader(contents))
+			if err != nil {
+				return types.WrapErr(err, "failed to write file")
+			}
+
+			<-guard
+			return nil
+		}(file)
+	}
+
+	wg.Wait()
 
 	log.Println("completed build: " + buildID)
 	return buildID, nil
 }
 
-func newBuildData() (types.BuildData, error) {
+func newBuildData(content types.SiteContent) (types.BuildData, error) {
 	builder := types.BuildData{}
 
-	assets, err := getDefaultSiteAssets()
+	assets, err := static.GetDefaultSiteAssets()
 	if err != nil {
 		return builder, fmt.Errorf("failed to generate default site assets; %w", err)
 	}
 
-	builder.SiteMetadata = getDefaultSiteMetadata()
+	builder.SiteMetadata = static.GetDefaultSiteMetadata()
 	builder.SiteAssets = assets
-	builder.SiteContent = siteContent
+	builder.SiteContent = content
 	builder.Data = make(map[string]any)
 	return builder, nil
 }
