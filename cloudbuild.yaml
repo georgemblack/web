@@ -28,7 +28,7 @@ steps:
       - "--max-instances"
       - "1"
       - "--memory"
-      - "512Mi"
+      - "2G"
       - "--platform"
       - "managed"
       - "--service-account"

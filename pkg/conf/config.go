@@ -10,7 +10,10 @@ import (
 type Config struct {
 	AssetsBucket  string `json:"assetsBucket"`
 	R2Endpoint    string `json:"r2Endpoint"`
-	R2AccessToken string
+	R2AccessToken string `json:"r2AccessToken"`
+	APIEndpoint   string `json:"apiEndpoint"`
+	APIUsername   string `json:"apiUsername"`
+	APIPassword   string `json:"apiPassword"`
 }
 
 //go:embed config/*
@@ -29,7 +32,18 @@ func LoadConfig() (Config, error) {
 	}
 
 	// Load config via env vars
-	config.R2AccessToken = os.Getenv("R2_ACCESS_TOKEN")
+	if config.R2AccessToken == "" {
+		config.R2AccessToken = os.Getenv("R2_ACCESS_TOKEN")
+	}
+	if config.APIEndpoint == "" {
+		config.APIEndpoint = os.Getenv("API_ENDPOINT")
+	}
+	if config.APIUsername == "" {
+		config.APIUsername = os.Getenv("API_USERNAME")
+	}
+	if config.APIPassword == "" {
+		config.APIPassword = os.Getenv("API_PASSWORD")
+	}
 
 	return config, nil
 }

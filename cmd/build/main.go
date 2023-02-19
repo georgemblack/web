@@ -3,11 +3,11 @@ package main
 import (
 	"log"
 
-	"github.com/georgemblack/web/pkg/service"
+	"github.com/georgemblack/web/pkg/web"
 )
 
 func main() {
-	_, err := service.Build()
+	_, err := web.Build()
 	if err != nil {
 		log.Fatal(err)
 	}
