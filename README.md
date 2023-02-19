@@ -37,13 +37,13 @@ go run ./cmd/build/main.go
 
 ## Environment
 
-All configuration can be defined in `.json` files in the `config` directory. Env vars override these values. In production the following env vars are required:
+All configuration can be defined in `.json` files in the `config` directory. Env vars override these values. In production the following env vars are required (as they are sensitive):
 
 ```
 ENVIRONMENT
-API_ENDPOINT
 API_USERNAME
 API_PASSWORD
+R2_ACCESS_TOKEN
 ```
 
 ## Infrastructure
