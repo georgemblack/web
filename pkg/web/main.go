@@ -2,10 +2,10 @@ package web
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"log"
 	"strconv"
-	"sync"
 	"time"
 
 	"github.com/georgemblack/web/pkg/build"
@@ -13,6 +13,7 @@ import (
 	"github.com/georgemblack/web/pkg/repo"
 	"github.com/georgemblack/web/pkg/static"
 	"github.com/georgemblack/web/pkg/types"
+	"golang.org/x/sync/errgroup"
 )
 
 // Build starts build process
@@ -123,18 +124,14 @@ func Build() (string, error) {
 	if len(files) < maxParallel {
 		maxParallel = len(files)
 	}
-	numTasks := len(files)
 
-	guard := make(chan struct{}, maxParallel)
-	var wg sync.WaitGroup
-	wg.Add(numTasks)
+	group, _ := errgroup.WithContext(context.Background())
+	group.SetLimit(maxParallel)
 
 	for _, file := range files {
-		guard <- struct{}{}
+		file := file // https://go.dev/doc/faq#closures_and_goroutines
 
-		go func(file types.SiteFile) error {
-			defer wg.Done()
-
+		group.Go(func() error {
 			log.Println("writing file to r2: " + file.GetKey())
 
 			contents, err := file.GetContents()
@@ -146,12 +143,13 @@ func Build() (string, error) {
 				return types.WrapErr(err, "failed to write file")
 			}
 
-			<-guard
 			return nil
-		}(file)
+		})
 	}
 
-	wg.Wait()
+	if err := group.Wait(); err != nil {
+		return "", types.WrapErr(err, "failed to write file(s)")
+	}
 
 	log.Println("completed build: " + buildID)
 	return buildID, nil

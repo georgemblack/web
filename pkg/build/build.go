@@ -15,6 +15,8 @@ import (
 	"github.com/georgemblack/web/pkg/static"
 	"github.com/georgemblack/web/pkg/types"
 	"github.com/georgemblack/web/pkg/util"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // LocalFile represents a site file that is stored locally (within the struct)
@@ -87,7 +89,8 @@ func StandardPages(data types.BuildData) ([]types.SiteFile, error) {
 
 		log.Println("executing template: " + fileName)
 
-		data.Data["PageTitle"] = strings.Title(pageName)
+		caser := cases.Title(language.English)
+		data.Data["PageTitle"] = caser.String(pageName)
 
 		tmpl, err := static.GetStandardTemplateWith(path)
 		if err != nil {

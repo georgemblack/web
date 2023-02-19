@@ -16,6 +16,13 @@ export ENVIRONMENT=staging
 echo "$GOOGLE_APPLICATION_CREDENTIALS_CONTENTS" > google-application-credentials.json
 ```
 
+To start the mock API server:
+
+```
+cd mock
+yarn && yarn start
+```
+
 To start the server locally, run:
 
 ```
@@ -30,12 +37,10 @@ go run ./cmd/build/main.go
 
 ## Environment
 
-The following environment configurations are used (with dummy defaults):
+All configuration can be defined in `.json` files in the `config` directory. Env vars override these values. In production the following env vars are required:
 
 ```
-PORT
-CLOUD_STORAGE_BUCKET    # for uploading builds
-API_ENDPOINT            # for auth with Web API
+API_ENDPOINT
 API_USERNAME
 API_PASSWORD
 ```
