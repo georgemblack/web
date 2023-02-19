@@ -32,6 +32,6 @@ steps:
       - "--platform"
       - "managed"
       - "--service-account"
-      - "web-builder-service@oceanblue.iam.gserviceaccount.com"
+      - "web-builder@$PROJECT_ID.iam.gserviceaccount.com"
 images:
   - "us-east1-docker.pkg.dev/$PROJECT_ID/private/web-builder:$COMMIT_SHA"
