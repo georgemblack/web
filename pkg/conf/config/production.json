@@ -1,5 +1,6 @@
 {
   "assetsBucket": "web.george.black",
   "r2Endpoint": "https://web-bucket.george.black",
-  "apiEndpoint": "https://web-api.george.black"
+  "apiEndpoint": "https://web-api.george.black",
+  "fullBuild": false
 }

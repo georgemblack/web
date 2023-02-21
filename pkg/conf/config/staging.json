@@ -3,5 +3,6 @@
   "r2Endpoint": "https://web-bucket-staging.george.black",
   "apiEndpoint": "http://localhost:9000",
   "apiUsername": "test",
-  "apiPassword": "test"
+  "apiPassword": "test",
+  "fullBuild": true
 }
