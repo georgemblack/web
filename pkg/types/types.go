@@ -1,5 +1,7 @@
 package types
 
+import "fmt"
+
 // BuildData is the top level struct passed into each template
 type BuildData struct {
 	SiteMetadata SiteMetadata
@@ -112,4 +114,9 @@ type JSONFeedItem struct {
 	ContentHTML   string `json:"content_html"`
 	DatePublished string `json:"date_published"`
 	DateModified  string `json:"date_modified"`
+}
+
+// WrapErr wraps an error and returns a new one
+func WrapErr(err error, message string) error {
+	return fmt.Errorf("%s; %w", message, err)
 }
