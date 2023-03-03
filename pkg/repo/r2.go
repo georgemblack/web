@@ -76,7 +76,7 @@ func (r2 *R2Service) Put(key string, object io.Reader) error {
 // Delete deletes a given object in the R2 storage bucket.
 func (r2 *R2Service) Delete(key string) (err error) {
 	client := &http.Client{}
-	url := fmt.Sprintf("%s, %s", r2.Config.R2Endpoint, key)
+	url := fmt.Sprintf("%s/%s", r2.Config.R2Endpoint, key)
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
 		return types.WrapErr(err, "failed to build http request")

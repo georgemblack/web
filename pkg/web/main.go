@@ -27,6 +27,12 @@ func Build() (string, error) {
 		return "", fmt.Errorf("failed to load configuration; %w", err)
 	}
 
+	log.Println("initializing services...")
+
+	r2 := repo.R2Service{
+		Config: config,
+	}
+
 	log.Println("starting build: " + buildID)
 	log.Println("collecting web data...")
 
@@ -116,13 +122,30 @@ func Build() (string, error) {
 	}
 	files = append(files, filesToAdd...)
 
-	log.Println("writing files to destination...")
+	log.Println("finding difference between new and existing files")
 
-	r2 := repo.R2Service{
-		Config: config,
+	existingKeys, err := r2.List()
+	if err != nil {
+		return "", types.WrapErr(err, "failed to list existing files")
 	}
 
-	maxParallel := 25
+	keysToDelete := []string{}
+	for _, existingKey := range existingKeys.Keys {
+		found := false
+		for _, file := range files {
+			if file.GetKey() == existingKey {
+				found = true
+				break
+			}
+		}
+		if !found {
+			keysToDelete = append(keysToDelete, existingKey)
+		}
+	}
+
+	log.Println("writing files to destination...")
+
+	maxParallel := 20
 	if len(files) < maxParallel {
 		maxParallel = len(files)
 	}
@@ -151,6 +174,16 @@ func Build() (string, error) {
 
 	if err := group.Wait(); err != nil {
 		return "", types.WrapErr(err, "failed to write file(s)")
+	}
+
+	log.Println("deleting files from destination...")
+
+	for _, key := range keysToDelete {
+		log.Println("deleting file from r2: " + key)
+		err = r2.Delete(key)
+		if err != nil {
+			return "", types.WrapErr(err, "failed to delete file")
+		}
 	}
 
 	log.Println("completed build: " + buildID)
