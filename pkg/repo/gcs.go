@@ -3,6 +3,7 @@ package repo
 import (
 	"bytes"
 	"context"
+	"fmt"
 
 	"cloud.google.com/go/storage"
 	"github.com/georgemblack/web/pkg/conf"
@@ -10,25 +11,28 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-type AssetService struct {
+// GCSService is a service for interacting with Google Cloud Storage.
+type GCSService struct {
 	config conf.Config
 	client *storage.Client
 }
 
-func NewAssetService(config conf.Config) (AssetService, error) {
+// NewGCSService creates a new GCS service.
+func NewGCSService(config conf.Config) (GCSService, error) {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
 	if err != nil {
-		return AssetService{}, types.WrapErr(err, "failed to create GCS client")
+		return GCSService{}, types.WrapErr(err, "failed to create GCS client")
 	}
 
-	return AssetService{
+	return GCSService{
 		config: config,
 		client: client,
 	}, nil
 }
 
-func (as *AssetService) List() ([]string, error) {
+// ListAssets returns a list of static assets to be used in the site build.
+func (as *GCSService) ListAssets() ([]string, error) {
 	bucket := as.client.Bucket(as.config.AssetsBucket)
 	query := &storage.Query{Prefix: ""}
 
@@ -48,7 +52,8 @@ func (as *AssetService) List() ([]string, error) {
 	return names, nil
 }
 
-func (as *AssetService) Get(key string) ([]byte, error) {
+// GetAsset returns the contents of a single static asset.
+func (as *GCSService) GetAsset(key string) ([]byte, error) {
 	obj := as.client.Bucket(as.config.AssetsBucket).Object(key)
 	reader, err := obj.NewReader(context.Background())
 	if err != nil {
@@ -63,4 +68,20 @@ func (as *AssetService) Get(key string) ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
+}
+
+// PutToBackup writes a single object to a bucket containing timestamped backups of the site.
+func (as *GCSService) PutToBackup(key string, buildTimestamp string, object []byte) error {
+	obj := as.client.Bucket(as.config.SnapshotsBucket).Object(fmt.Sprintf("%s/%s", buildTimestamp, key))
+	writer := obj.NewWriter(context.Background())
+	_, err := writer.Write(object)
+	if err != nil {
+		return types.WrapErr(err, "failed to write object")
+	}
+	err = writer.Close()
+	if err != nil {
+		return types.WrapErr(err, "failed to close writer")
+	}
+
+	return nil
 }

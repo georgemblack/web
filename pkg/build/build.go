@@ -35,9 +35,9 @@ func (file LocalFile) GetContents() ([]byte, error) {
 
 // GCSFile represents a site file that is stored in Google Cloud Storage
 type GCSFile struct {
-	Key          string
-	GCSKey       string
-	AssetService *repo.AssetService
+	Key        string
+	GCSKey     string
+	GCSService *repo.GCSService
 }
 
 func (file GCSFile) GetKey() string {
@@ -45,7 +45,7 @@ func (file GCSFile) GetKey() string {
 }
 
 func (file GCSFile) GetContents() ([]byte, error) {
-	return file.AssetService.Get(file.GCSKey)
+	return file.GCSService.GetAsset(file.GCSKey)
 }
 
 // IndexPage builds the index page
@@ -266,21 +266,21 @@ func RemoteAssets(config conf.Config) ([]types.SiteFile, error) {
 
 	var files []types.SiteFile
 
-	as, err := repo.NewAssetService(config)
+	gcs, err := repo.NewGCSService(config)
 	if err != nil {
 		return nil, types.WrapErr(err, "failed to create asset service")
 	}
 
-	keys, err := as.List()
+	keys, err := gcs.ListAssets()
 	if err != nil {
 		return nil, types.WrapErr(err, "failed to list assets")
 	}
 
 	for _, key := range keys {
 		files = append(files, GCSFile{
-			Key:          fmt.Sprintf("assets/%s", key),
-			GCSKey:       key,
-			AssetService: &as,
+			Key:        fmt.Sprintf("assets/%s", key),
+			GCSKey:     key,
+			GCSService: &gcs,
 		})
 	}
 

@@ -32,6 +32,10 @@ func Build() (string, error) {
 	r2 := repo.R2Service{
 		Config: config,
 	}
+	gcs, err := repo.NewGCSService(config)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to create gcs service")
+	}
 
 	log.Println("starting build: " + buildID)
 	log.Println("collecting web data...")
@@ -157,15 +161,24 @@ func Build() (string, error) {
 		file := file // https://go.dev/doc/faq#closures_and_goroutines
 
 		group.Go(func() error {
-			log.Println("writing file to r2: " + file.GetKey())
+			log.Println("writing file to destinations: " + file.GetKey())
 
+			// Fetch contents of file
 			contents, err := file.GetContents()
 			if err != nil {
 				return types.WrapErr(err, "failed to get file contents")
 			}
+
+			// Write file to R2
 			err = r2.Write(file.GetKey(), bytes.NewReader(contents))
 			if err != nil {
 				return types.WrapErr(err, "failed to write file")
+			}
+
+			// Write file to GCS backups bucket
+			err = gcs.PutToBackup(file.GetKey(), buildID, contents)
+			if err != nil {
+				return types.WrapErr(err, "failed to write file to backup")
 			}
 
 			return nil

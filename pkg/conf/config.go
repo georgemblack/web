@@ -8,13 +8,14 @@ import (
 )
 
 type Config struct {
-	AssetsBucket  string `json:"assetsBucket"`
-	R2Endpoint    string `json:"r2Endpoint"`
-	R2AccessToken string `json:"r2AccessToken"`
-	APIEndpoint   string `json:"apiEndpoint"`
-	APIUsername   string `json:"apiUsername"`
-	APIPassword   string `json:"apiPassword"`
-	FullBuild     bool   `json:"fullBuild"`
+	AssetsBucket    string `json:"assetsBucket"`
+	SnapshotsBucket string `json:"snapshotsBucket"`
+	R2Endpoint      string `json:"r2Endpoint"`
+	R2AccessToken   string `json:"r2AccessToken"`
+	APIEndpoint     string `json:"apiEndpoint"`
+	APIUsername     string `json:"apiUsername"`
+	APIPassword     string `json:"apiPassword"`
+	FullBuild       bool   `json:"fullBuild"`
 }
 
 //go:embed config/*
