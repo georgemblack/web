@@ -49,7 +49,7 @@ func NewAPIService(config conf.Config) (APIService, error) {
 	}, nil
 }
 
-func (api *APIService) GetAllLikes() (types.Likes, error) {
+func (api *APIService) GetLikes() (types.Likes, error) {
 	client := &http.Client{}
 	url := fmt.Sprintf("%s/likes", api.Config.APIEndpoint)
 

@@ -12,7 +12,7 @@ import (
 
 func GetPostPath(post types.Post) string {
 	year := GetYearStrFromSeconds(post.Published.Seconds)
-	return year + "/" + post.Metadata.Slug
+	return year + "/" + post.Slug
 }
 
 func GetLikePath(like types.Like) string {

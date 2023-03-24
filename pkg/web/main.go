@@ -50,7 +50,7 @@ func Build() (string, error) {
 		return "", fmt.Errorf("failed to fetch published posts; %w", err)
 	}
 	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
-	likes, err := api.GetAllLikes()
+	likes, err := api.GetLikes()
 	if err != nil {
 		return "", fmt.Errorf("failed to fetch likes; %w", err)
 	}

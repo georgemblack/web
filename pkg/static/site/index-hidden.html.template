@@ -6,7 +6,7 @@
     <main>
       {{ range .SiteContent.Posts.Posts }}
       <article style="margin-bottom: 6em;">
-        <h1><a href="/{{ . | getPostPath }}">{{ .Metadata.Title }}</a></h1>
+        <h1><a href="/{{ . | getPostPath }}">{{ .Title }}</a></h1>
         <p class="subtitle">{{ .Published.Seconds | secondsToFormattedDate }}</p>
         {{ .ContentHTMLPreview }}
         <a class="read-more-button" href="/{{ . | getPostPath }}"><p>Read More &#8594;</p></a>

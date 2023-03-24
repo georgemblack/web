@@ -120,10 +120,10 @@ func PostPages(data types.BuildData) ([]types.SiteFile, error) {
 	for _, post := range data.SiteContent.Posts.Posts {
 		path := util.GetPostPath(post)
 
-		data.Data["PageTitle"] = post.Metadata.Title
+		data.Data["PageTitle"] = post.Title
 		data.Data["Post"] = post
 
-		log.Println("executing template for post: " + post.Metadata.Title)
+		log.Println("executing template for post: " + post.Title)
 
 		tmpl, err := static.GetStandardTemplate()
 		if err != nil {
@@ -163,7 +163,7 @@ func JSONFeed(data types.BuildData) (types.SiteFile, error) {
 		item := types.JSONFeedItem{}
 		item.ID = meta.URL + "/" + util.GetPostPath(post)
 		item.URL = meta.URL + "/" + util.GetPostPath(post)
-		item.Title = post.Metadata.Title
+		item.Title = post.Title
 		item.ContentHTML = post.ContentHTML
 		item.DatePublished = util.SecondsToISOTimestamp(post.Published.Seconds)
 		item.DateModified = util.SecondsToISOTimestamp(post.Published.Seconds)

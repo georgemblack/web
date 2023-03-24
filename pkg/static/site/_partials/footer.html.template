@@ -2,7 +2,7 @@
 <footer>
   {{- if .Data.Post }}
   <div style="max-width: 2em; margin: 1em auto 0 auto">
-    <a href="mailto:{{ .SiteMetadata.AuthorEmail }}?subject=Re: {{ .Data.Post.Metadata.Title }}">
+    <a href="mailto:{{ .SiteMetadata.AuthorEmail }}?subject=Re: {{ .Data.Post.Title }}">
       <svg viewBox="0 0 512.012 512.012" xmlns="http://www.w3.org/2000/svg">
         <g>
           <path fill="#8f8f8f" d="m333.201 115.038c-28.905-59.021-89.37-98.042-157.193-98.042-97.047 0-176 78.505-176 175 0 26.224 5.63 51.359 16.742 74.794l-16.451 82.265c-2.094 10.472 7.144 19.728 17.618 17.656l83.279-16.465c11.213 5.319 22.813 9.364 34.732 12.151-26.717-126.541 69.199-245.321 197.273-247.359z"/>

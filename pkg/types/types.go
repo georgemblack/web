@@ -65,17 +65,12 @@ type Posts struct {
 
 // Post represents a single post
 type Post struct {
-	Metadata           PostMetadata
+	Title              string
+	Slug               string
 	Content            string
 	ContentHTML        string
 	ContentHTMLPreview string
 	Published          PostPublishedDate
-}
-
-// PostMetadata represents a post's metadata
-type PostMetadata struct {
-	Title string
-	Slug  string
 }
 
 // PostPublishedDate represents a UTC timestamp of when the post was published
