@@ -15,7 +15,6 @@ type Config struct {
 	APIEndpoint     string `json:"apiEndpoint"`
 	APIUsername     string `json:"apiUsername"`
 	APIPassword     string `json:"apiPassword"`
-	FullBuild       bool   `json:"fullBuild"`
 }
 
 //go:embed config/*

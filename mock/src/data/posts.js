@@ -7,12 +7,11 @@ const posts = [
       _seconds: 1676160908,
       _nanoseconds: 0,
     },
-    metadata: {
-      draft: "false",
-      tags: ["bogus", "photography"],
-      slug: "photography-tips",
-      title: "Some Photography Tips",
-    },
+    draft: false,
+    listed: true,
+    tags: ["bogus", "photography"],
+    slug: "photography-tips",
+    title: "Some Photography Tips",
     contentHtml:
       "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non posuere odio, id pellentesque dui. Maecenas vitae aliquam diam. Vestibulum auctor est id augue faucibus sodales. In dignissim luctus lorem vel pulvinar. Pellentesque luctus semper mi quis bibendum. Nullam vel enim lectus. Vivamus tempor eget nulla non semper. Aliquam cursus est sed nibh sodales, ac malesuada purus pulvinar. Nulla non augue lectus. Etiam id diam id nibh sollicitudin ornare sed id ante. Vestibulum cursus elit ac consequat vehicula. In pretium sed odio id aliquet. Vivamus non tellus vestibulum, placerat mi vitae, vestibulum urna.</p>",
     contentHtmlPreview:
@@ -26,12 +25,11 @@ const posts = [
     },
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non posuere odio, id pellentesque dui. Maecenas vitae aliquam diam. Vestibulum auctor est id augue faucibus sodales. In dignissim luctus lorem vel pulvinar. Pellentesque luctus semper mi quis bibendum. Nullam vel enim lectus. Vivamus tempor eget nulla non semper. Aliquam cursus est sed nibh sodales, ac malesuada purus pulvinar. Nulla non augue lectus. Etiam id diam id nibh sollicitudin ornare sed id ante. Vestibulum cursus elit ac consequat vehicula. In pretium sed odio id aliquet. Vivamus non tellus vestibulum, placerat mi vitae, vestibulum urna.",
-    metadata: {
-      slug: "wisconsin",
-      tags: ["bogus", "photography"],
-      title: "Wisconsin in the Cold",
-      draft: "false",
-    },
+    slug: "wisconsin",
+    tags: ["bogus", "photography"],
+    title: "Wisconsin in the Cold",
+    draft: false,
+    listed: true,
     contentHtml:
       "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non posuere odio, id pellentesque dui. Maecenas vitae aliquam diam. Vestibulum auctor est id augue faucibus sodales. In dignissim luctus lorem vel pulvinar. Pellentesque luctus semper mi quis bibendum. Nullam vel enim lectus. Vivamus tempor eget nulla non semper. Aliquam cursus est sed nibh sodales, ac malesuada purus pulvinar. Nulla non augue lectus. Etiam id diam id nibh sollicitudin ornare sed id ante. Vestibulum cursus elit ac consequat vehicula. In pretium sed odio id aliquet. Vivamus non tellus vestibulum, placerat mi vitae, vestibulum urna.</p>",
     contentHtmlPreview:
@@ -43,12 +41,11 @@ const posts = [
       _seconds: 1676160908,
       _nanoseconds: 0,
     },
-    metadata: {
-      title: "Breaking News: This is Nothing",
-      slug: "something-something-bogus",
-      draft: "false",
-      tags: ["bogus", "photography"],
-    },
+    title: "Breaking News: This is Nothing",
+    slug: "something-something-bogus",
+    draft: false,
+    listed: true,
+    tags: ["bogus", "photography"],
     content:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non posuere odio, id pellentesque dui. Maecenas vitae aliquam diam. Vestibulum auctor est id augue faucibus sodales. In dignissim luctus lorem vel pulvinar. Pellentesque luctus semper mi quis bibendum. Nullam vel enim lectus. Vivamus tempor eget nulla non semper. Aliquam cursus est sed nibh sodales, ac malesuada purus pulvinar. Nulla non augue lectus. Etiam id diam id nibh sollicitudin ornare sed id ante. Vestibulum cursus elit ac consequat vehicula. In pretium sed odio id aliquet. Vivamus non tellus vestibulum, placerat mi vitae, vestibulum urna.",
     contentHtml:

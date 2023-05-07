@@ -14,8 +14,10 @@
     <loc>{{ .SiteMetadata.URL }}/archive</loc>
   </url>
   {{- range .SiteContent.Posts.Posts }}
+  {{ if .Listed }}
   <url>
     <loc>{{ $root.SiteMetadata.URL }}/{{ . | getPostPath }}</loc>
   </url>
+  {{ end }}
   {{- end }}
 </urlset> 

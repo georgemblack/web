@@ -72,37 +72,35 @@ func Build() (string, error) {
 	}
 	files = append(files, fileToAdd)
 
-	if config.FullBuild {
-		buildData, err = newBuildData(siteContent)
-		if err != nil {
-			return "", types.WrapErr(err, "failed to create build data")
-		}
-		filesToAdd, err := build.StandardPages(buildData)
-		if err != nil {
-			return "", types.WrapErr(err, "failed to build standard pages")
-		}
-		files = append(files, filesToAdd...)
-
-		buildData, err = newBuildData(siteContent)
-		if err != nil {
-			return "", types.WrapErr(err, "failed to create build data")
-		}
-		filesToAdd, err = build.PostPages(buildData)
-		if err != nil {
-			return "", types.WrapErr(err, "failed to build post pages")
-		}
-		files = append(files, filesToAdd...)
-
-		buildData, err = newBuildData(siteContent)
-		if err != nil {
-			return "", types.WrapErr(err, "failed to create build data")
-		}
-		fileToAdd, err = build.Sitemap(buildData)
-		if err != nil {
-			return "", types.WrapErr(err, "failed to build sitemap")
-		}
-		files = append(files, fileToAdd)
+	buildData, err = newBuildData(siteContent)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to create build data")
 	}
+	filesToAdd, err := build.StandardPages(buildData)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to build standard pages")
+	}
+	files = append(files, filesToAdd...)
+
+	buildData, err = newBuildData(siteContent)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to create build data")
+	}
+	filesToAdd, err = build.PostPages(buildData)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to build post pages")
+	}
+	files = append(files, filesToAdd...)
+
+	buildData, err = newBuildData(siteContent)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to create build data")
+	}
+	fileToAdd, err = build.Sitemap(buildData)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to build sitemap")
+	}
+	files = append(files, fileToAdd)
 
 	buildData, err = newBuildData(siteContent)
 	if err != nil {
@@ -114,7 +112,7 @@ func Build() (string, error) {
 	}
 	files = append(files, fileToAdd)
 
-	filesToAdd, err := build.LocalAssets(static.SiteFiles())
+	filesToAdd, err = build.LocalAssets(static.SiteFiles())
 	if err != nil {
 		return "", types.WrapErr(err, "failed to build static files")
 	}

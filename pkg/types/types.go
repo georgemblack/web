@@ -70,6 +70,7 @@ type Post struct {
 	Content            string
 	ContentHTML        string
 	ContentHTMLPreview string
+	Listed             bool
 	Published          PostPublishedDate
 }
 

@@ -2,6 +2,5 @@
   "assetsBucket": "web-assets.george.black",
   "snapshotsBucket": "web-snapshots.george.black",
   "r2Endpoint": "https://storage.george.black",
-  "apiEndpoint": "https://api.george.black",
-  "fullBuild": false
+  "apiEndpoint": "https://api.george.black"
 }
