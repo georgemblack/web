@@ -12,6 +12,6 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3.7.0
       - name: golang-nilaway
-        uses: georgemblack/actions/golang-nilaway
+        uses: georgemblack/actions/golang-nilaway@1.1.0
         with:
           package: ./pkg/*
