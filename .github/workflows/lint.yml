@@ -10,4 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3.4.0
+        uses: golangci/golangci-lint-action@v3.7.0
+      - name: golang-nilaway
+        uses: georgemblack/actions/golang-nilaway
+        with:
+          package: ./pkg/*
