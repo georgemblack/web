@@ -43,7 +43,11 @@ func GetPostPath(post types.Post) string {
 
 // GetPostExcerpt is a template function
 func GetPostExcerpt(content string) string {
-	return strings.Split(content, "<!--more-->")[0]
+	split := strings.Split(content, "<!--more-->")
+	if len(split) > 0 {
+		return split[0]
+	}
+	return ""
 }
 
 // GetLikePath is a template function

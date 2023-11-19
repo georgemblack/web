@@ -35,6 +35,10 @@ func NewAPIService(config conf.Config) (APIService, error) {
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		return APIService{}, types.WrapErr(err, "invalid status code from api")
 	}
+	if resp.Body == nil {
+		return APIService{}, types.WrapErr(err, "empty response body")
+	}
+
 	defer resp.Body.Close()
 
 	var authTokenResponse AuthTokenResponse
@@ -84,6 +88,9 @@ func (api *APIService) GetPublishedPosts() (types.Posts, error) {
 	}
 
 	// URL params and headers
+	if req.URL == nil {
+		return types.Posts{}, types.WrapErr(err, "empty http request url")
+	}
 	query := req.URL.Query()
 	query.Add("published", "true")
 	req.URL.RawQuery = query.Encode()
