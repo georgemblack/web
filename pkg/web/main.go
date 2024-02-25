@@ -224,7 +224,7 @@ func Build() (string, error) {
 	// Write all site files to destination (as well as backup location)
 	logger.Info("writing files to destination...")
 
-	maxParallel := 50
+	maxParallel := 35
 	if len(files) < maxParallel {
 		maxParallel = len(files)
 	}
