@@ -224,7 +224,7 @@ func Build() (string, error) {
 	// Write all site files to destination (as well as backup location)
 	logger.Info("writing files to destination...")
 
-	maxParallel := 35
+	maxParallel := 50
 	if len(files) < maxParallel {
 		maxParallel = len(files)
 	}
@@ -235,27 +235,29 @@ func Build() (string, error) {
 	for _, file := range files {
 		file := file // https://go.dev/doc/faq#closures_and_goroutines
 
+		// Fetch contents of file
+		contents, err := file.GetContents()
+		if err != nil {
+			return "", types.WrapErr(err, "failed to get file contents")
+		}
+
+		// Write file to R2
 		group.Go(func() error {
-			logger.Info("writing file to destinations: " + file.GetKey())
-
-			// Fetch contents of file
-			contents, err := file.GetContents()
-			if err != nil {
-				return types.WrapErr(err, "failed to get file contents")
-			}
-
-			// Write file to R2
+			logger.Info("writing file to r2: " + file.GetKey())
 			err = r2.Write(file.GetKey(), bytes.NewReader(contents))
 			if err != nil {
-				return types.WrapErr(err, "failed to write file")
+				return types.WrapErr(err, "failed to write file to r2")
 			}
+			return nil
+		})
 
-			// Write file to GCS backups bucket
+		// Write file to GCS backups bucket
+		group.Go(func() error {
+			logger.Info("writing file to gcs: " + file.GetKey())
 			err = gcs.PutToBackup(file.GetKey(), buildID, contents)
 			if err != nil {
-				return types.WrapErr(err, "failed to write file to backup")
+				return types.WrapErr(err, "failed to write file to gcs sbackup")
 			}
-
 			return nil
 		})
 	}
