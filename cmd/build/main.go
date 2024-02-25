@@ -1,7 +1,8 @@
 package main
 
 import (
-	"log"
+	"log/slog"
+	"os"
 
 	"github.com/georgemblack/web/pkg/web"
 )
@@ -9,6 +10,7 @@ import (
 func main() {
 	_, err := web.Build()
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(err.Error())
+		os.Exit(1)
 	}
 }

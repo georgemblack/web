@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"log"
+	"log/slog"
 	"strconv"
 	"time"
 
@@ -18,16 +18,17 @@ import (
 
 // Build starts build process
 func Build() (string, error) {
+	logger := slog.Default()
 	buildID := time.Now().UTC().Format("2006-01-02-15-04-05")
 
-	log.Println("loading configuration...")
+	logger.Info("starting build: " + buildID)
 
 	config, err := conf.LoadConfig()
 	if err != nil {
 		return "", fmt.Errorf("failed to load configuration; %w", err)
 	}
 
-	log.Println("initializing services...")
+	logger.Info("initializing services...")
 
 	r2 := repo.R2Service{
 		Config: config,
@@ -37,8 +38,8 @@ func Build() (string, error) {
 		return "", types.WrapErr(err, "failed to create gcs service")
 	}
 
-	log.Println("starting build: " + buildID)
-	log.Println("collecting web data...")
+	logger.Info("starting build: " + buildID)
+	logger.Info("collecting web data...")
 
 	api, err := repo.NewAPIService(config)
 	if err != nil {
@@ -49,16 +50,16 @@ func Build() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to fetch published posts; %w", err)
 	}
-	log.Println("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
+	logger.Info("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
 	likes, err := api.GetLikes()
 	if err != nil {
 		return "", fmt.Errorf("failed to fetch likes; %w", err)
 	}
-	log.Println("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
+	logger.Info("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
 
 	siteContent := types.SiteContent{Posts: posts, Likes: likes}
 
-	log.Println("executing build steps...")
+	logger.Info("executing build steps...")
 
 	var files []types.SiteFile
 
@@ -124,7 +125,7 @@ func Build() (string, error) {
 	}
 	files = append(files, filesToAdd...)
 
-	log.Println("finding difference between new and existing files")
+	logger.Info("finding difference between new and existing files")
 
 	existingKeys, err := r2.List()
 	if err != nil {
@@ -145,7 +146,7 @@ func Build() (string, error) {
 		}
 	}
 
-	log.Println("writing files to destination...")
+	logger.Info("writing files to destination...")
 
 	maxParallel := 20
 	if len(files) < maxParallel {
@@ -159,7 +160,7 @@ func Build() (string, error) {
 		file := file // https://go.dev/doc/faq#closures_and_goroutines
 
 		group.Go(func() error {
-			log.Println("writing file to destinations: " + file.GetKey())
+			logger.Info("writing file to destinations: " + file.GetKey())
 
 			// Fetch contents of file
 			contents, err := file.GetContents()
@@ -187,17 +188,17 @@ func Build() (string, error) {
 		return "", types.WrapErr(err, "failed to write file(s)")
 	}
 
-	log.Println("deleting files from destination...")
+	logger.Info("deleting files from destination...")
 
 	for _, key := range keysToDelete {
-		log.Println("deleting file from r2: " + key)
+		logger.Info("deleting file from r2: " + key)
 		err = r2.Delete(key)
 		if err != nil {
 			return "", types.WrapErr(err, "failed to delete file")
 		}
 	}
 
-	log.Println("completed build: " + buildID)
+	logger.Info("completed build: " + buildID)
 	return buildID, nil
 }
 

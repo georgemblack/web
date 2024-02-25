@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 
@@ -20,14 +20,14 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		buildID, err := web.Build()
 		if err != nil {
-			log.Println(err)
+			slog.Error(err.Error())
 			http.Error(w, "Build failed", http.StatusInternalServerError)
 			return
 		}
 
 		respBody, err := json.Marshal(Build{buildID})
 		if err != nil {
-			log.Println(err)
+			slog.Error(err.Error())
 			http.Error(w, "Build failed", http.StatusInternalServerError)
 			return
 		}
@@ -35,12 +35,16 @@ func main() {
 		w.Header().Set("Content-Type", "application/json")
 		_, err = w.Write(respBody)
 		if err != nil {
-			log.Println(err)
+			slog.Error(err.Error())
 		}
 	})
 
-	log.Println("Listening on " + port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	slog.Info("Listening on " + port)
+	err := http.ListenAndServe(":"+port, nil)
+	if err != nil {
+		slog.Error(err.Error())
+		os.Exit(1)
+	}
 }
 
 func getEnv(key, fallback string) string {
