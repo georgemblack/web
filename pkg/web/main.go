@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/georgemblack/web/pkg/build"
@@ -37,96 +38,169 @@ func Build() (string, error) {
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create gcs service")
 	}
-
-	logger.Info("starting build: " + buildID)
-	logger.Info("collecting web data...")
-
 	api, err := repo.NewAPIService(config)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to create api service")
 	}
 
-	posts, err := api.GetPublishedPosts()
-	if err != nil {
-		return "", fmt.Errorf("failed to fetch published posts; %w", err)
-	}
-	logger.Info("Found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
-	likes, err := api.GetLikes()
-	if err != nil {
-		return "", fmt.Errorf("failed to fetch likes; %w", err)
-	}
-	logger.Info("Found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
+	logger.Info("starting build: " + buildID)
+	logger.Info("collecting web data...")
 
+	// Fetch 'posts' and 'likes' from API in parallel
+	var posts types.Posts
+	var likes types.Likes
+
+	group, _ := errgroup.WithContext(context.Background())
+	group.SetLimit(2)
+
+	group.Go(func() error {
+		var err error
+		posts, err = api.GetPublishedPosts()
+		if err != nil {
+			return fmt.Errorf("failed to fetch published posts; %w", err)
+		}
+		logger.Info("found " + strconv.Itoa(len(posts.Posts)) + " post(s)")
+		return nil
+	})
+
+	group.Go(func() error {
+		var err error
+		likes, err = api.GetLikes()
+		if err != nil {
+			return fmt.Errorf("failed to fetch likes; %w", err)
+		}
+		logger.Info("found " + strconv.Itoa(len(likes.Likes)) + " likes(s)")
+		return nil
+	})
+
+	if err := group.Wait(); err != nil {
+		return "", types.WrapErr(err, "failed to fetch critical site data")
+	}
+
+	// Create site content object, containing all data needed for build
 	siteContent := types.SiteContent{Posts: posts, Likes: likes}
 
+	// Execute build steps in parallel.
+	// Each builder returns a set of files to write to the destination.
+	// Use a mutex to ensure only one build step can add to the output files at one time.
 	logger.Info("executing build steps...")
 
 	var files []types.SiteFile
+	mutex := sync.Mutex{}
 
-	buildData, err := newBuildData(siteContent)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to create build data")
-	}
-	fileToAdd, err := build.IndexPage(buildData)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to build index page")
-	}
-	files = append(files, fileToAdd)
+	group, _ = errgroup.WithContext(context.Background())
+	group.SetLimit(5)
 
-	buildData, err = newBuildData(siteContent)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to create build data")
-	}
-	filesToAdd, err := build.StandardPages(buildData)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to build standard pages")
-	}
-	files = append(files, filesToAdd...)
+	// Build index page
+	group.Go(func() error {
+		buildData, err := newBuildData(siteContent)
+		if err != nil {
+			return types.WrapErr(err, "failed to create build data")
+		}
+		fileToAdd, err := build.IndexPage(buildData)
+		if err != nil {
+			return types.WrapErr(err, "failed to build index page")
+		}
+		mutex.Lock()
+		files = append(files, fileToAdd)
+		mutex.Unlock()
+		return nil
+	})
 
-	buildData, err = newBuildData(siteContent)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to create build data")
-	}
-	filesToAdd, err = build.PostPages(buildData)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to build post pages")
-	}
-	files = append(files, filesToAdd...)
+	// Build standard pages (about, archive, etc.)
+	group.Go(func() error {
+		buildData, err := newBuildData(siteContent)
+		if err != nil {
+			return types.WrapErr(err, "failed to create build data")
+		}
+		filesToAdd, err := build.StandardPages(buildData)
+		if err != nil {
+			return types.WrapErr(err, "failed to build standard pages")
+		}
+		mutex.Lock()
+		files = append(files, filesToAdd...)
+		mutex.Unlock()
+		return nil
+	})
 
-	buildData, err = newBuildData(siteContent)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to create build data")
-	}
-	fileToAdd, err = build.Sitemap(buildData)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to build sitemap")
-	}
-	files = append(files, fileToAdd)
+	// Build post pages
+	group.Go(func() error {
+		buildData, err := newBuildData(siteContent)
+		if err != nil {
+			return types.WrapErr(err, "failed to create build data")
+		}
+		filesToAdd, err := build.PostPages(buildData)
+		if err != nil {
+			return types.WrapErr(err, "failed to build post pages")
+		}
+		mutex.Lock()
+		files = append(files, filesToAdd...)
+		mutex.Unlock()
+		return nil
+	})
 
-	buildData, err = newBuildData(siteContent)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to create build data")
-	}
-	fileToAdd, err = build.JSONFeed(buildData)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to build JSON feed")
-	}
-	files = append(files, fileToAdd)
+	// Build sitemap
+	group.Go(func() error {
+		buildData, err := newBuildData(siteContent)
+		if err != nil {
+			return types.WrapErr(err, "failed to create build data")
+		}
+		fileToAdd, err := build.Sitemap(buildData)
+		if err != nil {
+			return types.WrapErr(err, "failed to build sitemap")
+		}
+		mutex.Lock()
+		files = append(files, fileToAdd)
+		mutex.Unlock()
+		return nil
+	})
 
-	filesToAdd, err = build.LocalAssets(static.SiteFiles())
-	if err != nil {
-		return "", types.WrapErr(err, "failed to build static files")
+	// Build JSON feed
+	group.Go(func() error {
+		buildData, err := newBuildData(siteContent)
+		if err != nil {
+			return types.WrapErr(err, "failed to create build data")
+		}
+		fileToAdd, err := build.JSONFeed(buildData)
+		if err != nil {
+			return types.WrapErr(err, "failed to build JSON feed")
+		}
+		mutex.Lock()
+		files = append(files, fileToAdd)
+		mutex.Unlock()
+		return nil
+	})
+
+	// Build local assets (i.e. stored in this repo)
+	group.Go(func() error {
+		filesToAdd, err := build.LocalAssets(static.SiteFiles())
+		if err != nil {
+			return types.WrapErr(err, "failed to build static files")
+		}
+		mutex.Lock()
+		files = append(files, filesToAdd...)
+		mutex.Unlock()
+		return nil
+	})
+
+	// Build remote assets (i.e. stored in GCS)
+	group.Go(func() error {
+		filesToAdd, err := build.RemoteAssets(config)
+		if err != nil {
+			return types.WrapErr(err, "failed to build remote assets")
+		}
+		mutex.Lock()
+		files = append(files, filesToAdd...)
+		mutex.Unlock()
+		return nil
+	})
+
+	if err := group.Wait(); err != nil {
+		return "", types.WrapErr(err, "failed one or more build steps")
 	}
-	files = append(files, filesToAdd...)
 
-	filesToAdd, err = build.RemoteAssets(config)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to build remote assets")
-	}
-	files = append(files, filesToAdd...)
-
-	logger.Info("finding difference between new and existing files")
-
+	// Cleanup any unused files in the destination
+	logger.Info("finding diff between new and existing files")
 	existingKeys, err := r2.List()
 	if err != nil {
 		return "", types.WrapErr(err, "failed to list existing files")
@@ -145,15 +219,17 @@ func Build() (string, error) {
 			keysToDelete = append(keysToDelete, existingKey)
 		}
 	}
+	logger.Info("found the following files to delete: " + fmt.Sprint(keysToDelete))
 
+	// Write all site files to destination (as well as backup location)
 	logger.Info("writing files to destination...")
 
-	maxParallel := 20
+	maxParallel := 35
 	if len(files) < maxParallel {
 		maxParallel = len(files)
 	}
 
-	group, _ := errgroup.WithContext(context.Background())
+	group, _ = errgroup.WithContext(context.Background())
 	group.SetLimit(maxParallel)
 
 	for _, file := range files {
