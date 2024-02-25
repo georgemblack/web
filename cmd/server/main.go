@@ -18,7 +18,10 @@ func main() {
 	port := getEnv("PORT", "9002")
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		buildID, err := web.Build()
+		buildID, err := web.Build(web.Options{
+			Archive:             true,
+			ReplaceRemoteAssets: false,
+		})
 		if err != nil {
 			slog.Error(err.Error())
 			http.Error(w, "Build failed", http.StatusInternalServerError)

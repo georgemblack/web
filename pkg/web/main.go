@@ -14,11 +14,17 @@ import (
 	"github.com/georgemblack/web/pkg/repo"
 	"github.com/georgemblack/web/pkg/static"
 	"github.com/georgemblack/web/pkg/types"
+	"github.com/georgemblack/web/pkg/util"
 	"golang.org/x/sync/errgroup"
 )
 
+type Options struct {
+	Archive             bool // Create a snapshot of the site and store it in GCS
+	ReplaceRemoteAssets bool // Replace all assets (i.e. images) in R2, instead of just adding new ones
+}
+
 // Build starts build process
-func Build() (string, error) {
+func Build(options Options) (string, error) {
 	logger := slog.Default()
 	buildID := time.Now().UTC().Format("2006-01-02-15-04-05")
 
@@ -29,7 +35,7 @@ func Build() (string, error) {
 		return "", fmt.Errorf("failed to load configuration; %w", err)
 	}
 
-	logger.Info("initializing services...")
+	logger.Info("initializing services")
 
 	r2 := repo.R2Service{
 		Config: config,
@@ -44,7 +50,7 @@ func Build() (string, error) {
 	}
 
 	logger.Info("starting build: " + buildID)
-	logger.Info("collecting web data...")
+	logger.Info("collecting web data")
 
 	// Fetch 'posts' and 'likes' from API in parallel
 	var posts types.Posts
@@ -83,7 +89,7 @@ func Build() (string, error) {
 	// Execute build steps in parallel.
 	// Each builder returns a set of files to write to the destination.
 	// Use a mutex to ensure only one build step can add to the output files at one time.
-	logger.Info("executing build steps...")
+	logger.Info("executing build steps")
 
 	var files []types.SiteFile
 	mutex := sync.Mutex{}
@@ -199,7 +205,8 @@ func Build() (string, error) {
 		return "", types.WrapErr(err, "failed one or more build steps")
 	}
 
-	// Cleanup any unused files in the destination
+	// Find difference between new and existing files
+	// Mark unused files for deletion
 	logger.Info("finding diff between new and existing files")
 	existingKeys, err := r2.List()
 	if err != nil {
@@ -219,10 +226,10 @@ func Build() (string, error) {
 			keysToDelete = append(keysToDelete, existingKey)
 		}
 	}
-	logger.Info("found the following files to delete: " + fmt.Sprint(keysToDelete))
+	logger.Info("marking the following files for deletion: " + fmt.Sprint(keysToDelete))
 
 	// Write all site files to destination (as well as backup location)
-	logger.Info("writing files to destination...")
+	logger.Info("writing files to destination")
 
 	maxParallel := 35
 	if len(files) < maxParallel {
@@ -234,6 +241,15 @@ func Build() (string, error) {
 
 	for _, file := range files {
 		file := file // https://go.dev/doc/faq#closures_and_goroutines
+		key := file.GetKey()
+
+		writeToDestination := options.ReplaceRemoteAssets || !util.Contains(existingKeys.Keys, key)
+		writeToArchive := options.Archive
+
+		// Skip fetching contents of file if we don't need to write it
+		if !writeToDestination && !writeToArchive {
+			continue
+		}
 
 		// Fetch contents of file
 		contents, err := file.GetContents()
@@ -242,32 +258,35 @@ func Build() (string, error) {
 		}
 
 		// Write file to R2
-		group.Go(func() error {
-			logger.Info("writing file to r2: " + file.GetKey())
-			err = r2.Write(file.GetKey(), bytes.NewReader(contents))
-			if err != nil {
-				return types.WrapErr(err, "failed to write file to r2")
-			}
-			return nil
-		})
+		if writeToDestination {
+			group.Go(func() error {
+				logger.Info("writing file to r2: " + key)
+				err = r2.Write(file.GetKey(), bytes.NewReader(contents))
+				if err != nil {
+					return types.WrapErr(err, "failed to write file to r2")
+				}
+				return nil
+			})
+		}
 
 		// Write file to GCS backups bucket
-		group.Go(func() error {
-			logger.Info("writing file to gcs: " + file.GetKey())
-			err = gcs.PutToBackup(file.GetKey(), buildID, contents)
-			if err != nil {
-				return types.WrapErr(err, "failed to write file to gcs sbackup")
-			}
-			return nil
-		})
+		if writeToArchive {
+			group.Go(func() error {
+				logger.Info("writing file to gcs: " + key)
+				err = gcs.PutToBackup(key, buildID, contents)
+				if err != nil {
+					return types.WrapErr(err, "failed to write file to gcs sbackup")
+				}
+				return nil
+			})
+		}
 	}
 
 	if err := group.Wait(); err != nil {
 		return "", types.WrapErr(err, "failed to write file(s)")
 	}
 
-	logger.Info("deleting files from destination...")
-
+	logger.Info("cleaning up unused files from destination")
 	for _, key := range keysToDelete {
 		logger.Info("deleting file from r2: " + key)
 		err = r2.Delete(key)

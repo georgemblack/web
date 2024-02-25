@@ -42,3 +42,12 @@ func IsIndex(path string) bool {
 	fileName := filepath.Base(path)
 	return strings.HasPrefix(fileName, "index.html")
 }
+
+func Contains(slice []string, val string) bool {
+	for _, item := range slice {
+		if item == val {
+			return true
+		}
+	}
+	return false
+}
