@@ -19,6 +19,35 @@ type R2Service struct {
 	Config conf.Config
 }
 
+// NewR2Service creates a new R2 service.
+func NewR2Service(config conf.Config) R2Service {
+	return R2Service{
+		Config: config,
+	}
+}
+
+func (r2 *R2Service) Get(key string) ([]byte, error) {
+	client := &http.Client{}
+	url := fmt.Sprintf("%s/%s", r2.Config.R2Endpoint, key)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, types.WrapErr(err, "failed to build http request")
+	}
+	req.Header.Set("X-Access-Token", r2.Config.R2AccessToken)
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, types.WrapErr(err, "http request failed")
+	}
+	defer resp.Body.Close()
+
+	var result []byte
+	_, err = resp.Body.Read(result)
+	if err != nil {
+		return nil, types.WrapErr(err, "failed to read response body")
+	}
+	return result, nil
+}
+
 // Write implements the Writer interface.
 func (r2 *R2Service) Write(key string, content io.Reader) error {
 	return r2.Put(key, content)

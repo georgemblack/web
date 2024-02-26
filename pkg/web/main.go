@@ -3,6 +3,9 @@ package web
 import (
 	"bytes"
 	"context"
+	"crypto/md5"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"strconv"
@@ -14,13 +17,11 @@ import (
 	"github.com/georgemblack/web/pkg/repo"
 	"github.com/georgemblack/web/pkg/static"
 	"github.com/georgemblack/web/pkg/types"
-	"github.com/georgemblack/web/pkg/util"
 	"golang.org/x/sync/errgroup"
 )
 
 type Options struct {
-	Archive             bool // Create a snapshot of the site and store it in GCS
-	ReplaceRemoteAssets bool // Replace all assets (i.e. images) in R2, instead of just adding new ones
+	Archive bool // Create a snapshot of the site and store it in GCS
 }
 
 // Build starts build process
@@ -222,14 +223,40 @@ func Build(options Options) (string, error) {
 				break
 			}
 		}
-		if !found {
+
+		// TODO: Refactor, make this cleaner
+		if !found && existingKey != "hashbrown.json" {
 			keysToDelete = append(keysToDelete, existingKey)
 		}
 	}
 	logger.Info("marking the following files for deletion: " + fmt.Sprint(keysToDelete))
 
-	// Write all site files to destination (as well as backup location)
+	// Fetch set of hashes for existing files in R2
+	// This will be used to determine if a file has changed
+	// TODO: Debug
+	logger.Info("fetching hashes for existing files")
+	hashbrown := types.Hashbrown{
+		Hashes: make(map[string]string),
+	}
+	responseBody, err := r2.Get("hashbrown.json")
+
+	if err == nil {
+		err = json.Unmarshal(responseBody, &hashbrown)
+		if err != nil {
+			logger.Warn("failed to unmarshal hashbrown, assuming all files are new; " + err.Error())
+		}
+	} else {
+		logger.Warn("failed to fetch hashbrown, assuming all files are new; " + err.Error())
+	}
+	logger.Info("found " + strconv.Itoa(len(hashbrown.Hashes)) + " existing hash(es)")
+
+	// Write all site files to destination (as well as backup location).
+	// Calculate hashes for each site file to determine whether or not to write, as well as to build a new hashbrown.
 	logger.Info("writing files to destination")
+
+	newHashbrown := types.Hashbrown{
+		Hashes: make(map[string]string),
+	}
 
 	maxParallel := 35
 	if len(files) < maxParallel {
@@ -243,18 +270,31 @@ func Build(options Options) (string, error) {
 		file := file // https://go.dev/doc/faq#closures_and_goroutines
 		key := file.GetKey()
 
-		writeToDestination := options.ReplaceRemoteAssets || !util.Contains(existingKeys.Keys, key)
-		writeToArchive := options.Archive
-
-		// Skip fetching contents of file if we don't need to write it
-		if !writeToDestination && !writeToArchive {
-			continue
-		}
-
 		// Fetch contents of file
 		contents, err := file.GetContents()
 		if err != nil {
 			return "", types.WrapErr(err, "failed to get file contents")
+		}
+
+		// Hash contents of file
+		hasher := md5.New()
+		_, err = hasher.Write(contents)
+		if err != nil {
+			return "", types.WrapErr(err, "failed to hash file contents for key: "+key)
+		}
+		hashBytes := hasher.Sum(nil)
+		hash := hex.EncodeToString(hashBytes)
+
+		// Add hash to new hashbrown
+		newHashbrown.Hashes[key] = hash
+
+		writeToDestination := true
+		writeToArchive := options.Archive
+
+		// Check if file has changed
+		if existingHash, ok := hashbrown.Hashes[key]; ok && existingHash == hash {
+			logger.Info("file has not changed, skipping: " + key)
+			writeToDestination = false
 		}
 
 		// Write file to R2
@@ -293,6 +333,16 @@ func Build(options Options) (string, error) {
 		if err != nil {
 			return "", types.WrapErr(err, "failed to delete file")
 		}
+	}
+
+	logger.Info("writing new hashbrown")
+	hashbrownJSON, err := json.Marshal(newHashbrown)
+	if err != nil {
+		return "", types.WrapErr(err, "failed to marshal new hashbrown")
+	}
+	err = r2.WriteString("hashbrown.json", string(hashbrownJSON))
+	if err != nil {
+		return "", types.WrapErr(err, "failed to write new hashbrown")
 	}
 
 	logger.Info("completed build: " + buildID)

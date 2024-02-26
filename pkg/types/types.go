@@ -112,6 +112,12 @@ type JSONFeedItem struct {
 	DateModified  string `json:"date_modified"`
 }
 
+// Hashbrown represents a set of hashes for given keys in R2.
+// Hashbrown is just a fun name.
+type Hashbrown struct {
+	Hashes map[string]string `json:"hashes"`
+}
+
 // WrapErr wraps an error and returns a new one
 func WrapErr(err error, message string) error {
 	return fmt.Errorf("%s; %w", message, err)

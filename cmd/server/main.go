@@ -19,8 +19,7 @@ func main() {
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		buildID, err := web.Build(web.Options{
-			Archive:             true,
-			ReplaceRemoteAssets: true,
+			Archive: true,
 		})
 		if err != nil {
 			slog.Error(err.Error())
