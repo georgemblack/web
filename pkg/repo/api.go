@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -109,4 +110,57 @@ func (api *APIService) GetPublishedPosts() (types.Posts, error) {
 	}
 
 	return posts, nil
+}
+
+func (api *APIService) GetHashbrown() (types.Hashbrown, error) {
+	// Use empty struct as default
+	hashbrown := types.Hashbrown{
+		Keys: make(map[string]string),
+	}
+
+	client := &http.Client{}
+	url := fmt.Sprintf("%s/hashes", api.Config.APIEndpoint)
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return hashbrown, types.WrapErr(err, "failed to build http request")
+	}
+	req.Header.Set("Authorization", api.AuthToken)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return hashbrown, types.WrapErr(err, "http request failed")
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&hashbrown)
+	if err != nil {
+		return hashbrown, types.WrapErr(err, "failed to decode http response body")
+	}
+
+	return hashbrown, nil
+}
+
+func (api *APIService) PostHashbrown(hashbrown types.Hashbrown) error {
+	client := &http.Client{}
+	url := fmt.Sprintf("%s/hashes", api.Config.APIEndpoint)
+
+	hashbrownBytes, err := json.Marshal(hashbrown)
+	if err != nil {
+		return types.WrapErr(err, "failed to marshal hashbrown")
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(hashbrownBytes))
+	if err != nil {
+		return types.WrapErr(err, "failed to build http request")
+	}
+	req.Header.Set("Authorization", api.AuthToken)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return types.WrapErr(err, "http request failed")
+	}
+	defer resp.Body.Close()
+
+	return nil
 }

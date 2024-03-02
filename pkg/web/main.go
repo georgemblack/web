@@ -5,7 +5,6 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"log/slog"
 	"strconv"
@@ -206,16 +205,21 @@ func Build(options Options) (string, error) {
 		return "", types.WrapErr(err, "failed one or more build steps")
 	}
 
+	// Fetch set of hashes for existing files in R2
+	// This will be used to determine if a file has changed, and to determine file deletions
+	logger.Info("fetching hashes for existing files")
+	hashbrown, err := api.GetHashbrown()
+	if err != nil {
+		logger.Warn("failed to fetch hashbrown, assuming all files are new; " + err.Error())
+	}
+	logger.Info("found " + strconv.Itoa(len(hashbrown.Keys)) + " existing hash(es)")
+
 	// Find difference between new and existing files
 	// Mark unused files for deletion
 	logger.Info("finding diff between new and existing files")
-	existingKeys, err := r2.List()
-	if err != nil {
-		return "", types.WrapErr(err, "failed to list existing files")
-	}
 
 	keysToDelete := []string{}
-	for _, existingKey := range existingKeys.Keys {
+	for existingKey, _ := range hashbrown.Keys {
 		found := false
 		for _, file := range files {
 			if file.GetKey() == existingKey {
@@ -224,38 +228,18 @@ func Build(options Options) (string, error) {
 			}
 		}
 
-		// TODO: Refactor, make this cleaner
-		if !found && existingKey != "hashbrown.json" {
+		if !found {
 			keysToDelete = append(keysToDelete, existingKey)
 		}
 	}
 	logger.Info("marking the following files for deletion: " + fmt.Sprint(keysToDelete))
-
-	// Fetch set of hashes for existing files in R2
-	// This will be used to determine if a file has changed
-	// TODO: Debug
-	logger.Info("fetching hashes for existing files")
-	hashbrown := types.Hashbrown{
-		Hashes: make(map[string]string),
-	}
-	responseBody, err := r2.Get("hashbrown.json")
-
-	if err == nil {
-		err = json.Unmarshal(responseBody, &hashbrown)
-		if err != nil {
-			logger.Warn("failed to unmarshal hashbrown, assuming all files are new; " + err.Error())
-		}
-	} else {
-		logger.Warn("failed to fetch hashbrown, assuming all files are new; " + err.Error())
-	}
-	logger.Info("found " + strconv.Itoa(len(hashbrown.Hashes)) + " existing hash(es)")
 
 	// Write all site files to destination (as well as backup location).
 	// Calculate hashes for each site file to determine whether or not to write, as well as to build a new hashbrown.
 	logger.Info("writing files to destination")
 
 	newHashbrown := types.Hashbrown{
-		Hashes: make(map[string]string),
+		Keys: make(map[string]string),
 	}
 
 	maxParallel := 35
@@ -286,13 +270,13 @@ func Build(options Options) (string, error) {
 		hash := hex.EncodeToString(hashBytes)
 
 		// Add hash to new hashbrown
-		newHashbrown.Hashes[key] = hash
+		newHashbrown.Keys[key] = hash
 
 		writeToDestination := true
 		writeToArchive := options.Archive
 
 		// Check if file has changed
-		if existingHash, ok := hashbrown.Hashes[key]; ok && existingHash == hash {
+		if existingHash, ok := hashbrown.Keys[key]; ok && existingHash == hash {
 			logger.Info("file has not changed, skipping: " + key)
 			writeToDestination = false
 		}
@@ -336,11 +320,7 @@ func Build(options Options) (string, error) {
 	}
 
 	logger.Info("writing new hashbrown")
-	hashbrownJSON, err := json.Marshal(newHashbrown)
-	if err != nil {
-		return "", types.WrapErr(err, "failed to marshal new hashbrown")
-	}
-	err = r2.WriteString("hashbrown.json", string(hashbrownJSON))
+	err = api.PostHashbrown(newHashbrown)
 	if err != nil {
 		return "", types.WrapErr(err, "failed to write new hashbrown")
 	}

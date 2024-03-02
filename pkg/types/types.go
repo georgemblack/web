@@ -115,7 +115,7 @@ type JSONFeedItem struct {
 // Hashbrown represents a set of hashes for given keys in R2.
 // Hashbrown is just a fun name.
 type Hashbrown struct {
-	Hashes map[string]string `json:"hashes"`
+	Keys map[string]string `json:"keys"`
 }
 
 // WrapErr wraps an error and returns a new one

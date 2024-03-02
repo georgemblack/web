@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -56,29 +55,6 @@ func (r2 *R2Service) Write(key string, content io.Reader) error {
 // WriteString implements the Writer interface.
 func (r2 *R2Service) WriteString(key string, content string) error {
 	return r2.Put(key, strings.NewReader(content))
-}
-
-// List returns a full list of keys available in the R2 storage bucket.
-func (r2 *R2Service) List() (ListResponse, error) {
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", r2.Config.R2Endpoint, nil)
-	if err != nil {
-		return ListResponse{}, types.WrapErr(err, "failed to build http request")
-	}
-	req.Header.Set("X-Access-Token", r2.Config.R2AccessToken)
-	resp, err := client.Do(req)
-	if err != nil {
-		return ListResponse{}, types.WrapErr(err, "http request failed")
-	}
-	defer resp.Body.Close()
-
-	var result ListResponse
-	err = json.NewDecoder(resp.Body).Decode(&result)
-	if err != nil {
-		return ListResponse{}, types.WrapErr(err, "failed to decode response body")
-	}
-
-	return result, nil
 }
 
 // Put writes a single object to the R2 storage bucket.
