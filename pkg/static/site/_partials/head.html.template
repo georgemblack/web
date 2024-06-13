@@ -19,7 +19,7 @@
   <meta name="twitter:title" content="{{ .SiteMetadata.Name }}" />
   {{- end }}
   <meta name="twitter:description" content="{{ .SiteMetadata.Description }}" />
-  <meta name="twitter:image" content="{{ .SiteMetadata.URL }}/images/profile.jpg" />
+  <meta name="twitter:image" content="{{ .SiteMetadata.URL }}/images/profile.avif" />
   <meta name="twitter:image:alt" content="{{ .SiteMetadata.Author }} profile" />
   <meta name="twitter:url" content="{{ .SiteMetadata.URL }}" />
   <meta name="twitter:creator" content="{{ .SiteMetadata.AuthorTwitter }}" />
@@ -31,7 +31,7 @@
   {{- end }}
   <meta property="og:url" content="{{ .SiteMetadata.URL }}" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="{{ .SiteMetadata.URL }}/images/profile.jpg" />
+  <meta property="og:image" content="{{ .SiteMetadata.URL }}/images/profile.avif" />
   <meta property="og:description" content="{{ .SiteMetadata.Description }}" />
   <!-- Theme colors (Safari navbar)-->
   <meta name="theme-color" content="#f0ece9" media="(prefers-color-scheme: light)" />

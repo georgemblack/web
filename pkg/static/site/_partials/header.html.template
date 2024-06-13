@@ -3,7 +3,7 @@
   <h1 class="view-large"><a href="/">george.black</a></h1>
   <h1 class="view-small"><a href="/">gb</a></h1>
   <nav>
-    <a href="/">Home</a>
+    <a href="/home">Home</a>
     <a href="/about">About</a>
     <a href="/likes">Likes</a>
     <a href="https://photos.george.black">Photos</a>
