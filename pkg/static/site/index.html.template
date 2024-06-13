@@ -2,7 +2,14 @@
 <html lang="en">
   {{ template "head" . }}
   <body>
-    <main>
+    <main style="max-width: 38em; margin: 0 auto">
+      <div>
+        <img
+          style="border-radius: 100%; max-width: 16em; border: 1px solid white; margin: 2em auto"
+          src="https://george.black/images/profile.avif"
+          alt="George and his best friend, hiking"
+        />
+      </div>
       <div>
         <h1>George Black</h1>
         <p>Software Engineer, currently living & working in Austin, TX.</p>
@@ -10,13 +17,6 @@
           <li><a href="https://github.com/georgemblack">GitHub</a></li>
           <li><a href="https://www.linkedin.com/in/georgemb/">LinkedIn</a></li>
         </ul>
-      </div>
-      <div style="margin-top: 2em">
-        <img
-          style="border-radius: 100%; max-width: 16em; border: 1px solid white"
-          src="https://george.black/images/profile.avif"
-          alt="George and his best friend, hiking"
-        />
       </div>
     </main>
   </body>
