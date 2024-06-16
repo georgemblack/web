@@ -2,7 +2,7 @@
 <html lang="en">
   {{ template "head" . }}
   <body>
-    <main style="max-width: 38em; margin: 4m auto">
+    <main style="max-width: 38em; margin: 4m auto; text-align: center">
       <div>
         <img
           style="border-radius: 100%; max-width: 16em; border: 5px solid white"
