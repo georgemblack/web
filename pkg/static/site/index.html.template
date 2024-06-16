@@ -2,21 +2,21 @@
 <html lang="en">
   {{ template "head" . }}
   <body>
-    <main style="max-width: 38em; margin: 0 auto">
+    <main style="max-width: 38em; margin: 4m auto">
       <div>
         <img
-          style="border-radius: 100%; max-width: 16em; border: 1px solid white; margin: 2em auto"
+          style="border-radius: 100%; max-width: 16em; border: 5px solid white"
           src="https://george.black/images/profile.avif"
-          alt="George and his best friend, hiking"
+          alt="George Black"
         />
       </div>
       <div>
         <h1>George Black</h1>
-        <p>Software Engineer, currently living & working in Austin, TX.</p>
-        <ul>
-          <li><a href="https://github.com/georgemblack">GitHub</a></li>
-          <li><a href="https://www.linkedin.com/in/georgemb/">LinkedIn</a></li>
-        </ul>
+        <div style="display: flex; gap: 1.5em; justify-content: center; margin-top: 1em">
+          <a href="https://github.com/georgemblack">GitHub</a>
+          <a href="https://www.linkedin.com/in/georgemb/">LinkedIn</a>
+          <a href="https://photos.george.black">Photos</a>
+        </div>
       </div>
     </main>
   </body>
