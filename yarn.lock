@@ -118,6 +118,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@astrojs/rss@npm:^4.0.7":
+  version: 4.0.7
+  resolution: "@astrojs/rss@npm:4.0.7"
+  dependencies:
+    fast-xml-parser: "npm:^4.4.0"
+    kleur: "npm:^4.1.5"
+  checksum: 10c0/dc3ca62de077eb4f1130c289aff95d7f69a74258fc0f7ca2f79ecfa428ad704051860c5abf386acfd0cfc5a5b026b08699cd520306df16eb8eaaa881a8611ac7
+  languageName: node
+  linkType: hard
+
 "@astrojs/sitemap@npm:^3.1.6":
   version: 3.1.6
   resolution: "@astrojs/sitemap@npm:3.1.6"
@@ -2227,6 +2237,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-xml-parser@npm:^4.4.0":
+  version: 4.5.0
+  resolution: "fast-xml-parser@npm:4.5.0"
+  dependencies:
+    strnum: "npm:^1.0.5"
+  bin:
+    fxparser: src/cli/cli.js
+  checksum: 10c0/71d206c9e137f5c26af88d27dde0108068a5d074401901d643c500c36e95dfd828333a98bda020846c41f5b9b364e2b0e9be5b19b0bdcab5cf31559c07b80a95
+  languageName: node
+  linkType: hard
+
 "fastq@npm:^1.17.1, fastq@npm:^1.6.0":
   version: 1.17.1
   resolution: "fastq@npm:1.17.1"
@@ -4257,6 +4278,7 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@astrojs/check": "npm:^0.9.3"
+    "@astrojs/rss": "npm:^4.0.7"
     "@astrojs/sitemap": "npm:^3.1.6"
     astro: "npm:^4.15.9"
     typescript: "npm:^5.6.2"
@@ -4601,6 +4623,13 @@ __metadata:
   version: 3.0.0
   resolution: "strip-bom@npm:3.0.0"
   checksum: 10c0/51201f50e021ef16672593d7434ca239441b7b760e905d9f33df6e4f3954ff54ec0e0a06f100d028af0982d6f25c35cd5cda2ce34eaebccd0250b8befb90d8f1
+  languageName: node
+  linkType: hard
+
+"strnum@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "strnum@npm:1.0.5"
+  checksum: 10c0/64fb8cc2effbd585a6821faa73ad97d4b553c8927e49086a162ffd2cc818787643390b89d567460a8e74300148d11ac052e21c921ef2049f2987f4b1b89a7ff1
   languageName: node
   linkType: hard
 

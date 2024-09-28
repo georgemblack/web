@@ -9,6 +9,11 @@ export function formatTimestamp(unixSeconds: number): string {
   });
 }
 
+export function timestampToISO8601(unixSeconds: number): string {
+  const date = new Date(unixSeconds * 1000);
+  return date.toISOString();
+}
+
 export function hostnameFromUrl(url: string): string {
   const parsed = new URL(url);
   return parsed.hostname.replace(/^www\./, "");

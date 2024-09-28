@@ -28,6 +28,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@astrojs/check", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:0.9.3"],\
+          ["@astrojs/rss", "npm:4.0.7"],\
           ["@astrojs/sitemap", "npm:3.1.6"],\
           ["astro", "npm:4.15.9"],\
           ["typescript", "patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=8c6c40"]\
@@ -169,6 +170,17 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@astrojs/prism", "npm:3.1.0"],\
           ["prismjs", "npm:1.29.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["@astrojs/rss", [\
+      ["npm:4.0.7", {\
+        "packageLocation": "../../../.yarn/berry/cache/@astrojs-rss-npm-4.0.7-118107b2ec-10c0.zip/node_modules/@astrojs/rss/",\
+        "packageDependencies": [\
+          ["@astrojs/rss", "npm:4.0.7"],\
+          ["fast-xml-parser", "npm:4.5.0"],\
+          ["kleur", "npm:4.1.5"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -2593,6 +2605,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
+    ["fast-xml-parser", [\
+      ["npm:4.5.0", {\
+        "packageLocation": "../../../.yarn/berry/cache/fast-xml-parser-npm-4.5.0-353a57f69a-10c0.zip/node_modules/fast-xml-parser/",\
+        "packageDependencies": [\
+          ["fast-xml-parser", "npm:4.5.0"],\
+          ["strnum", "npm:1.0.5"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
     ["fastq", [\
       ["npm:1.17.1", {\
         "packageLocation": "../../../.yarn/berry/cache/fastq-npm-1.17.1-56d4554993-10c0.zip/node_modules/fastq/",\
@@ -4805,6 +4827,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["root-workspace-0b6124", "workspace:."],\
           ["@astrojs/check", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:0.9.3"],\
+          ["@astrojs/rss", "npm:4.0.7"],\
           ["@astrojs/sitemap", "npm:3.1.6"],\
           ["astro", "npm:4.15.9"],\
           ["typescript", "patch:typescript@npm%3A5.6.2#optional!builtin<compat/typescript>::version=5.6.2&hash=8c6c40"]\
@@ -5142,6 +5165,15 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../.yarn/berry/cache/strip-bom-string-npm-1.0.0-aa6cb548d1-10c0.zip/node_modules/strip-bom-string/",\
         "packageDependencies": [\
           ["strip-bom-string", "npm:1.0.0"]\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["strnum", [\
+      ["npm:1.0.5", {\
+        "packageLocation": "../../../.yarn/berry/cache/strnum-npm-1.0.5-9ba11d2a0a-10c0.zip/node_modules/strnum/",\
+        "packageDependencies": [\
+          ["strnum", "npm:1.0.5"]\
         ],\
         "linkType": "HARD"\
       }]\

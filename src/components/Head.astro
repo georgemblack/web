@@ -14,7 +14,8 @@ const pageTitle = title ? `${title} | George Black` : `George Black`;
   <meta name="description" content="{{ .SiteMetadata.Description }}" />
   <meta name="author" content="{{ .SiteMetadata.Author }}" />
   <link rel="sitemap" href="/sitemap-index.xml" />
-  <link rel="alternate" title="George Black's blog feed" type="application/feed+json" href="{{ .SiteMetadata.URL }}/feeds/main.json" />
+  <link rel="alternate" type="application/rss+xml" title="George Black" href="https://george.black/feeds/main.xml"  />
+  <link rel="alternate" type="application/feed+json" title="George Black" href="https://george.black/feeds/main.json" />
   <title>{pageTitle}</title>
   <!-- Twitter card data -->
   <meta name="twitter:card" content="summary" />
