@@ -1,6 +1,6 @@
 import rss from "@astrojs/rss";
 import { getPosts } from "../../util/Api";
-import { fullSlug, timestampToISO8601 } from "../../util/Format";
+import { fullSlug } from "../../util/Format";
 
 export async function GET(context) {
   const posts = await getPosts();
@@ -11,7 +11,7 @@ export async function GET(context) {
     site: context.site,
     items: posts.map((post) => ({
       title: post.title,
-      pubDate: timestampToISO8601(post.published._seconds),
+      pubDate: post.published,
       link: `/${fullSlug(post)}`,
       trailingSlash: false,
       content: post.contentHtml,

@@ -1,7 +1,7 @@
 ---
-import { getPosts } from "../util/Api"
-import { formatTimestamp, fullSlug } from '../util/Format';
-import Post from "../layouts/Post.astro"
+import { getPosts } from "../util/Api";
+import { formatTimestamp, fullSlug } from "../util/Format";
+import Post from "../layouts/Post.astro";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -13,13 +13,13 @@ export async function getStaticPaths() {
       title: post.title,
       published: post.published,
       contentHtml: post.contentHtml,
-    }
-  }))
+    },
+  }));
 }
 
 const { title, published, contentHtml } = Astro.props;
 ---
 
-<Post title={title} date={formatTimestamp(published._seconds)}>
- <Fragment set:html={contentHtml} />
+<Post title={title} date={formatTimestamp(published)}>
+  <Fragment set:html={contentHtml} />
 </Post>

@@ -1,20 +1,28 @@
 ---
-import { getLikes } from "../util/Api"
-import { formatTimestamp, hostnameFromUrl } from "../util/Format"
+import { getLikes } from "../util/Api";
+import { formatTimestamp, hostnameFromUrl } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
 const likes = await getLikes();
 ---
+
 <Page title="Likes">
   <h1>Likes</h1>
-  <p>Think of these as bookmarks – maybe retweets? I’m not sure! They are links I find interesting.</p>
+  <p>
+    Think of these as bookmarks – maybe retweets? I’m not sure! They are links I
+    find interesting.
+  </p>
   <div class="card-list">
-  {likes.map(like => (
-    <div class="card">
-      <p class="supertitle">{formatTimestamp(like.timestamp._seconds)}</p>
-      <h2><a href={like.url}>{ like.title }</a></h2>
-      <p class="subtitle">{hostnameFromUrl(like.url)}</p>
-    </div>
-  ))}
+    {
+      likes.map((like) => (
+        <div class="card">
+          <p class="supertitle">{formatTimestamp(like.timestamp)}</p>
+          <h2>
+            <a href={like.url}>{like.title}</a>
+          </h2>
+          <p class="subtitle">{hostnameFromUrl(like.url)}</p>
+        </div>
+      ))
+    }
   </div>
 </Page>

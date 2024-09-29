@@ -1,36 +1,31 @@
 const API_URL = import.meta.env.API_URL;
 const API_TOKEN = import.meta.env.API_TOKEN;
 
-interface AuthResponse {
+export interface AuthResponse {
   token: string;
 }
 
-interface PostsResponse {
+export interface PostsResponse {
   posts: Post[];
 }
 
 export interface Post {
   title: string;
   slug: string;
-  published: Timestamp;
+  published: string;
   listed: boolean;
   contentHtml: string;
   contentHtmlPreview?: string;
 }
 
-interface LikeResponse {
+export interface LikeResponse {
   likes: Like[];
 }
 
-interface Like {
+export interface Like {
   title: string;
   url: string;
-  timestamp: Timestamp;
-}
-
-interface Timestamp {
-  _seconds: number;
-  _nanoseconds: number;
+  timestamp: string;
 }
 
 export async function getPosts(): Promise<Post[]> {
@@ -43,14 +38,11 @@ export async function getPosts(): Promise<Post[]> {
   });
   const auth: AuthResponse = await authResponse.json();
 
-  const postsResponse = await fetch(
-    `${API_URL}/posts?listed=true&published=true`,
-    {
-      headers: {
-        Authorization: "Bearer " + auth.token,
-      },
-    }
-  );
+  const postsResponse = await fetch(`${API_URL}/posts?published=true`, {
+    headers: {
+      Authorization: "Bearer " + auth.token,
+    },
+  });
   const posts: PostsResponse = await postsResponse.json();
 
   return posts.posts;

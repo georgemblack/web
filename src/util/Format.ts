@@ -1,17 +1,12 @@
 import type { Post } from "./Api";
 
-export function formatTimestamp(unixSeconds: number): string {
-  const date = new Date(unixSeconds * 1000);
+export function formatTimestamp(timestamp: string): string {
+  const date = new Date(timestamp);
   return date.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
-}
-
-export function timestampToISO8601(unixSeconds: number): string {
-  const date = new Date(unixSeconds * 1000);
-  return date.toISOString();
 }
 
 export function hostnameFromUrl(url: string): string {
@@ -20,8 +15,6 @@ export function hostnameFromUrl(url: string): string {
 }
 
 export function fullSlug(post: Post): string {
-  const year = new Date(post.published._seconds * 1000)
-    .getFullYear()
-    .toString();
+  const year = new Date(post.published).getFullYear().toString();
   return `${year}/${post.slug}`;
 }

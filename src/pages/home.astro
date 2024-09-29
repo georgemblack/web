@@ -1,19 +1,26 @@
 ---
-import { getPosts } from "../util/Api"
-import { formatTimestamp, fullSlug } from '../util/Format';
+import { getPosts } from "../util/Api";
+import { formatTimestamp, fullSlug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
 const posts = await getPosts();
-const listed = posts.filter(post => post.listed);
+const listed = posts.filter((post) => post.listed);
 ---
+
 <Page title="Home">
-  {listed.map(post => (
-    <article style="margin-bottom: 6em;">
-      <h1><a href={`/${fullSlug(post)}`}>{post.title}</a></h1>
-      <p class="subtitle">{formatTimestamp(post.published._seconds)}</p>
-      <Fragment set:html={post.contentHtmlPreview || post.contentHtml} />
-      <a class="read-more-button" href={`/${fullSlug(post)}`}><p>Read More &#8594;</p></a>
-    </article>
-  ))}
+  {
+    listed.map((post) => (
+      <article style="margin-bottom: 6em;">
+        <h1>
+          <a href={`/${fullSlug(post)}`}>{post.title}</a>
+        </h1>
+        <p class="subtitle">{formatTimestamp(post.published)}</p>
+        <Fragment set:html={post.contentHtmlPreview || post.contentHtml} />
+        <a class="read-more-button" href={`/${fullSlug(post)}`}>
+          <p>Read More &#8594;</p>
+        </a>
+      </article>
+    ))
+  }
   <p><a href="/archive">Go to Archive</a></p>
 </Page>

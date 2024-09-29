@@ -1,19 +1,25 @@
 ---
-import { getPosts } from "../util/Api"
-import { formatTimestamp, fullSlug } from "../util/Format"
+import { getPosts } from "../util/Api";
+import { formatTimestamp, fullSlug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
 const posts = await getPosts();
-const listed = posts.filter(post => post.listed);
+const listed = posts.filter((post) => post.listed);
 ---
+
 <Page title="Archive">
   <h1>Archive</h1>
-  <p>All the dumb shit I’ve said, organized in one place for your convenience.</p>
-  {listed.map(post => (
-    <div class="card">
-      <h2><a href={`/${fullSlug(post)}`}>{ post.title }</a></h2>
-      <p class="subtitle">{formatTimestamp(post.published._seconds)}</p>
-    </div>
-  ))}
-  </div>
+  <p>
+    All the dumb shit I’ve said, organized in one place for your convenience.
+  </p>
+  {
+    listed.map((post) => (
+      <div class="card">
+        <h2>
+          <a href={`/${fullSlug(post)}`}>{post.title}</a>
+        </h2>
+        <p class="subtitle">{formatTimestamp(post.published)}</p>
+      </div>
+    ))
+  }
 </Page>
