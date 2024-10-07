@@ -12,14 +12,14 @@ export async function getStaticPaths() {
     props: {
       title: post.title,
       published: post.published,
-      contentHtml: post.contentHtml,
+      content: post.content,
     },
   }));
 }
 
-const { title, published, contentHtml } = Astro.props;
+const { title, published, content } = Astro.props;
 ---
 
 <Post title={title} date={formatTimestamp(published)}>
-  <Fragment set:html={contentHtml} />
+  <Fragment set:html={content} />
 </Post>
