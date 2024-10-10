@@ -1,69 +1,51 @@
-const API_URL = import.meta.env.API_URL;
-const API_TOKEN = import.meta.env.API_TOKEN;
-
-export interface AuthResponse {
-  token: string;
-}
-
-export interface PostsResponse {
-  posts: Post[];
-}
+const API_URL = import.meta.env.KIRBY_API_URL;
 
 export interface Post {
+  id: string;
   title: string;
   slug: string;
   published: string;
-  listed: boolean;
-  contentHtml: string;
-  contentHtmlPreview?: string;
-}
-
-export interface LikeResponse {
-  likes: Like[];
+  visible: boolean;
+  preview: string;
+  content: string;
 }
 
 export interface Like {
+  id: string;
   title: string;
+  slug: string;
+  published: string;
   url: string;
-  timestamp: string;
+  content: string;
 }
 
 export async function getPosts(): Promise<Post[]> {
-  const authResponse = await fetch(`${API_URL}/auth`, {
-    method: "POST",
+  const response = await fetch(`${API_URL}/blog.json`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + API_TOKEN,
     },
   });
-  const auth: AuthResponse = await authResponse.json();
 
-  const postsResponse = await fetch(`${API_URL}/posts?published=true`, {
-    headers: {
-      Authorization: "Bearer " + auth.token,
-    },
+  const posts = await response.json();
+
+  // For each post, add a preview field.
+  // If the post content has a '<div class="break"></div>' element, use the content up to (but not including) that element.
+  // If there is no 'break', use the full content as the preview.
+  return posts.map((post: Post) => {
+    const index = post.content.indexOf('<div class="break"></div>');
+    post.preview = index === -1 ? post.content : post.content.slice(0, index);
+    return post;
   });
-  const posts: PostsResponse = await postsResponse.json();
-
-  return posts.posts;
 }
 
 export async function getLikes(): Promise<Like[]> {
-  const authResponse = await fetch(`${API_URL}/auth`, {
-    method: "POST",
+  const response = await fetch(`${API_URL}/links.json`, {
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + API_TOKEN,
     },
   });
-  const auth: AuthResponse = await authResponse.json();
 
-  const likesResponse = await fetch(`${API_URL}/likes`, {
-    headers: {
-      Authorization: "Bearer " + auth.token,
-    },
-  });
-  const likes: LikeResponse = await likesResponse.json();
-
-  return likes.likes;
+  return await response.json();
 }

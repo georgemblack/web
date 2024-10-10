@@ -14,7 +14,7 @@ export async function GET(context) {
       pubDate: post.published,
       link: `/${fullSlug(post)}`,
       trailingSlash: false,
-      content: post.contentHtml,
+      content: post.content,
     })),
   });
 }

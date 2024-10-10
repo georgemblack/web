@@ -4,7 +4,7 @@ import { formatTimestamp, fullSlug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
 const posts = await getPosts();
-const listed = posts.filter((post) => post.listed);
+const visible = posts.filter((post) => post.visible);
 ---
 
 <Page title="Archive">
@@ -13,7 +13,7 @@ const listed = posts.filter((post) => post.listed);
     All the dumb shit I’ve said, organized in one place for your convenience.
   </p>
   {
-    listed.map((post) => (
+    visible.map((post) => (
       <div class="card">
         <h2>
           <a href={`/${fullSlug(post)}`}>{post.title}</a>

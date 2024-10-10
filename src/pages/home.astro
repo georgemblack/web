@@ -4,18 +4,18 @@ import { formatTimestamp, fullSlug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
 const posts = await getPosts();
-const listed = posts.filter((post) => post.listed);
+const visible = posts.filter((post) => post.visible);
 ---
 
 <Page title="Home">
   {
-    listed.map((post) => (
+    visible.map((post) => (
       <article style="margin-bottom: 6em;">
         <h1>
           <a href={`/${fullSlug(post)}`}>{post.title}</a>
         </h1>
         <p class="subtitle">{formatTimestamp(post.published)}</p>
-        <Fragment set:html={post.contentHtmlPreview || post.contentHtml} />
+        <Fragment set:html={post.preview || post.content} />
         <a class="read-more-button" href={`/${fullSlug(post)}`}>
           <p>Read More &#8594;</p>
         </a>
