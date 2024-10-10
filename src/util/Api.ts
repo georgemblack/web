@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.API_URL;
+const API_URL = import.meta.env.KIRBY_API_URL;
 
 export interface Post {
   id: string;
