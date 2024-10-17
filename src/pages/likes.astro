@@ -16,7 +16,7 @@ const likes = await getLikes();
     {
       likes.map((like) => (
         <div class="card">
-          <p class="supertitle">{formatTimestamp(like.timestamp)}</p>
+          <p class="supertitle">{formatTimestamp(like.published)}</p>
           <h2>
             <a href={like.url}>{like.title}</a>
           </h2>
