@@ -29,13 +29,24 @@ export async function getPosts(): Promise<Post[]> {
 
   const posts = await response.json();
 
+  // Filter out posts that are published in the future.
+  const now = new Date();
+  const published = posts.filter((post: Post) => {
+    return new Date(post.published) <= now;
+  });
+
   // For each post, add a preview field.
   // If the post content has a '<div class="break"></div>' element, use the content up to (but not including) that element.
   // If there is no 'break', use the full content as the preview.
-  return posts.map((post: Post) => {
+  const hydrated = published.map((post: Post) => {
     const index = post.content.indexOf('<div class="break"></div>');
     post.preview = index === -1 ? post.content : post.content.slice(0, index);
     return post;
+  });
+
+  // Sort posts by published date, in descending order.
+  return hydrated.sort((a: Post, b: Post) => {
+    return a.published < b.published ? 1 : -1;
   });
 }
 
@@ -47,5 +58,16 @@ export async function getLikes(): Promise<Like[]> {
     },
   });
 
-  return await response.json();
+  const likes = await response.json();
+
+  // Filter out any likes that are published in the future.
+  const now = new Date();
+  const published = likes.filter((like: Like) => {
+    return new Date(like.published) <= now;
+  });
+
+  // Sort likes by published date, in descending order.
+  return published.sort((a: Like, b: Like) => {
+    return a.published < b.published ? 1 : -1;
+  });
 }
