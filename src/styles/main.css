@@ -35,7 +35,7 @@
   --faded-text-color: rgba(0, 0, 0, 0.4);
 
   /* specific section colors */
-  --search-background-color: #f8f4f0;
+  --search-background-color: rgba(255, 255, 255, 0.75);
 }
 
 /* dark mode */
@@ -60,7 +60,7 @@
     --faded-text-color: rgba(255, 255, 255, 0.4);
 
     /* specific section colors */
-    --search-background-color: #101212;
+    --search-background-color: rgba(255, 255, 255, 0.1);
   }
 }
 
