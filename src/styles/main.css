@@ -333,15 +333,12 @@ footer {
 
 /* medium break-point */
 @media screen and (max-width: 58em) {
-  .bio img {
-    width: 6em;
-  }
-}
-
-/* small break-point */
-@media screen and (max-width: 22.5em) {
   .bio {
     flex-direction: column;
+  }
+
+  .bio img {
+    width: 6em;
   }
 }
 
