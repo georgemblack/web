@@ -1,6 +1,6 @@
 ---
 import { getLikes } from "../util/Api";
-import { formatTimestamp, hostnameFromUrl } from "../util/Format";
+import { timestamp, hostname } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
 const likes = await getLikes();
@@ -16,11 +16,11 @@ const likes = await getLikes();
     {
       likes.map((like) => (
         <div class="card">
-          <p class="supertitle">{formatTimestamp(like.published)}</p>
+          <p class="supertitle">{timestamp(like.published)}</p>
           <h2>
             <a href={like.url}>{like.title}</a>
           </h2>
-          <p class="subtitle">{hostnameFromUrl(like.url)}</p>
+          <p class="subtitle">{hostname(like.url)}</p>
         </div>
       ))
     }

@@ -1,13 +1,13 @@
 ---
 import { getPosts } from "../util/Api";
-import { formatTimestamp, fullSlug } from "../util/Format";
+import { timestamp, slug } from "../util/Format";
 import Post from "../layouts/Post.astro";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
   return posts.map((post) => ({
     params: {
-      slug: fullSlug(post),
+      slug: slug(post),
     },
     props: {
       title: post.title,
@@ -20,6 +20,6 @@ export async function getStaticPaths() {
 const { title, published, content } = Astro.props;
 ---
 
-<Post title={title} date={formatTimestamp(published)}>
+<Post title={title} date={timestamp(published)}>
   <Fragment set:html={content} />
 </Post>

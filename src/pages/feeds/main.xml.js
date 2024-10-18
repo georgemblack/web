@@ -1,6 +1,6 @@
 import rss from "@astrojs/rss";
 import { getPosts } from "../../util/Api";
-import { fullSlug } from "../../util/Format";
+import { slug } from "../../util/Format";
 
 export async function GET(context) {
   const posts = await getPosts();
@@ -12,7 +12,7 @@ export async function GET(context) {
     items: posts.map((post) => ({
       title: post.title,
       pubDate: post.published,
-      link: `/${fullSlug(post)}`,
+      link: `/${slug(post)}`,
       trailingSlash: false,
       content: post.content,
     })),

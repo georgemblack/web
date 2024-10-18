@@ -19,6 +19,8 @@ export interface Like {
   content: string;
 }
 
+export type Combined = Post | Like;
+
 export async function getPosts(): Promise<Post[]> {
   const response = await fetch(`${API_URL}/blog.json`, {
     method: "GET",
@@ -68,6 +70,17 @@ export async function getLikes(): Promise<Like[]> {
 
   // Sort likes by published date, in descending order.
   return published.sort((a: Like, b: Like) => {
+    return a.published < b.published ? 1 : -1;
+  });
+}
+
+export async function getCombined(): Promise<Combined[]> {
+  const posts = await getPosts();
+  const likes = await getLikes();
+  const combined = [...posts, ...likes];
+
+  // Sort combined posts and likes by published date, in descending order.
+  return combined.sort((a: Combined, b: Combined) => {
     return a.published < b.published ? 1 : -1;
   });
 }

@@ -1,24 +1,30 @@
 ---
-import { getPosts } from "../util/Api";
-import { formatTimestamp, fullSlug } from "../util/Format";
+import { getCombined } from "../util/Api";
+import { subtitle, url, preview, readMore } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
-const posts = await getPosts();
-const visible = posts.filter((post) => post.visible);
+const combined = await getCombined();
+const visible = combined.filter((item) => {
+  if ("visible" in item) return item.visible;
+  return true;
+});
 ---
 
 <Page title="Home">
   {
-    visible.map((post) => (
+    visible.map((item) => (
       <article style="margin-bottom: 6em;">
         <h1>
-          <a href={`/${fullSlug(post)}`}>{post.title}</a>
+          <a href={url(item)}>{item.title}</a>
         </h1>
-        <p class="subtitle">{formatTimestamp(post.published)}</p>
-        <Fragment set:html={post.preview || post.content} />
-        <a class="read-more-button" href={`/${fullSlug(post)}`}>
-          <p>Read More &#8594;</p>
-        </a>
+        <p class="subtitle">{subtitle(item)}</p>
+
+        <Fragment set:html={preview(item)} />
+        {readMore(item) && (
+          <a class="read-more-button" href={url(item)}>
+            <p>Read More &#8594;</p>
+          </a>
+        )}
       </article>
     ))
   }
