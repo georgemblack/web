@@ -12,14 +12,16 @@ const visible = posts.filter((post) => post.visible);
   <p>
     All the dumb shit I’ve said, organized in one place for your convenience.
   </p>
-  {
-    visible.map((post) => (
-      <div class="card">
-        <h2>
-          <a href={`/${fullSlug(post)}`}>{post.title}</a>
-        </h2>
-        <p class="subtitle">{formatTimestamp(post.published)}</p>
-      </div>
-    ))
-  }
+  <div class="card-list">
+    {
+      visible.map((post) => (
+        <div class="card">
+          <h2>
+            <a href={`/${fullSlug(post)}`}>{post.title}</a>
+          </h2>
+          <p class="subtitle">{formatTimestamp(post.published)}</p>
+        </div>
+      ))
+    }
+  </div>
 </Page>
