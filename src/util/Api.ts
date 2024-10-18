@@ -80,7 +80,10 @@ export async function getCombined(): Promise<Combined[]> {
   const combined = [...posts, ...likes];
 
   // Sort combined posts and likes by published date, in descending order.
-  return combined.sort((a: Combined, b: Combined) => {
+  const sorted = combined.sort((a: Combined, b: Combined) => {
     return a.published < b.published ? 1 : -1;
   });
+
+  //  Keep 20 latest items
+  return sorted.slice(0, 20);
 }
