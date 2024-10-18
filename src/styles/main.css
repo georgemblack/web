@@ -306,8 +306,9 @@ footer {
   display: flex;
   gap: 2em;
   align-items: center;
-  padding: 0 0 2em 0;
-  border-bottom: 2px solid var(--line-separator-color);
+  padding: 1.5em 2em;
+  border-radius: 2em;
+  background-color: var(--line-separator-color);
 }
 
 .bio img {
