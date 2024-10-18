@@ -335,6 +335,7 @@ footer {
 @media screen and (max-width: 58em) {
   .bio {
     flex-direction: column;
+    gap: 1em;
   }
 
   .bio img {
