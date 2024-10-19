@@ -25,7 +25,7 @@ export function preview(item: Combined): string {
 }
 
 export function images(item: Combined): string[] {
-  if (isPost(item)) return item.images.slice(0, 3);
+  if (isPost(item)) return item.images.slice(0, 6);
   return [];
 }
 
