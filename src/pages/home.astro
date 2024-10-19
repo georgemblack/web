@@ -1,6 +1,13 @@
 ---
 import { getCombined } from "../util/Api";
-import { subtitle, url, preview, readMore, isPost } from "../util/Format";
+import {
+  subtitle,
+  url,
+  preview,
+  images,
+  readMore,
+  isPost,
+} from "../util/Format";
 import Page from "../layouts/Page.astro";
 
 const combined = await getCombined();
@@ -8,6 +15,7 @@ const visible = combined.filter((item) => {
   if (isPost(item)) return item.visible;
   return true;
 });
+const selected = visible.slice(0, 50);
 ---
 
 <Page title="Home">
@@ -41,7 +49,7 @@ const visible = combined.filter((item) => {
   </div>
   <div class="content">
     {
-      visible.map((item) => (
+      selected.map((item) => (
         <article style="margin-top: 5em;">
           <h1>
             <a href={url(item)}>{item.title}</a>
@@ -49,6 +57,17 @@ const visible = combined.filter((item) => {
           <p class="subtitle">{subtitle(item)}</p>
 
           <Fragment set:html={preview(item)} />
+          {isPost(item) && item.gallery && (
+            <div class="image-grid">
+              {images(item).map((image) => {
+                return (
+                  <a href={url(item)}>
+                    <img src={image} />
+                  </a>
+                );
+              })}
+            </div>
+          )}
           {readMore(item) && (
             <a class="read-more-button" href={url(item)}>
               <p>Read More &#8594;</p>
@@ -58,5 +77,5 @@ const visible = combined.filter((item) => {
       ))
     }
   </div>
-  <p><a href="/writing">Go to all writing</a></p>
+  <p><a href="/posts">Go to all posts</a></p>
 </Page>

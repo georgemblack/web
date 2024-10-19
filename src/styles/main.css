@@ -267,7 +267,7 @@ main figcaption {
 
 main blockquote {
   max-width: var(--reading-max-width);
-  border-left: 8px solid var(--blockquote-border-color);
+  border-left: 6px solid var(--blockquote-border-color);
   margin: 1.25em 0 0 1em;
   padding: 0.5em 1em;
   font-style: italic;
@@ -343,6 +343,19 @@ footer {
     flex-direction: column;
     gap: 1em;
   }
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1em;
+  margin-top: 1em;
+  width: 100%;
+}
+
+.image-grid img {
+  object-fit: cover;
+  aspect-ratio: 1 / 1;
 }
 
 .read-more-button p {

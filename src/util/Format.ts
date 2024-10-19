@@ -24,6 +24,11 @@ export function preview(item: Combined): string {
   return "";
 }
 
+export function images(item: Combined): string[] {
+  if (isPost(item)) return item.images.slice(0, 3);
+  return [];
+}
+
 export function readMore(item: Combined): boolean {
   if (isLike(item)) return false;
   if (isPost(item)) return item.content !== item.preview;

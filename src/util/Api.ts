@@ -6,8 +6,10 @@ export interface Post {
   slug: string;
   published: string;
   visible: boolean;
+  gallery: boolean;
   preview: string;
   content: string;
+  images: string[];
 }
 
 export interface Like {
@@ -37,12 +39,18 @@ export async function getPosts(): Promise<Post[]> {
     return new Date(post.published) <= now;
   });
 
-  // For each post, add a preview field.
-  // If the post content has a '<div class="break"></div>' element, use the content up to (but not including) that element.
-  // If there is no 'break', use the full content as the preview.
   const hydrated = published.map((post: Post) => {
+    // For each post, add a preview field.
+    // If the post content has a '<div class="break"></div>' element, use the content up to (but not including) that element.
+    // If there is no 'break', use the full content as the preview.
     const index = post.content.indexOf('<div class="break"></div>');
     post.preview = index === -1 ? post.content : post.content.slice(0, index);
+
+    // For each post, generate a list of images.
+    // Any string that matches the pattern 'https://files.george.black/*' is considered an image.
+    const images = post.content.match(/https:\/\/files\.george\.black\/[^"]+/g);
+    post.images = images || [];
+
     return post;
   });
 
@@ -80,10 +88,7 @@ export async function getCombined(): Promise<Combined[]> {
   const combined = [...posts, ...likes];
 
   // Sort combined posts and likes by published date, in descending order.
-  const sorted = combined.sort((a: Combined, b: Combined) => {
+  return combined.sort((a: Combined, b: Combined) => {
     return a.published < b.published ? 1 : -1;
   });
-
-  //  Keep 20 latest items
-  return sorted.slice(0, 20);
 }
