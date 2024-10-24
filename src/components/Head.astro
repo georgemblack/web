@@ -2,39 +2,73 @@
 import "../styles/main.css";
 
 interface Props {
-	title?: string;
+  title?: string;
 }
 
 const { title } = Astro.props;
 const pageTitle = title ? `${title} | George Black` : `George Black`;
 ---
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="{{ .SiteMetadata.Description }}" />
-  <meta name="author" content="{{ .SiteMetadata.Author }}" />
+  <meta
+    name="description"
+    content="George is a software engineer working in Austin, with a small home on the internet."
+  />
+  <meta name="author" content="George Black" />
   <link rel="sitemap" href="/sitemap-index.xml" />
-  <link rel="alternate" type="application/rss+xml" title="George Black" href="https://george.black/feeds/main.xml"  />
-  <link rel="alternate" type="application/feed+json" title="George Black" href="https://george.black/feeds/main.json" />
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title="George Black"
+    href="https://george.black/feeds/main.xml"
+  />
+  <link
+    rel="alternate"
+    type="application/feed+json"
+    title="George Black"
+    href="https://george.black/feeds/main.json"
+  />
   <title>{pageTitle}</title>
   <!-- Twitter card data -->
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:site" content="{{ .SiteMetadata.AuthorTwitter }}" />
+  <meta name="twitter:site" content="@georgeblackm" />
   <meta name="twitter:title" content={pageTitle} />
-  <meta name="twitter:description" content="{{ .SiteMetadata.Description }}" />
-  <meta name="twitter:image" content="{{ .SiteMetadata.URL }}/images/profile.avif" />
-  <meta name="twitter:image:alt" content="{{ .SiteMetadata.Author }} profile" />
-  <meta name="twitter:url" content="{{ .SiteMetadata.URL }}" />
-  <meta name="twitter:creator" content="{{ .SiteMetadata.AuthorTwitter }}" />
+  <meta
+    name="twitter:description"
+    content="George is a software engineer working in Austin, with a small home on the internet."
+  />
+  <meta
+    name="twitter:image"
+    content="https://george.black/images/profile.avif"
+  />
+  <meta name="twitter:image:alt" content="George Black profile" />
+  <meta name="twitter:url" content="https://george.black" />
+  <meta name="twitter:creator" content="@georgeblackm" />
   <!-- Open Graph tags -->
   <meta property="og:title" content={pageTitle} />
-  <meta property="og:url" content="{{ .SiteMetadata.URL }}" />
+  <meta property="og:url" content="https://george.black" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="{{ .SiteMetadata.URL }}/images/profile.avif" />
-  <meta property="og:description" content="{{ .SiteMetadata.Description }}" />
+  <meta
+    property="og:image"
+    content="https://george.black/images/profile.avif"
+  />
+  <meta
+    property="og:description"
+    content="George is a software engineer working in Austin, with a small home on the internet."
+  />
   <!-- Theme colors (Safari navbar)-->
-  <meta name="theme-color" content="#f0ece9" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#101212" media="(prefers-color-scheme: dark)" />
+  <meta
+    name="theme-color"
+    content="#f0ece9"
+    media="(prefers-color-scheme: light)"
+  />
+  <meta
+    name="theme-color"
+    content="#101212"
+    media="(prefers-color-scheme: dark)"
+  />
   <!-- Icons -->
   <link
     rel="apple-touch-icon"
