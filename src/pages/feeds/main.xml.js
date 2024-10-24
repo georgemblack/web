@@ -1,5 +1,5 @@
 import rss from "@astrojs/rss";
-import { getCombined, getPosts } from "../../util/Api";
+import { getCombined } from "../../util/Api";
 import { url } from "../../util/Format";
 
 export async function GET(context) {
