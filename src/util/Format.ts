@@ -18,9 +18,20 @@ export function url(item: Combined): string {
   return "/";
 }
 
+export function absoluteUrl(item: Combined): string {
+  if (isPost(item)) return `https://george.black/${slug(item)}`;
+  if (isLike(item)) return item.url;
+  return "/";
+}
+
 export function preview(item: Combined): string {
   if (isPost(item)) return item.preview || item.content;
   if (isLike(item)) return item.content;
+  return "";
+}
+
+export function image(item: Combined): string {
+  if (isPost(item)) return item.images[0] || "";
   return "";
 }
 
