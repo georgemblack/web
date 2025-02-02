@@ -1,5 +1,5 @@
 ---
-import Head from "../components/Head.astro"
+import Head from "../components/Head.astro";
 
 interface Props {
   title?: string;
@@ -8,10 +8,11 @@ interface Props {
 const { title } = Astro.props;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <Head title={title} />
   <body>
     <slot />
-  </body>
+  </body><script async src="https://scripts.simpleanalyticscdn.com/latest.js"
+  ></script>
 </html>

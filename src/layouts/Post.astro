@@ -1,7 +1,7 @@
 ---
-import Head from "../components/Head.astro"
-import Header from "../components/Header.astro"
-import Footer from "../components/Footer.astro"
+import Head from "../components/Head.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 interface Props {
   title?: string;
@@ -11,7 +11,7 @@ interface Props {
 const { title, date } = Astro.props;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <Head title={title} />
   <body>
@@ -24,5 +24,6 @@ const { title, date } = Astro.props;
       </article>
     </main>
     <Footer />
-  </body>
+  </body><script async src="https://scripts.simpleanalyticscdn.com/latest.js"
+  ></script>
 </html>
