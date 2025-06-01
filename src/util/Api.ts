@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.KIRBY_API_URL;
+import { KIRBY_API_URL } from "astro:env/server";
 
 export interface Post {
   id: string;
@@ -24,7 +24,7 @@ export interface Like {
 export type Combined = Post | Like;
 
 export async function getPosts(): Promise<Post[]> {
-  const response = await fetch(`${API_URL}/blog.json`, {
+  const response = await fetch(`${KIRBY_API_URL}/blog.json`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -61,7 +61,7 @@ export async function getPosts(): Promise<Post[]> {
 }
 
 export async function getLikes(): Promise<Like[]> {
-  const response = await fetch(`${API_URL}/links.json`, {
+  const response = await fetch(`${KIRBY_API_URL}/links.json`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

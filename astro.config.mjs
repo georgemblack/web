@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 
 import sitemap from "@astrojs/sitemap";
 
@@ -14,4 +14,9 @@ export default defineConfig({
       },
     }),
   ],
+  env: {
+    schema: {
+      KIRBY_API_URL: envField.string({ context: "server", access: "public" }),
+    },
+  },
 });
