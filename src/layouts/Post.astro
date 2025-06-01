@@ -6,7 +6,7 @@ import Footer from "../components/Footer.astro";
 interface Props {
   title: string;
   date: string;
-  link?: string;
+  link: string | null;
 }
 
 const { title, date, link } = Astro.props;

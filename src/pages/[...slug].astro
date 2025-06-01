@@ -12,7 +12,7 @@ export async function getStaticPaths() {
     props: {
       title: item.title,
       published: item.published,
-      link: isLike(item) && item.url,
+      link: isLike(item) ? item.url : null,
       content: item.content,
     },
   }));

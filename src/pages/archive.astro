@@ -1,10 +1,10 @@
 ---
-import { Combined, getCombined } from "../util/Api";
+import { getCombined } from "../util/Api";
 import { timestamp, slug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
 const combined = await getCombined();
-const visible = combined.filter((item: Combined) => {
+const visible = combined.filter((item) => {
   if ("visible" in item) return item.visible;
   return true;
 });
