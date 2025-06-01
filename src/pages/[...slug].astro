@@ -1,25 +1,26 @@
 ---
-import { getPosts } from "../util/Api";
-import { timestamp, slug } from "../util/Format";
+import { getCombined } from "../util/Api";
+import { timestamp, slug, isLike } from "../util/Format";
 import Post from "../layouts/Post.astro";
 
 export async function getStaticPaths() {
-  const posts = await getPosts();
-  return posts.map((post) => ({
+  const combined = await getCombined();
+  return combined.map((item) => ({
     params: {
-      slug: slug(post),
+      slug: slug(item),
     },
     props: {
-      title: post.title,
-      published: post.published,
-      content: post.content,
+      title: item.title,
+      published: item.published,
+      link: isLike(item) && item.url,
+      content: item.content,
     },
   }));
 }
 
-const { title, published, content } = Astro.props;
+const { title, published, link, content } = Astro.props;
 ---
 
-<Post title={title} date={timestamp(published)}>
+<Post title={title} date={timestamp(published)} link={link}>
   <Fragment set:html={content} />
 </Post>

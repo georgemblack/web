@@ -1,14 +1,17 @@
 ---
-import { getPosts } from "../util/Api";
+import { Combined, getCombined } from "../util/Api";
 import { timestamp, slug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
-const posts = await getPosts();
-const visible = posts.filter((post) => post.visible);
+const combined = await getCombined();
+const visible = combined.filter((item: Combined) => {
+  if ("visible" in item) return item.visible;
+  return true;
+});
 ---
 
-<Page title="Posts">
-  <h1>Posts</h1>
+<Page title="Archive">
+  <h1>Archive</h1>
   <p>
     All the dumb shit I’ve said, organized in one place for your convenience.
   </p>

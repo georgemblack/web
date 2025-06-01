@@ -4,11 +4,12 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
 interface Props {
-  title?: string;
+  title: string;
   date: string;
+  link?: string;
 }
 
-const { title, date } = Astro.props;
+const { title, date, link } = Astro.props;
 ---
 
 <!doctype html>
@@ -18,7 +19,15 @@ const { title, date } = Astro.props;
     <Header />
     <main class="post">
       <article>
-        {title && <h1>{title}</h1>}
+        {
+          link ? (
+            <h1>
+              🔗 <a href={link}>{title}</a>
+            </h1>
+          ) : (
+            <h1>{title}</h1>
+          )
+        }
         <p class="subtitle">{date}</p>
         <slot />
       </article>

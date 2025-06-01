@@ -7,6 +7,7 @@ import {
   images,
   readMore,
   isPost,
+  isLike,
 } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
@@ -21,14 +22,13 @@ const selected = visible.slice(0, 50);
 <Page title="Home">
   <div class="bio">
     <picture>
-      <img src="/images/profile.avif" alt="George Black profile distorted" />
+      <img src="/images/profile.avif" alt="George Black profile image" />
     </picture>
     <div>
       <p>
-        Software engineer working in Austin (but Wisconsin is home 🐄). Send me
-        a message at <a href="mailto:contact@george.black"
-          >contact@george.black</a
-        >.
+        Software engineer working in Austin, but Wisconsin is home 🐄. Send me a
+        message at <a href="mailto:contact@george.black">contact@george.black</a
+        >, or on <a href="https://bsky.app/profile/george.black">Bluesky</a>.
       </p>
       <form
         class="search"
@@ -52,10 +52,12 @@ const selected = visible.slice(0, 50);
       selected.map((item) => (
         <article style="margin-top: 5em;">
           <h1>
-            <a href={url(item)}>{item.title}</a>
+            <a href={url(item)}>
+              {isLike(item) && "🔗 "}
+              {item.title}
+            </a>
           </h1>
           <p class="subtitle">{subtitle(item)}</p>
-
           <Fragment set:html={preview(item)} />
           {isPost(item) && item.gallery && (
             <div class="image-grid">
@@ -77,5 +79,5 @@ const selected = visible.slice(0, 50);
       ))
     }
   </div>
-  <p><a href="/posts">Go to all posts</a></p>
+  <p><a href="/archive">Go to archive</a></p>
 </Page>

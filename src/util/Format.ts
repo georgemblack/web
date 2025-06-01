@@ -1,8 +1,8 @@
 import type { Combined, Like, Post } from "./Api";
 
-export function slug(post: Post): string {
-  const year = new Date(post.published).getFullYear().toString();
-  return `${year}/${post.slug}`;
+export function slug(item: Combined): string {
+  const year = new Date(item.published).getFullYear().toString();
+  return `${year}/${item.slug}`;
 }
 
 export function subtitle(item: Combined): string {
