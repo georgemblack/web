@@ -1,5 +1,5 @@
 ---
-import { getPosts } from "../util/Api";
+import { Post, getPosts } from "../util/Api";
 import { slug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
@@ -7,7 +7,7 @@ const combined = await getPosts();
 const visible = combined.filter((item) => item.visible);
 
 // Group posts by year
-let years = {};
+const years = {};
 visible.forEach((post) => {
   const year = new Date(post.published).getFullYear().toString();
   if (!years[year]) {
@@ -30,7 +30,7 @@ visible.forEach((post) => {
           <>
             <h2>{year}</h2>
             <ul>
-              {years[year].map((item) => {
+              {years[year].map((item: Post) => {
                 return (
                   <li>
                     <a href={`/${slug(item)}`}>{item.title}</a>
