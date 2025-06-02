@@ -9,7 +9,7 @@ const visible = combined.filter((item) => item.visible);
 // Group posts by year
 let years = {};
 visible.forEach((post) => {
-  const year = new Date(post.published).getFullYear();
+  const year = new Date(post.published).getFullYear().toString();
   if (!years[year]) {
     years[year] = [];
   }
