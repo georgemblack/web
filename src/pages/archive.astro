@@ -1,10 +1,20 @@
 ---
 import { getPosts } from "../util/Api";
-import { timestamp, slug } from "../util/Format";
+import { slug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
 const combined = await getPosts();
 const visible = combined.filter((item) => item.visible);
+
+// Group posts by year
+let years = {};
+visible.forEach((post) => {
+  const year = new Date(post.published).getFullYear();
+  if (!years[year]) {
+    years[year] = [];
+  }
+  years[year].push(post);
+});
 ---
 
 <Page title="Archive">
@@ -12,16 +22,24 @@ const visible = combined.filter((item) => item.visible);
   <p>
     All the dumb shit I’ve said, organized in one place for your convenience.
   </p>
-  <div class="card-list">
-    {
-      visible.map((post) => (
-        <div class="card">
-          <h2>
-            <a href={`/${slug(post)}`}>{post.title}</a>
-          </h2>
-          <p class="subtitle">{timestamp(post.published)}</p>
-        </div>
-      ))
-    }
-  </div>
+  {
+    Object.keys(years)
+      .reverse()
+      .map((year) => {
+        return (
+          <>
+            <h2>{year}</h2>
+            <ul>
+              {years[year].map((item) => {
+                return (
+                  <li>
+                    <a href={`/${slug(item)}`}>{item.title}</a>
+                  </li>
+                );
+              })}
+            </ul>
+          </>
+        );
+      })
+  }
 </Page>

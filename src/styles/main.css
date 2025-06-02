@@ -377,24 +377,3 @@ footer {
   color: var(--background-color);
   background-color: var(--link-hover-color);
 }
-
-/* ==========================================================================
-     Card Lists (Archive/Likes page)
-     ========================================================================== */
-.card-list {
-  margin-top: 2em;
-}
-
-.card {
-  padding: 1.5em 0;
-  max-width: var(--reading-max-width);
-  border-top: 1px solid var(--line-separator-color);
-}
-
-.card :is(h2, .supertitle, .subtitle) {
-  margin-top: 0;
-}
-
-.card h2 {
-  font-size: 1.25em;
-}
