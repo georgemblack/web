@@ -1,4 +1,4 @@
-import { getCombined } from "./Api";
+import { getPosts } from "./Api";
 import { absoluteUrl, image } from "./Format";
 
 type Feed = {
@@ -31,10 +31,10 @@ type FeedItem = {
 };
 
 export async function generate(): Promise<string> {
-  const combined = await getCombined();
+  const posts = await getPosts();
 
   // Generate feed items
-  const feedItems: FeedItem[] = combined.map((item) => {
+  const feedItems: FeedItem[] = posts.map((item) => {
     const feedItem: FeedItem = {
       id: absoluteUrl(item),
       url: absoluteUrl(item),

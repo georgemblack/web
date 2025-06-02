@@ -1,18 +1,18 @@
 ---
-import { getCombined } from "../util/Api";
-import { timestamp, slug, isLike } from "../util/Format";
+import { getPosts } from "../util/Api";
+import { timestamp, slug } from "../util/Format";
 import Post from "../layouts/Post.astro";
 
 export async function getStaticPaths() {
-  const combined = await getCombined();
-  return combined.map((item) => ({
+  const posts = await getPosts();
+  return posts.map((item) => ({
     params: {
       slug: slug(item),
     },
     props: {
       title: item.title,
       published: item.published,
-      link: isLike(item) ? item.url : null,
+      link: item.link,
       content: item.content,
     },
   }));

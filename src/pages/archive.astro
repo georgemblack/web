@@ -1,13 +1,10 @@
 ---
-import { getCombined } from "../util/Api";
+import { getPosts } from "../util/Api";
 import { timestamp, slug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
-const combined = await getCombined();
-const visible = combined.filter((item) => {
-  if ("visible" in item) return item.visible;
-  return true;
-});
+const combined = await getPosts();
+const visible = combined.filter((item) => item.visible);
 ---
 
 <Page title="Archive">

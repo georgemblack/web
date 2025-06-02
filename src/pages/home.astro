@@ -1,21 +1,10 @@
 ---
-import { getCombined } from "../util/Api";
-import {
-  subtitle,
-  url,
-  preview,
-  images,
-  readMore,
-  isPost,
-  isLike,
-} from "../util/Format";
+import { getPosts } from "../util/Api";
+import { subtitle, url, preview, images, readMore } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
-const combined = await getCombined();
-const visible = combined.filter((item) => {
-  if (isPost(item)) return item.visible;
-  return true;
-});
+const combined = await getPosts();
+const visible = combined.filter((item) => item.visible);
 const selected = visible.slice(0, 50);
 ---
 
@@ -53,13 +42,13 @@ const selected = visible.slice(0, 50);
         <article style="margin-top: 5em;">
           <h1>
             <a href={url(item)}>
-              {isLike(item) && "🔗 "}
+              {item.link && "🔗 "}
               {item.title}
             </a>
           </h1>
           <p class="subtitle">{subtitle(item)}</p>
           <Fragment set:html={preview(item)} />
-          {isPost(item) && item.gallery && (
+          {item.gallery && (
             <div class="image-grid">
               {images(item).map((image) => {
                 return (
