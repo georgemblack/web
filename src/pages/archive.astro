@@ -34,7 +34,10 @@ visible.forEach((post) => {
               {years[year].map((item: Post) => {
                 return (
                   <li>
-                    <a href={`/${slug(item)}`}>{item.title}</a>
+                    <a href={`/${slug(item)}`}>
+                      {item.link && "🔗 "}
+                      {item.title}
+                    </a>
                   </li>
                 );
               })}
