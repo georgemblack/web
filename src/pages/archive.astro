@@ -4,8 +4,8 @@ import { getPosts } from "../util/Api";
 import { slug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
-const combined = await getPosts();
-const visible = combined.filter((item) => item.visible);
+const posts = await getPosts();
+const visible = posts.filter((item) => item.visible);
 
 // Group posts by year
 const years: { [key: string]: Post[] } = {};
