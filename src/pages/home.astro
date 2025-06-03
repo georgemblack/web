@@ -42,7 +42,7 @@ const selected = visible.slice(0, 50);
         <article style="margin-top: 5em;">
           <h1>
             <a href={url(item)}>
-              {item.link && "🔗 "}
+              {item.link && <span style="font-size: 0.9em;">🔗 </span>}
               {item.title}
             </a>
           </h1>

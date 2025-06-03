@@ -22,7 +22,10 @@ const { title, date, link } = Astro.props;
         {
           link ? (
             <h1>
-              🔗 <a href={link}>{title}</a>
+              <a href={link}>
+                <span style="font-size: 0.9em;">🔗 </span>
+                {title}
+              </a>
             </h1>
           ) : (
             <h1>{title}</h1>
