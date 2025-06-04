@@ -2,36 +2,37 @@
 import Head from "../components/Head.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import { subtitle } from "../util/Format";
+import type { Post } from "../util/Api";
+import LinkIcon from "../components/LinkIcon.astro";
 
 interface Props {
-  title: string;
-  date: string;
-  link: string | null;
+  post: Post;
 }
 
-const { title, date, link } = Astro.props;
+const { post }: { post: Post } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
-  <Head title={title} />
+  <Head title={post.title} />
   <body>
     <Header />
     <main class="post">
       <article>
-        {
-          link ? (
-            <h1>
-              <a href={link}>
-                <span style="font-size: 0.9em;">🔗 </span>
-                {title}
+        <h1>
+          {
+            post.link ? (
+              <a href={post.link}>
+                <LinkIcon />
+                {post.title}
               </a>
-            </h1>
-          ) : (
-            <h1>{title}</h1>
-          )
-        }
-        <p class="subtitle">{date}</p>
+            ) : (
+              post.title
+            )
+          }
+        </h1>
+        <p class="subtitle">{subtitle(post)}</p>
         <slot />
       </article>
     </main>

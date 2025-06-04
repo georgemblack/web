@@ -2,6 +2,7 @@
 import { getPosts } from "../util/Api";
 import { subtitle, url, preview, images, readMore } from "../util/Format";
 import Page from "../layouts/Page.astro";
+import LinkIcon from "../components/LinkIcon.astro";
 
 const posts = await getPosts();
 const visible = posts.filter((item) => item.visible);
@@ -42,7 +43,7 @@ const selected = visible.slice(0, 50);
         <article style="margin-top: 5em;">
           <h1>
             <a href={url(item)}>
-              {item.link && <span style="font-size: 0.9em;">🔗 </span>}
+              {item.link && <LinkIcon />}
               {item.title}
             </a>
           </h1>

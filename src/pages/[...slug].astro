@@ -10,17 +10,14 @@ export async function getStaticPaths() {
       slug: slug(item),
     },
     props: {
-      title: item.title,
-      published: item.published,
-      link: item.link,
-      content: item.content,
+      post: item,
     },
   }));
 }
 
-const { title, published, link, content } = Astro.props;
+const { post } = Astro.props;
 ---
 
-<Post title={title} date={timestamp(published)} link={link}>
-  <Fragment set:html={content} />
+<Post post={post}>
+  <Fragment set:html={post.content} />
 </Post>
