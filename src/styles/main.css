@@ -226,6 +226,7 @@ main p {
   margin: 1.25em 0 0 0;
   line-height: 180%;
   text-rendering: optimizeLegibility;
+  text-wrap: pretty;
 }
 
 main :is(ul, ol) {
