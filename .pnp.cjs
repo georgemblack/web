@@ -28,7 +28,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@astrojs/check", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:0.9.4"],\
-          ["@astrojs/rss", "npm:4.0.11"],\
+          ["@astrojs/rss", "npm:4.0.12"],\
           ["@astrojs/sitemap", "npm:3.4.0"],\
           ["astro", "npm:5.13.1"],\
           ["typescript", "patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5"]\
@@ -172,11 +172,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@astrojs/rss", [\
-      ["npm:4.0.11", {\
-        "packageLocation": "../../.yarn/berry/cache/@astrojs-rss-npm-4.0.11-a7303e10ab-10c0.zip/node_modules/@astrojs/rss/",\
+      ["npm:4.0.12", {\
+        "packageLocation": "../../.yarn/berry/cache/@astrojs-rss-npm-4.0.12-e664111856-10c0.zip/node_modules/@astrojs/rss/",\
         "packageDependencies": [\
-          ["@astrojs/rss", "npm:4.0.11"],\
-          ["fast-xml-parser", "npm:4.5.1"],\
+          ["@astrojs/rss", "npm:4.0.12"],\
+          ["fast-xml-parser", "npm:5.2.5"],\
           ["kleur", "npm:4.1.5"]\
         ],\
         "linkType": "HARD"\
@@ -2319,11 +2319,11 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["fast-xml-parser", [\
-      ["npm:4.5.1", {\
-        "packageLocation": "../../.yarn/berry/cache/fast-xml-parser-npm-4.5.1-77d072daa3-10c0.zip/node_modules/fast-xml-parser/",\
+      ["npm:5.2.5", {\
+        "packageLocation": "../../.yarn/berry/cache/fast-xml-parser-npm-5.2.5-4fd49da1b5-10c0.zip/node_modules/fast-xml-parser/",\
         "packageDependencies": [\
-          ["fast-xml-parser", "npm:4.5.1"],\
-          ["strnum", "npm:1.0.5"]\
+          ["fast-xml-parser", "npm:5.2.5"],\
+          ["strnum", "npm:2.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4461,7 +4461,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["root-workspace-0b6124", "workspace:."],\
           ["@astrojs/check", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:0.9.4"],\
-          ["@astrojs/rss", "npm:4.0.11"],\
+          ["@astrojs/rss", "npm:4.0.12"],\
           ["@astrojs/sitemap", "npm:3.4.0"],\
           ["astro", "npm:5.13.1"],\
           ["typescript", "patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5"]\
@@ -4770,10 +4770,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["strnum", [\
-      ["npm:1.0.5", {\
-        "packageLocation": "../../.yarn/berry/cache/strnum-npm-1.0.5-9ba11d2a0a-10c0.zip/node_modules/strnum/",\
+      ["npm:2.1.1", {\
+        "packageLocation": "../../.yarn/berry/cache/strnum-npm-2.1.1-2f45f2aae3-10c0.zip/node_modules/strnum/",\
         "packageDependencies": [\
-          ["strnum", "npm:1.0.5"]\
+          ["strnum", "npm:2.1.1"]\
         ],\
         "linkType": "HARD"\
       }]\
