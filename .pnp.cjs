@@ -29,7 +29,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@astrojs/check", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:0.9.4"],\
           ["@astrojs/rss", "npm:4.0.11"],\
-          ["@astrojs/sitemap", "npm:3.4.0"],\
+          ["@astrojs/sitemap", "npm:3.6.0"],\
           ["astro", "npm:5.13.1"],\
           ["typescript", "patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5"]\
         ],\
@@ -183,13 +183,13 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@astrojs/sitemap", [\
-      ["npm:3.4.0", {\
-        "packageLocation": "../../.yarn/berry/cache/@astrojs-sitemap-npm-3.4.0-0471344e39-10c0.zip/node_modules/@astrojs/sitemap/",\
+      ["npm:3.6.0", {\
+        "packageLocation": "../../.yarn/berry/cache/@astrojs-sitemap-npm-3.6.0-b4d883d36d-10c0.zip/node_modules/@astrojs/sitemap/",\
         "packageDependencies": [\
-          ["@astrojs/sitemap", "npm:3.4.0"],\
+          ["@astrojs/sitemap", "npm:3.6.0"],\
           ["sitemap", "npm:8.0.0"],\
           ["stream-replace-string", "npm:2.0.0"],\
-          ["zod", "npm:3.24.2"]\
+          ["zod", "npm:3.25.76"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4462,7 +4462,7 @@ const RAW_RUNTIME_STATE =
           ["root-workspace-0b6124", "workspace:."],\
           ["@astrojs/check", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:0.9.4"],\
           ["@astrojs/rss", "npm:4.0.11"],\
-          ["@astrojs/sitemap", "npm:3.4.0"],\
+          ["@astrojs/sitemap", "npm:3.6.0"],\
           ["astro", "npm:5.13.1"],\
           ["typescript", "patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5"]\
         ],\
@@ -5894,13 +5894,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["zod", [\
-      ["npm:3.24.2", {\
-        "packageLocation": "../../.yarn/berry/cache/zod-npm-3.24.2-ab80dc0969-10c0.zip/node_modules/zod/",\
-        "packageDependencies": [\
-          ["zod", "npm:3.24.2"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:3.25.76", {\
         "packageLocation": "../../.yarn/berry/cache/zod-npm-3.25.76-7de26333f8-10c0.zip/node_modules/zod/",\
         "packageDependencies": [\
