@@ -9,11 +9,11 @@
     "all": "yarn preprocess && yarn build"
   },
   "dependencies": {
-    "@astrojs/check": "0.9.4",
-    "@astrojs/rss": "4.0.12",
+    "@astrojs/check": "0.9.5",
+    "@astrojs/rss": "4.0.13",
     "@astrojs/sitemap": "3.6.0",
-    "astro": "5.14.1",
-    "typescript": "^5.9.2"
+    "astro": "5.15.1",
+    "typescript": "^5.9.3"
   },
   "packageManager": "yarn@4.7.0"
 }
