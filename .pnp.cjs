@@ -142,7 +142,7 @@ const RAW_RUNTIME_STATE =
           ["hast-util-from-html", "npm:2.0.3"],\
           ["hast-util-to-text", "npm:4.0.2"],\
           ["import-meta-resolve", "npm:4.2.0"],\
-          ["js-yaml", "npm:4.1.0"],\
+          ["js-yaml", "npm:4.1.1"],\
           ["mdast-util-definitions", "npm:6.0.0"],\
           ["rehype-raw", "npm:7.0.0"],\
           ["rehype-stringify", "npm:10.0.1"],\
@@ -1656,7 +1656,7 @@ const RAW_RUNTIME_STATE =
           ["html-escaper", "npm:3.0.3"],\
           ["http-cache-semantics", "npm:4.2.0"],\
           ["import-meta-resolve", "npm:4.2.0"],\
-          ["js-yaml", "npm:4.1.0"],\
+          ["js-yaml", "npm:4.1.1"],\
           ["magic-string", "npm:0.30.19"],\
           ["magicast", "npm:0.3.5"],\
           ["mrmime", "npm:2.0.1"],\
@@ -3001,10 +3001,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["js-yaml", [\
-      ["npm:4.1.0", {\
-        "packageLocation": "../../.yarn/berry/cache/js-yaml-npm-4.1.0-3606f32312-10c0.zip/node_modules/js-yaml/",\
+      ["npm:4.1.1", {\
+        "packageLocation": "../../.yarn/berry/cache/js-yaml-npm-4.1.1-86ec786790-10c0.zip/node_modules/js-yaml/",\
         "packageDependencies": [\
-          ["js-yaml", "npm:4.1.0"],\
+          ["js-yaml", "npm:4.1.1"],\
           ["argparse", "npm:2.0.1"]\
         ],\
         "linkType": "HARD"\
