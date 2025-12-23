@@ -1,4 +1,4 @@
-import { KIRBY_API_URL } from "astro:env/server";
+import { KIRBY_API_URL, CF_ACCESS_CLIENT_ID, CF_ACCESS_CLIENT_SECRET } from "astro:env/server";
 
 export interface Post {
   id: string;
@@ -14,11 +14,17 @@ export interface Post {
 }
 
 export async function getPosts(): Promise<Post[]> {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  if(CF_ACCESS_CLIENT_ID && CF_ACCESS_CLIENT_SECRET) {
+    headers["CF-Access-Client-Id"] = CF_ACCESS_CLIENT_ID;
+    headers["CF-Access-Client-Secret"] = CF_ACCESS_CLIENT_SECRET;
+  }
+
   const response = await fetch(`${KIRBY_API_URL}/blog.json`, {
     method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers,
   });
 
   const posts = await response.json();

@@ -9,9 +9,19 @@ const KIRBY_API_URL = process.env.KIRBY_API_URL;
 const OUTPUT_ROOT = path.resolve(process.cwd(), "public");
 const MAX_PARALLEL = 8;
 
+const CF_ACCESS_CLIENT_ID = process.env.CF_ACCESS_CLIENT_ID;
+const CF_ACCESS_CLIENT_SECRET = process.env.CF_ACCESS_CLIENT_SECRET;
+
 async function fetchPosts() {
   const endpoint = `${KIRBY_API_URL}/blog.json`;
-  const response = await fetch(endpoint);
+
+  const headers = {};
+  if(CF_ACCESS_CLIENT_ID && CF_ACCESS_CLIENT_SECRET) {
+    headers["CF-Access-Client-Id"] = CF_ACCESS_CLIENT_ID;
+    headers["CF-Access-Client-Secret"] = CF_ACCESS_CLIENT_SECRET;
+  }
+
+  const response = await fetch(endpoint, { headers });
   if (!response.ok)
     throw new Error(`${endpoint} → ${response.status} ${response.statusText}`);
   return response.json();
@@ -32,7 +42,14 @@ function urlToOutputPath(url) {
 // Proxy image through Cloudflare Images to ensure it is resized and converted to AVIF.
 async function downloadImage(url) {
   const endpoint = `https://george.black/cdn-cgi/image/width=1600,format=avif/${url}`;
-  const response = await fetch(endpoint);
+
+  const headers = {};
+  if(CF_ACCESS_CLIENT_ID && CF_ACCESS_CLIENT_SECRET) {
+    headers["CF-Access-Client-Id"] = CF_ACCESS_CLIENT_ID;
+    headers["CF-Access-Client-Secret"] = CF_ACCESS_CLIENT_SECRET;
+  }
+
+  const response = await fetch(endpoint, { headers });
   if (!response.ok)
     throw new Error(`${url} → ${response.status} ${response.statusText}`);
 

@@ -17,6 +17,8 @@ export default defineConfig({
   env: {
     schema: {
       KIRBY_API_URL: envField.string({ context: "server", access: "public" }),
+      CF_ACCESS_CLIENT_ID: envField.string({ context: "server", access: "public" }),
+      CF_ACCESS_CLIENT_SECRET: envField.string({ context: "server", access: "public" }),
     },
   },
 });
