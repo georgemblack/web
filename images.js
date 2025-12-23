@@ -43,7 +43,9 @@ function urlToOutputPath(url) {
 async function downloadImage(url) {
   const endpoint = `https://george.black/cdn-cgi/image/width=1600,format=avif/${url}`;
 
-  const headers = {};
+  const headers = {
+    "Accept": "image/avif",
+  };
   if(CF_ACCESS_CLIENT_ID && CF_ACCESS_CLIENT_SECRET) {
     headers["CF-Access-Client-Id"] = CF_ACCESS_CLIENT_ID;
     headers["CF-Access-Client-Secret"] = CF_ACCESS_CLIENT_SECRET;
