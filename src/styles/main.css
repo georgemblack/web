@@ -219,6 +219,7 @@ main h1 {
 
 main :is(h2, h3) {
   margin-top: 2em;
+  max-width: var(--reading-max-width);
 }
 
 main p {
