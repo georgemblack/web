@@ -14,7 +14,7 @@ export interface Post {
 }
 
 export async function getPosts(): Promise<Post[]> {
-  const headers = {
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
   if(CF_ACCESS_CLIENT_ID && CF_ACCESS_CLIENT_SECRET) {
