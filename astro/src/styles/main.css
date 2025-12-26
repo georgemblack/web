@@ -223,23 +223,23 @@ main :is(h2, h3) {
   max-width: var(--reading-max-width);
 }
 
+/* removed: 'text-wrap: pretty;' until it handles multiple paragraphs better */
 main p {
   max-width: var(--reading-max-width);
   margin: 1.25em 0 0 0;
-  line-height: 150%;
+  line-height: 160%;
   text-rendering: optimizeLegibility;
-  text-wrap: pretty;
 }
 
 main :is(ul, ol) {
   max-width: var(--reading-max-width);
   margin: 1em 0 0 0;
   padding: 0 0 0 2em;
-  line-height: 150%;
+  line-height: 160%;
 }
 
 main li {
-  line-height: 150%;
+  line-height: 160%;
   text-rendering: optimizeLegibility;
 }
 
@@ -274,7 +274,7 @@ main blockquote {
   margin: 1.25em 0 0 1em;
   padding: 0.5em 1em;
   font-style: italic;
-  line-height: 150%;
+  line-height: 160%;
   text-rendering: optimizeLegibility;
 }
 
@@ -313,7 +313,7 @@ footer {
   display: flex;
   gap: 2em;
   align-items: center;
-  padding: 1.5em 2em;
+  padding: 1.25em 1.5em;
   border-radius: 2em;
   background-color: var(--line-separator-color);
   box-shadow: 8px 10px 55px -40px rgba(0, 0, 0, 0.75);
@@ -371,7 +371,7 @@ footer {
 
 .read-more-button p {
   display: inline-block;
-  padding: 0 0.65em;
+  padding: 0.25em 1em;
   background-color: var(--line-separator-color);
   border-radius: 2.5em;
 }
