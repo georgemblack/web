@@ -13,8 +13,21 @@
       }
     ],
     "preview_urls": false,
+    "workers_dev": false,
     "assets": {
       "directory": "../astro/dist",
       "run_worker_first": ["/files/*"]
-    }
+    },
+    "r2_buckets": [
+      {
+        "binding": "WEB_FILES",
+        "bucket_name": "web-files"
+      }
+    ],
+    "kv_namespaces": [
+      {
+        "binding": "WEB_FILES_META",
+        "id": "87f58384e21f4eed9e1c1106e3c4c553"
+      }
+    ]
   }
