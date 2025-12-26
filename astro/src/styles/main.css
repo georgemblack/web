@@ -7,10 +7,11 @@
   --reading-max-width: 38rem;
 
   /* primary fonts */
-  --primary-font: system-ui, -apple-system, BlinkMacSystemFont, Roboto,
-    Helvetica, sans-serif;
-  --primary-font-rounded: ui-rounded, system-ui, -apple-system,
-    BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
+  --primary-font:
+    system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
+  --primary-font-rounded:
+    ui-rounded, system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica,
+    sans-serif;
 
   /* font weights */
   --font-weight-bold: 900;
@@ -225,7 +226,7 @@ main :is(h2, h3) {
 main p {
   max-width: var(--reading-max-width);
   margin: 1.25em 0 0 0;
-  line-height: 180%;
+  line-height: 150%;
   text-rendering: optimizeLegibility;
   text-wrap: pretty;
 }
@@ -234,11 +235,11 @@ main :is(ul, ol) {
   max-width: var(--reading-max-width);
   margin: 1em 0 0 0;
   padding: 0 0 0 2em;
-  line-height: 180%;
+  line-height: 150%;
 }
 
 main li {
-  line-height: 180%;
+  line-height: 150%;
   text-rendering: optimizeLegibility;
 }
 
@@ -273,7 +274,7 @@ main blockquote {
   margin: 1.25em 0 0 1em;
   padding: 0.5em 1em;
   font-style: italic;
-  line-height: 180%;
+  line-height: 150%;
   text-rendering: optimizeLegibility;
 }
 
@@ -364,7 +365,7 @@ footer {
 /* medium break-point */
 @media screen and (max-width: 58em) {
   .image-grid {
-    gap: 0.5em
+    gap: 0.5em;
   }
 }
 
