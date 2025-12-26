@@ -142,7 +142,7 @@ h2 {
 p,
 li,
 blockquote {
-  font-size: 1.125em;
+  font-size: 1em;
   color: var(--body-color);
 }
 
