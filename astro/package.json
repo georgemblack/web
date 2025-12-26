@@ -3,10 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
-    "preprocess": "node images.js",
-    "build": "astro check && astro build",
-    "all": "yarn preprocess && yarn build"
+    "build": "astro check && astro build"
   },
   "dependencies": {
     "@astrojs/check": "0.9.5",

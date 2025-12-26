@@ -6,10 +6,10 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/"
+    directory: "/astro"
     schedule:
       interval: "weekly"
     groups:
       all-dependencies:
         patterns:
-          - "*"   
+          - "*"

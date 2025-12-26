@@ -1,21 +1,28 @@
 # build output
-dist/
-public/media/
+astro/dist/
 
 # generated types
-.astro/
+astro/.astro/
 
 # dependencies
-node_modules/
+astro/node_modules/
+worker/node_modules/
 
-# logs
+# package managers
+astro/.yarn/
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# macOS-specific files
+# Wrangler
+worker/.wrangler/
+
+# VSCode
+astro/.vscode/
+worker/.vscode/
+
+# macOS
 .DS_Store
 
-# jetbrains setting folder
-.idea/

@@ -1,0 +1,13 @@
+{
+    "name": "web",
+    "main": "src/index.ts",
+    "account_id": "bc4564dd499c0a9b8a7bb79c9bd5ea6d",
+    "compatibility_date": "2025-04-08",
+    "observability": {
+      "enabled": true
+    },
+    "assets": {
+      "directory": "../astro/dist",
+      "run_worker_first": ["/files/*"]
+    }
+  }
