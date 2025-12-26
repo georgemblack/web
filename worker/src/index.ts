@@ -19,7 +19,7 @@ export default {
 
     if (toOptimize && toOptimize.includes(key)) {
       const optimized = await env.IMAGES.input(object.body)
-        .transform({ width: 900 })
+        .transform({ width: 1200 })
         .output({ format: "image/avif" });
 
       const response = optimized.response();
