@@ -6,12 +6,10 @@
   --page-max-width: 54rem;
   --reading-max-width: 38rem;
 
-  /* primary fonts */
-  --primary-font:
-    system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, sans-serif;
-  --primary-font-rounded:
-    ui-rounded, system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica,
-    sans-serif;
+  /* fonts */
+  --font-family-display: system-ui;
+  --font-family-text: ui-serif, system-ui;
+  --font-family-rounded: ui-rounded, system-ui;
 
   /* font weights */
   --font-weight-bold: 900;
@@ -77,10 +75,7 @@
      ========================================================================== */
 .subtitle {
   margin-top: 0;
-  color: var(--faded-text-color);
-}
-
-.supertitle {
+  font-family: var(--font-family-display);
   color: var(--faded-text-color);
 }
 
@@ -112,13 +107,13 @@ body {
   margin: 0 auto;
   padding: 0 1em;
   max-width: var(--page-max-width);
-  font-family: var(--primary-font);
   background-color: var(--background-color);
 }
 
 h1,
 h2,
 h3 {
+  font-family: var(--font-family-display);
   font-weight: var(--font-weight-bold);
   color: var(--header-color);
 }
@@ -142,6 +137,7 @@ h2 {
 p,
 li,
 blockquote {
+  font-family: var(--font-family-text);
   font-size: 1em;
   color: var(--body-color);
 }
@@ -168,7 +164,7 @@ header {
 
 header h1 a {
   margin: 0 0.25em 0 0;
-  font-family: var(--primary-font-rounded);
+  font-family: var(--font-family-rounded);
   color: var(--header-color);
 }
 
@@ -178,6 +174,7 @@ header h1 a:hover {
 
 nav {
   font-size: 1.125em;
+  font-family: var(--font-family-display);
   font-weight: var(--font-weight-bold);
   display: flex;
   justify-content: space-between;
@@ -221,6 +218,7 @@ main h1 {
 main :is(h2, h3) {
   margin-top: 2em;
   max-width: var(--reading-max-width);
+  line-height: 130%;
 }
 
 /* removed: 'text-wrap: pretty;' until it handles multiple paragraphs better */
@@ -311,16 +309,18 @@ footer {
      ========================================================================== */
 .bio {
   display: flex;
-  gap: 2em;
+  gap: 1.5em;
   align-items: center;
-  padding: 1.25em 1.5em;
-  border-radius: 2em;
+  padding: 1em 1.25em;
+  border-radius: 3em;
+  corner-shape: squircle;
   background-color: var(--line-separator-color);
   box-shadow: 8px 10px 55px -40px rgba(0, 0, 0, 0.75);
 }
 
 .bio img {
-  width: 8em;
+  width: 6em;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 100%;
 }
 
@@ -336,7 +336,8 @@ footer {
   color: var(--body-color);
   background-color: var(--search-background-color);
   border: none;
-  border-radius: 0.5em;
+  border-radius: 3em;
+  corner-shape: squircle;
   box-shadow: 8px 10px 55px -40px rgba(0, 0, 0, 0.75);
 }
 
@@ -371,7 +372,8 @@ footer {
 
 .read-more-button p {
   display: inline-block;
-  padding: 0.25em 1em;
+  padding: 0.25em 1.25em;
+  font-family: var(--font-family-display);
   background-color: var(--line-separator-color);
   border-radius: 2.5em;
 }
