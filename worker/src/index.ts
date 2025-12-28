@@ -2,29 +2,43 @@ const CACHE_CONTROL = "public, max-age=31536000";
 
 export default {
   async fetch(request, env, ctx): Promise<Response> {
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      return new Response("Method Not Allowed", { status: 405 });
+    }
+
+    let response: Response | undefined;
     const url = new URL(request.url);
     const key = url.pathname.replace("/files/", "");
 
     const cache = caches.default;
-    const cachedResponse = await cache.match(request);
-    if (cachedResponse) return cachedResponse;
+    response = await cache.match(request);
+    if (response) return response;
 
     const object = await env.WEB_FILES.get(key);
-    if (!object) return new Response("Not Found", { status: 404 });
+    if (!object) {
+      response = new Response("Not Found", {
+        status: 404,
+        headers: {
+          "cache-control": "public, max-age=3600",
+        },
+      });
+      ctx.waitUntil(cache.put(request.url, response.clone()));
+      return response;
+    }
 
-    const toOptimize = await env.WEB_FILES_META.get<string[]>(
+    const optimizeKeys = await env.WEB_FILES_META.get<string[]>(
       "optimized_files",
       "json"
     );
 
-    if (toOptimize && toOptimize.includes(key)) {
+    if (optimizeKeys && optimizeKeys.includes(key)) {
       const optimized = await env.IMAGES.input(object.body)
         .transform({ width: 1200 })
         .output({ format: "image/avif" });
 
-      const response = optimized.response();
+      response = optimized.response();
       response.headers.set("cache-control", CACHE_CONTROL);
-      ctx.waitUntil(cache.put(request, response.clone()));
+      ctx.waitUntil(cache.put(request.url, response.clone()));
       return response;
     }
 
@@ -33,10 +47,10 @@ export default {
     headers.set("etag", object.httpEtag);
     headers.set("cache-control", CACHE_CONTROL);
 
-    const response = new Response(object.body, {
+    response = new Response(object.body, {
       headers,
     });
-    ctx.waitUntil(cache.put(request, response.clone()));
+    ctx.waitUntil(cache.put(request.url, response.clone()));
     return response;
   },
 } satisfies ExportedHandler<Env>;
