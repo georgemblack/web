@@ -12,8 +12,9 @@
   --font-family-rounded: ui-rounded, system-ui;
 
   /* font weights */
-  --font-weight-bold: 800;
   --font-weight-normal: 400;
+  --font-weight-bold: 800;
+  --font-weight-extreme: 900;
 
   /* general purpose colors */
   --background-color: #f0ece9;
@@ -169,7 +170,7 @@ header {
 header h1 a {
   margin: 0 0.25em 0 0;
   font-family: var(--font-family-rounded);
-  font-weight: 900;
+  font-weight: var(--font-weight-extreme);
   color: var(--header-color);
 }
 
@@ -180,7 +181,7 @@ header h1 a:hover {
 nav {
   font-size: 1.125em;
   font-family: var(--font-family-display);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-extreme);
   display: flex;
   justify-content: space-between;
   gap: 0.75em;
