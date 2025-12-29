@@ -1,5 +1,3 @@
-const CACHE_CONTROL = "public, max-age=31536000";
-
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     if (request.method !== "GET" && request.method !== "HEAD") {
@@ -14,66 +12,35 @@ export default {
     response = await cache.match(request);
     if (response) return response;
 
-    // Object is not in volatile cache. Check to see if object marked for optimization.
-    const optimizedImageKeys =
-      (await env.WEB_FILES_META.get<string[]>("optimized_files", "json")) || [];
-
-    if (!optimizedImageKeys.includes(key)) {
-      // Object is not marked for optimization.
-      // Simply return it from R2 and cache it.
-      const object = await env.WEB_FILES.get(key);
-      if (!object) {
-        ctx.waitUntil(cache.put(request.url, notFoundResponse()));
-        return notFoundResponse();
-      }
-
+    // Object is not in volatile cache. Check cached objects bucket instead.
+    const cachedObj = await env.WEB_FILES_CACHE.get(key);
+    if (cachedObj) {
       const headers = new Headers();
-      object.writeHttpMetadata(headers);
-      headers.set("etag", object.httpEtag);
-      headers.set("cache-control", CACHE_CONTROL);
+      cachedObj.writeHttpMetadata(headers);
 
-      response = new Response(object.body, {
+      response = new Response(cachedObj.body, {
         headers,
       });
       ctx.waitUntil(cache.put(request.url, response.clone()));
       return response;
     }
 
-    // Object is marked for optimization – check to see if it's in the cache bucket.
-    const cachedObject = await env.WEB_FILES_CACHE.get(key);
-    if (cachedObject) {
+    // Return original object if it exists
+    const original = await env.WEB_FILES.get(key);
+    if (original) {
       const headers = new Headers();
-      cachedObject.writeHttpMetadata(headers);
-      headers.set("etag", cachedObject.httpEtag);
-      headers.set("cache-control", CACHE_CONTROL);
-      response = new Response(cachedObject.body, {
+      original.writeHttpMetadata(headers);
+
+      response = new Response(original.body, {
         headers,
       });
       ctx.waitUntil(cache.put(request.url, response.clone()));
       return response;
     }
 
-    // Otherwise, optimize the object (it's an image) and cache it.
-    const originalObject = await env.WEB_FILES.get(key);
-    if (!originalObject) {
-      ctx.waitUntil(cache.put(request.url, notFoundResponse()));
-      return notFoundResponse();
-    }
-    const optimizedObject = await env.IMAGES.input(originalObject.body)
-      .transform({ width: 1200 })
-      .output({ format: "image/avif" });
-
-    response = optimizedObject.response();
-    response.headers.set("cache-control", CACHE_CONTROL);
-    ctx.waitUntil(cache.put(request.url, response.clone()));
-    ctx.waitUntil(
-      env.WEB_FILES_CACHE.put(key, optimizedObject.image(), {
-        httpMetadata: {
-          contentType: optimizedObject.contentType(),
-        },
-      })
-    );
-    return response;
+    // Return not found response
+    ctx.waitUntil(cache.put(request.url, notFoundResponse()));
+    return notFoundResponse();
   },
 } satisfies ExportedHandler<Env>;
 
