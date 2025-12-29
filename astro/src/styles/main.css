@@ -313,12 +313,25 @@ footer {
 /* ==========================================================================
      Homepage
      ========================================================================== */
+
+/* temporary: double border radius if browser supports squircle */
+/* remove this once safari supports squircle */
+:root {
+  --bio-border-radius: 1.5em;
+}
+
+@supports (corner-shape: squircle) {
+  :root {
+    --bio-border-radius: 3em;
+  }
+}
+
 .bio {
   display: flex;
   gap: 1.5em;
   align-items: center;
   padding: 1em 1.25em;
-  border-radius: 3em;
+  border-radius: var(--bio-border-radius);
   corner-shape: squircle;
   background-color: var(--line-separator-color);
   box-shadow: 8px 10px 55px -40px rgba(0, 0, 0, 0.75);
@@ -343,7 +356,7 @@ footer {
   color: var(--body-color);
   background-color: var(--search-background-color);
   border: none;
-  border-radius: 3em;
+  border-radius: var(--bio-border-radius);
   corner-shape: squircle;
   box-shadow: 8px 10px 55px -40px rgba(0, 0, 0, 0.75);
 }
