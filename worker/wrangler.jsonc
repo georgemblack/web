@@ -22,6 +22,10 @@
       {
         "binding": "WEB_FILES",
         "bucket_name": "web-files"
+      },
+      {
+        "binding": "WEB_FILES_CACHE",
+        "bucket_name": "web-files-cache"
       }
     ],
     "kv_namespaces": [
