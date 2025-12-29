@@ -12,7 +12,7 @@
   --font-family-rounded: ui-rounded, system-ui;
 
   /* font weights */
-  --font-weight-bold: 900;
+  --font-weight-bold: 800;
   --font-weight-normal: 400;
 
   /* general purpose colors */
@@ -51,11 +51,11 @@
 
     /* text colors */
     --header-color: #dddddd;
-    --header-link-color: #799cff;
-    --header-link-hover-color: #5e84ff;
+    --header-link-color: #70b0ff;
+    --header-link-hover-color: #5da6ff;
     --body-color: #f7f7f7;
-    --link-color: #799cff;
-    --link-hover-color: #5e84ff;
+    --link-color: #70b0ff;
+    --link-hover-color: #5da6ff;
     --faded-text-color: rgba(255, 255, 255, 0.4);
 
     /* specific section colors */
@@ -113,7 +113,7 @@ body {
 h1,
 h2,
 h3 {
-  font-family: var(--font-family-display);
+  font-family: var(--font-family-text);
   font-weight: var(--font-weight-bold);
   color: var(--header-color);
 }
@@ -142,6 +142,10 @@ blockquote {
   color: var(--body-color);
 }
 
+figcaption {
+  font-family: var(--font-family-text);
+}
+
 a {
   text-decoration: none;
   color: var(--link-color);
@@ -165,6 +169,7 @@ header {
 header h1 a {
   margin: 0 0.25em 0 0;
   font-family: var(--font-family-rounded);
+  font-weight: 900;
   color: var(--header-color);
 }
 
@@ -196,7 +201,7 @@ nav a:hover {
   }
 }
 
-/* small break-point */
+/* xsmall break-point */
 @media screen and (max-width: 22.5em) {
   nav {
     font-size: 1em;
@@ -326,6 +331,7 @@ footer {
 
 .bio p {
   margin: 0;
+  font-family: var(--font-family-display);
 }
 
 .bio .search input {
@@ -341,8 +347,8 @@ footer {
   box-shadow: 8px 10px 55px -40px rgba(0, 0, 0, 0.75);
 }
 
-/* medium break-point */
-@media screen and (max-width: 58em) {
+/* small break-point */
+@media screen and (max-width: 32em) {
   .bio {
     flex-direction: column;
     gap: 1em;
