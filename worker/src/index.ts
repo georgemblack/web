@@ -9,7 +9,7 @@ export default {
     const key = url.pathname.replace("/files/", "");
 
     const cache = caches.default;
-    response = await cache.match(request);
+    response = await cache.match(request.url);
     if (response) return response;
 
     // Object is not in volatile cache. Check cached objects bucket instead.
