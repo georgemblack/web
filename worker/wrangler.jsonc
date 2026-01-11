@@ -28,12 +28,6 @@
         "bucket_name": "web-files-cache"
       }
     ],
-    "kv_namespaces": [
-      {
-        "binding": "WEB_FILES_META",
-        "id": "87f58384e21f4eed9e1c1106e3c4c553"
-      }
-    ],
     "images": {
       "binding": "IMAGES"
     }
