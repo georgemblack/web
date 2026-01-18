@@ -1,3 +1,6 @@
+# secrets
+.env
+
 # build output
 astro/dist/
 
