@@ -3,17 +3,17 @@
    ========================================================================== */
 :root {
   /* defined widths */
-  --page-max-width: 54rem;
-  --reading-max-width: 38rem;
+  --page-max-width: 42rem;
+  --reading-max-width: 42rem;
 
   /* fonts */
   --font-family-display: system-ui;
-  --font-family-text: ui-serif, system-ui;
+  --font-family-text: system-ui;
   --font-family-rounded: ui-rounded, system-ui;
 
   /* font weights */
   --font-weight-normal: 400;
-  --font-weight-bold: 800;
+  --font-weight-bold: 900;
   --font-weight-extreme: 900;
 
   /* general purpose colors */
@@ -139,7 +139,7 @@ p,
 li,
 blockquote {
   font-family: var(--font-family-text);
-  font-size: 1em;
+  font-size: 1.125em;
   color: var(--body-color);
 }
 
@@ -193,13 +193,6 @@ nav a {
 
 nav a:hover {
   color: var(--nav-link-hover-color);
-}
-
-/* medium break-point */
-@media screen and (max-width: 58em) {
-  nav {
-    gap: 0.65em;
-  }
 }
 
 /* xsmall break-point */
@@ -326,12 +319,6 @@ footer {
 .bio {
   display: flex;
   gap: 1.5em;
-  align-items: center;
-  padding: 1em 1.25em;
-  border-radius: var(--bio-border-radius);
-  corner-shape: squircle;
-  background-color: var(--line-separator-color);
-  box-shadow: 8px 10px 55px -40px rgba(0, 0, 0, 0.75);
 }
 
 .bio img {
@@ -343,19 +330,6 @@ footer {
 .bio p {
   margin: 0;
   font-family: var(--font-family-display);
-}
-
-.bio .search input {
-  width: 100%;
-  margin: 1em 0 0 0;
-  padding: 0.75em 1em;
-  font-size: 1em;
-  color: var(--body-color);
-  background-color: var(--search-background-color);
-  border: none;
-  border-radius: var(--bio-border-radius);
-  corner-shape: squircle;
-  box-shadow: 8px 10px 55px -40px rgba(0, 0, 0, 0.75);
 }
 
 /* small break-point */

@@ -53,7 +53,7 @@ export async function generate(): Promise<string> {
     home_page_url: "https://george.black",
     feed_url: "https://george.black/feeds/main.json",
     description:
-      "George is a software engineer working in Chicago, with a small home on the internet.",
+      "George is a software engineer working in Austin, with a small home on the internet.",
     user_comment:
       "Hello friend! You've found my JSON feed! You can use this to follow my blog in a feed reader, such as NetNewsWire.",
     icon: "https://george.black/icons/json-feed-icon.png",

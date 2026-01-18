@@ -6,7 +6,7 @@ import LinkIcon from "../components/LinkIcon.astro";
 
 const posts = await getPosts();
 const visible = posts.filter((item) => item.visible);
-const selected = visible.slice(0, 50);
+const selected = visible.slice(0, 20);
 ---
 
 <Page title="Home">
@@ -16,25 +16,11 @@ const selected = visible.slice(0, 50);
     </picture>
     <div>
       <p>
-        Software engineer working in Austin, but Wisconsin is home 🐄. Send me a
-        message at <a href="mailto:contact@george.black">contact@george.black</a
-        >, or on <a href="https://bsky.app/profile/george.black">Bluesky</a>.
+        Howdy - I'm a software engineer working in Austin, Texas. This is my
+        small home on the internet, where I write (mostly for myself). Say hi on <a
+          href="https://bsky.app/profile/george.black">Bluesky</a
+        >!
       </p>
-      <form
-        class="search"
-        method="get"
-        id="search"
-        action="https://duckduckgo.com/"
-      >
-        <input type="hidden" name="sites" value="george.black" />
-        <input
-          type="text"
-          name="q"
-          maxlength="255"
-          placeholder="Search this site..."
-          autocomplete="off"
-        />
-      </form>
     </div>
   </div>
   <div class="content">
