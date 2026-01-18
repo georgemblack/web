@@ -208,7 +208,7 @@ main h1 {
 
 main :is(h2, h3) {
   margin-top: 2em;
-  line-height: 130%;
+  line-height: 125%;
 }
 
 /* removed: 'text-wrap: pretty;' until it handles multiple paragraphs better */
