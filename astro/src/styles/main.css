@@ -248,11 +248,8 @@ main li {
 }
 
 main :is(img, video) {
-  border-radius: 0.25em;
-}
-
-main img {
   width: 100%;
+  border-radius: 0.25em;
   max-width: var(--reading-max-width);
 }
 
