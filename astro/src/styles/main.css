@@ -4,7 +4,6 @@
 :root {
   /* defined widths */
   --page-max-width: 42rem;
-  --reading-max-width: 42rem;
 
   /* fonts */
   --font-family-display: system-ui;
@@ -64,13 +63,6 @@
   }
 }
 
-/* medium break-point */
-@media screen and (max-width: 58em) {
-  :root {
-    --page-max-width: var(--reading-max-width);
-  }
-}
-
 /* ==========================================================================
      General-Purpose Classes
      ========================================================================== */
@@ -84,8 +76,8 @@
   display: none;
 }
 
-/* medium break-point */
-@media screen and (max-width: 58em) {
+/* small break-point */
+@media screen and (max-width: 32em) {
   .view-small {
     display: initial;
   }
@@ -180,7 +172,7 @@ header h1 a:hover {
 
 nav {
   font-size: 1.125em;
-  font-family: var(--font-family-display);
+  font-family: var(--font-family-rounded);
   font-weight: var(--font-weight-extreme);
   display: flex;
   justify-content: space-between;
@@ -216,20 +208,17 @@ main h1 {
 
 main :is(h2, h3) {
   margin-top: 2em;
-  max-width: var(--reading-max-width);
   line-height: 130%;
 }
 
 /* removed: 'text-wrap: pretty;' until it handles multiple paragraphs better */
 main p {
-  max-width: var(--reading-max-width);
   margin: 1.25em 0 0 0;
   line-height: 160%;
   text-rendering: optimizeLegibility;
 }
 
 main :is(ul, ol) {
-  max-width: var(--reading-max-width);
   margin: 1em 0 0 0;
   padding: 0 0 0 2em;
   line-height: 160%;
@@ -243,7 +232,6 @@ main li {
 main :is(img, video) {
   width: 100%;
   border-radius: 0.25em;
-  max-width: var(--reading-max-width);
 }
 
 main figure {
@@ -253,17 +241,14 @@ main figure {
 main figcaption {
   font-size: 1em;
   width: 100%;
-  max-width: var(--reading-max-width);
   margin: 0;
-  padding: 0.25em 1em;
-  text-align: center;
+  padding: 0.25em 0;
   font-style: italic;
   line-height: normal;
   color: var(--faded-text-color);
 }
 
 main blockquote {
-  max-width: var(--reading-max-width);
   border-left: 6px solid var(--blockquote-border-color);
   margin: 1.25em 0 0 1em;
   padding: 0.5em 1em;
@@ -276,7 +261,6 @@ main pre code {
   display: block;
   margin: 2em 0 0 0;
   padding: 0.75em;
-  max-width: var(--reading-max-width);
   overflow-x: scroll;
   color: var(--body-color);
   background-color: var(--line-separator-color);
@@ -288,7 +272,6 @@ main iframe {
 }
 
 main hr {
-  max-width: var(--reading-max-width);
   margin: 1em 0 0 0;
   border-top: 1px solid var(--line-separator-color);
 }
@@ -303,22 +286,10 @@ footer {
 /* ==========================================================================
      Homepage
      ========================================================================== */
-
-/* temporary: double border radius if browser supports squircle */
-/* remove this once safari supports squircle */
-:root {
-  --bio-border-radius: 1.5em;
-}
-
-@supports (corner-shape: squircle) {
-  :root {
-    --bio-border-radius: 3em;
-  }
-}
-
 .bio {
   display: flex;
   gap: 1.5em;
+  align-items: center;
 }
 
 .bio img {
