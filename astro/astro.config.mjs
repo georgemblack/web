@@ -22,7 +22,7 @@ export default defineConfig({
       }),
       CF_ACCESS_CLIENT_SECRET: envField.string({
         context: "server",
-        access: "public",
+        access: "secret",
       }),
     },
   },
