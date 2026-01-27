@@ -6,10 +6,10 @@
     "build": "astro check && astro build"
   },
   "dependencies": {
-    "@astrojs/check": "0.9.6-beta.1",
-    "@astrojs/rss": "4.0.15-beta.1",
-    "@astrojs/sitemap": "3.6.1-beta.2",
-    "astro": "6.0.0-beta.1",
+    "@astrojs/check": "0.9.6",
+    "@astrojs/rss": "4.0.15",
+    "@astrojs/sitemap": "3.7.0",
+    "astro": "6.0.0-beta.3",
     "typescript": "^5.9.3"
   }
 }
