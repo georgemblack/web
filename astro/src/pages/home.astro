@@ -5,7 +5,7 @@ import Page from "../layouts/Page.astro";
 import LinkIcon from "../components/LinkIcon.astro";
 
 const posts = await getPosts();
-const visible = posts.filter((item) => item.visible);
+const visible = posts.filter((post) => !post.hidden);
 const selected = visible.slice(0, 20);
 ---
 
@@ -29,7 +29,7 @@ const selected = visible.slice(0, 20);
         <article style="margin-top: 4em;">
           <h1>
             <a href={url(item)}>
-              {item.link && <LinkIcon />}
+              {item.external_link && <LinkIcon />}
               {item.title}
             </a>
           </h1>

@@ -22,8 +22,8 @@ const { post }: { post: Post } = Astro.props;
       <article>
         <h1>
           {
-            post.link ? (
-              <a href={post.link}>
+            post.external_link ? (
+              <a href={post.external_link}>
                 <LinkIcon />
                 {post.title}
               </a>

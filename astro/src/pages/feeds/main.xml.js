@@ -14,7 +14,7 @@ export async function GET(context) {
       pubDate: item.published,
       link: url(item),
       trailingSlash: false,
-      content: item.content,
+      content: item.content_html,
     })),
   });
 }

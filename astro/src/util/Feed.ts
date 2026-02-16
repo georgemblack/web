@@ -39,7 +39,7 @@ export async function generate(): Promise<string> {
       id: absoluteUrl(item),
       url: absoluteUrl(item),
       title: item.title,
-      content_html: item.content,
+      content_html: item.content_html || "", // TODO
       date_published: item.published,
     };
     if (image(item)) feedItem.image = image(item);
