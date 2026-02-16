@@ -5,11 +5,10 @@ import { slug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
 const posts = await getPosts();
-const visible = posts.filter((item) => item.visible);
 
 // Group posts by year
 const years: { [key: string]: Post[] } = {};
-visible.forEach((post) => {
+posts.forEach((post) => {
   const year = new Date(post.published).getFullYear().toString();
   if (!years[year]) {
     years[year] = [];
@@ -35,7 +34,7 @@ visible.forEach((post) => {
                 return (
                   <li>
                     <a href={`/${slug(item)}`}>
-                      {item.link && "🔗 "}
+                      {item.external_link && "🔗 "}
                       {item.title}
                     </a>
                   </li>

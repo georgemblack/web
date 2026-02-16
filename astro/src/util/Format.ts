@@ -6,22 +6,23 @@ export function slug(item: Post): string {
 }
 
 export function subtitle(item: Post): string {
-  if (item.link) return `${hostname(item.link)} • ${timestamp(item.published)}`;
+  if (item.external_link)
+    return `${hostname(item.external_link)} • ${timestamp(item.published)}`;
   return timestamp(item.published);
 }
 
 export function url(item: Post): string {
-  if (item.link) return item.link;
+  if (item.external_link) return item.external_link;
   return `/${slug(item)}`;
 }
 
 export function absoluteUrl(item: Post): string {
-  if (item.link) return item.link;
+  if (item.external_link) return item.external_link;
   return `https://george.black/${slug(item)}`;
 }
 
 export function preview(item: Post): string {
-  return item.preview || item.content;
+  return item.preview_html || item.content_html || "";
 }
 
 export function image(item: Post): string {
@@ -33,8 +34,8 @@ export function images(item: Post): string[] {
 }
 
 export function readMore(item: Post): boolean {
-  if (item.link) return false;
-  return item.content !== item.preview;
+  if (item.external_link) return false;
+  return item.content_html !== item.preview_html;
 }
 
 export function timestamp(timestamp: string): string {

@@ -1,16 +1,29 @@
 import { CF_ACCESS_CLIENT_ID, CF_ACCESS_CLIENT_SECRET } from "astro:env/server";
 
+export type PostStatus = "draft" | "published";
+
 export interface Post {
   id: string;
   title: string;
-  slug: string;
   published: string;
-  link: string | null;
-  visible: boolean;
+  updated: string;
+  slug: string;
+  status: PostStatus;
+  hidden: boolean;
   gallery: boolean;
-  preview: string;
-  content: string;
+  external_link: string | null;
+  content_html: string;
+  preview_html: string | null;
   images: string[];
+}
+
+export interface ListItem {
+  id: string;
+  title: string;
+  published: string;
+  status: PostStatus;
+  hidden: boolean;
+  gallery: boolean;
 }
 
 export async function getPosts(): Promise<Post[]> {
@@ -21,32 +34,29 @@ export async function getPosts(): Promise<Post[]> {
     headers["CF-Access-Client-Id"] = CF_ACCESS_CLIENT_ID;
     headers["CF-Access-Client-Secret"] = CF_ACCESS_CLIENT_SECRET;
   }
-
-  const response = await fetch(`https://kirby.george.black/blog.json`, {
+  const response = await fetch(`https://cms.george.black/api/posts`, {
     method: "GET",
     headers,
   });
 
-  const posts = await response.json();
+  const posts: ListItem[] = await response.json();
+  const published = posts.filter((post) => post.status === "published");
 
-  // Filter out posts that are published in the future.
-  const now = new Date();
-  const published = posts.filter((post: Post) => {
-    return new Date(post.published) <= now;
-  });
+  // Fetch the contents of each post that is published & visible
+  const rendered: Post[] = [];
+  for (const item of published) {
+    const response = await fetch(
+      `https://cms.george.black/api/posts/${item.id}/rendered`,
+      {
+        method: "GET",
+        headers,
+      },
+    );
+    rendered.push(await response.json());
+  }
 
-  const hydrated = published.map((post: Post) => {
-    // For each post, add a preview field.
-    // If the post content has a '<div class="break"></div>' element, use the content up to (but not including) that element.
-    // If there is no 'break', use the full content as the preview.
-    const index = post.content.indexOf('<div class="break"></div>');
-    post.preview = index === -1 ? post.content : post.content.slice(0, index);
-
-    return post;
-  });
-
-  // Sort posts by published date, in descending order.
-  return hydrated.sort((a: Post, b: Post) => {
+  // Sort posts by published date, in descending order
+  return rendered.sort((a: Post, b: Post) => {
     return a.published < b.published ? 1 : -1;
   });
 }
