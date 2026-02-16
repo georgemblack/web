@@ -1,7 +1,7 @@
 ---
 import { getPosts } from "../util/Api";
-import { slug } from "../util/Format";
 import Post from "../layouts/Post.astro";
+import { slug } from "../util/Format";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
@@ -19,5 +19,5 @@ const { post } = Astro.props;
 ---
 
 <Post post={post}>
-  <Fragment set:html={post.content} />
+  <Fragment set:html={post.content_html} />
 </Post>
