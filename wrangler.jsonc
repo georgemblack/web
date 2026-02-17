@@ -15,17 +15,6 @@
     "preview_urls": false,
     "workers_dev": false,
     "assets": {
-      "directory": "../astro/dist",
-      "run_worker_first": ["/files/*"]
-    },
-    "r2_buckets": [
-      {
-        "binding": "WEB_FILES",
-        "bucket_name": "web-files"
-      },
-      {
-        "binding": "WEB_FILES_CACHE",
-        "bucket_name": "web-files-cache"
-      }
-    ]
+      "directory": "./dist"
+    }
   }
