@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build"
+    "build": "astro check && astro build",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "@astrojs/check": "0.9.6-beta.1",
