@@ -1,15 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/astro"
-    schedule:
-      interval: "weekly"
-    groups:
-      all-dependencies:
-        patterns:
-          - "*"
-  - package-ecosystem: "npm"
-    directory: "/worker"
+    directory: "/"
     schedule:
       interval: "weekly"
     groups:
