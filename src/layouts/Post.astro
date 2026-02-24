@@ -11,11 +11,12 @@ interface Props {
 }
 
 const { post }: { post: Post } = Astro.props;
+const ogImage = post.images.length > 0 ? post.images[0] : undefined;
 ---
 
 <!doctype html>
 <html lang="en">
-  <Head title={post.title} />
+  <Head title={post.title} ogImage={ogImage} />
   <body>
     <Header />
     <main class="post">
