@@ -3,10 +3,12 @@ import "../styles/main.css";
 
 interface Props {
   title?: string;
+  ogImage?: string;
 }
 
-const { title } = Astro.props;
+const { title, ogImage } = Astro.props;
 const pageTitle = title ? `${title} | George Black` : `George Black`;
+const ogImageUrl = ogImage || "https://george.black/images/profile.avif";
 ---
 
 <head>
@@ -32,7 +34,7 @@ const pageTitle = title ? `${title} | George Black` : `George Black`;
   />
   <title>{pageTitle}</title>
   <!-- Twitter card data -->
-  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
   <meta name="twitter:site" content="@georgeblackm" />
   <meta name="twitter:title" content={pageTitle} />
   <meta
@@ -41,7 +43,7 @@ const pageTitle = title ? `${title} | George Black` : `George Black`;
   />
   <meta
     name="twitter:image"
-    content="https://george.black/images/profile.avif"
+    content={ogImageUrl}
   />
   <meta name="twitter:image:alt" content="George Black profile" />
   <meta name="twitter:url" content="https://george.black" />
@@ -52,7 +54,7 @@ const pageTitle = title ? `${title} | George Black` : `George Black`;
   <meta property="og:type" content="website" />
   <meta
     property="og:image"
-    content="https://george.black/images/profile.avif"
+    content={ogImageUrl}
   />
   <meta
     property="og:description"
