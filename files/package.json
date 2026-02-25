@@ -10,9 +10,9 @@
     "format": "prettier . --write"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.12.4",
+    "@cloudflare/vitest-pool-workers": "^0.12.17",
     "typescript": "^5.5.2",
-    "vitest": "~4.0.17",
-    "wrangler": "^4.68.0"
+    "vitest": "~4.0.18",
+    "wrangler": "^4.68.1"
   }
 }
