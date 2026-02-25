@@ -92,52 +92,48 @@ export function SortableBlockItem({
 
   return (
     <div ref={setNodeRef} style={style}>
-      <div className="flex gap-2">
-        <div className="flex-1">
-          <BlockEditor block={block} onChange={onChange} />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Button
-            variant="secondary"
-            shape="square"
-            size="sm"
-            {...attributes}
-            {...listeners}
-            aria-label="Drag to reorder"
-          >
-            {EMOJI.grip}
-          </Button>
-          <Button
-            variant="secondary"
-            shape="square"
-            size="sm"
-            onClick={onMoveUp}
-            disabled={isFirst}
-            aria-label="Move block up"
-          >
-            {EMOJI.up}
-          </Button>
-          <Button
-            variant="secondary"
-            shape="square"
-            size="sm"
-            onClick={onMoveDown}
-            disabled={isLast}
-            aria-label="Move block down"
-          >
-            {EMOJI.down}
-          </Button>
-          <Button
-            variant="secondary-destructive"
-            shape="square"
-            size="sm"
-            onClick={onDelete}
-            aria-label="Delete block"
-          >
-            {EMOJI.trash}
-          </Button>
-        </div>
+      <div className="flex justify-end gap-2">
+        <Button
+          variant="secondary"
+          shape="square"
+          size="sm"
+          {...attributes}
+          {...listeners}
+          aria-label="Drag to reorder"
+        >
+          {EMOJI.grip}
+        </Button>
+        <Button
+          variant="secondary"
+          shape="square"
+          size="sm"
+          onClick={onMoveUp}
+          disabled={isFirst}
+          aria-label="Move block up"
+        >
+          {EMOJI.up}
+        </Button>
+        <Button
+          variant="secondary"
+          shape="square"
+          size="sm"
+          onClick={onMoveDown}
+          disabled={isLast}
+          aria-label="Move block down"
+        >
+          {EMOJI.down}
+        </Button>
+        <Button
+          variant="secondary-destructive"
+          shape="square"
+          size="sm"
+          onClick={onDelete}
+          aria-label="Delete block"
+        >
+          {EMOJI.trash}
+        </Button>
       </div>
+      <BlockEditor block={block} onChange={onChange} />
     </div>
   );
 }
