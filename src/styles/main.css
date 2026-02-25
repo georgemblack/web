@@ -11,7 +11,6 @@
   --font-family-rounded: ui-rounded, system-ui;
 
   /* font weights */
-  --font-weight-normal: 400;
   --font-weight-bold: 900;
   --font-weight-extreme: 900;
 
@@ -32,9 +31,6 @@
   --link-color: #35589c;
   --link-hover-color: #302b29;
   --faded-text-color: rgba(0, 0, 0, 0.4);
-
-  /* specific section colors */
-  --search-background-color: rgba(255, 255, 255, 0.75);
 }
 
 /* dark mode */
@@ -57,9 +53,6 @@
     --link-color: #70b0ff;
     --link-hover-color: #5da6ff;
     --faded-text-color: rgba(255, 255, 255, 0.4);
-
-    /* specific section colors */
-    --search-background-color: rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -211,7 +204,6 @@ main :is(h2, h3) {
   line-height: 125%;
 }
 
-/* removed: 'text-wrap: pretty;' until it handles multiple paragraphs better */
 main p {
   margin: 1.25em 0 0 0;
   line-height: 160%;
