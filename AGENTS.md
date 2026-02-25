@@ -1,6 +1,11 @@
 # AGENTS.md
 
-This is a monorepo containing a collection of Cloudflare Workers for personal use. Each top-level directory represents a worker.
+This is a monorepo of services used to power my personal website. Each top-level directory represents a Cloudflare Worker:
+
+* `web`: The front-end of the website
+* `cms`: The content management system
+* `cms-db`: Database functions
+* `cms-backup`: Data backup
 
 For project-specific context, see `AGENTS.md` within each directory.
 
