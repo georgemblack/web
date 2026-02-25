@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cms",
+  "compatibility_date": "2025-09-02",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@tanstack/react-start/server-entry",
+  "d1_databases": [
+    {
+      "binding": "WEB_DB",
+      "database_name": "web",
+      "database_id": "9b0b56cc-daed-4e61-b4d2-a8ba33da1286",
+      "remote": true,
+    },
+  ],
+  "services": [
+    {
+      "binding": "CMS_DB",
+      "service": "cms-db",
+      "remote": true
+    },
+  ],
+  "observability": {
+    "enabled": true,
+  },
+  "routes": [
+    {
+      "pattern": "cms.george.black",
+      "custom_domain": true,
+    },
+  ],
+  "workers_dev": false,
+  "preview_urls": false,
+}

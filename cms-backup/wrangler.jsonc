@@ -1,0 +1,25 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "cms-backup",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-02-19",
+	"observability": {
+		"enabled": true,
+	},
+	"triggers": {
+		"crons": ["0 12 * * *"],
+	},
+	"d1_databases": [
+		{
+			"binding": "WEB_DB",
+			"database_name": "web",
+			"database_id": "9b0b56cc-daed-4e61-b4d2-a8ba33da1286",
+		},
+	],
+	"r2_buckets": [
+		{
+			"binding": "BACKUP_BUCKET",
+			"bucket_name": "cms-backups",
+		},
+	],
+}

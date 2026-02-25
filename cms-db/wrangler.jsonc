@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cms-db",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-02-25",
+  "observability": {
+    "enabled": true,
+  },
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "WEB_DB",
+      "database_name": "web",
+      "database_id": "9b0b56cc-daed-4e61-b4d2-a8ba33da1286",
+    },
+  ],
+}

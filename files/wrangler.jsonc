@@ -1,0 +1,27 @@
+{
+    "name": "files",
+    "main": "src/index.ts",
+    "account_id": "bc4564dd499c0a9b8a7bb79c9bd5ea6d",
+    "compatibility_date": "2026-01-15",
+    "observability": {
+      "enabled": true
+    },
+    "routes": [
+      {
+        "pattern": "george.black/files",
+        "zone_name": "george.black"
+      }
+    ],
+    "preview_urls": false,
+    "workers_dev": false,
+    "r2_buckets": [
+      {
+        "binding": "WEB_FILES",
+        "bucket_name": "web-files"
+      },
+      {
+        "binding": "WEB_FILES_CACHE",
+        "bucket_name": "web-files-cache"
+      }
+    ]
+  }
