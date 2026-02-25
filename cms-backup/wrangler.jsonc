@@ -9,11 +9,11 @@
 	"triggers": {
 		"crons": ["0 12 * * *"],
 	},
-	"d1_databases": [
+	"services": [
 		{
-			"binding": "WEB_DB",
-			"database_name": "web",
-			"database_id": "9b0b56cc-daed-4e61-b4d2-a8ba33da1286",
+			"binding": "CMS_DB",
+			"service": "cms-db",
+			"remote": true,
 		},
 	],
 	"r2_buckets": [

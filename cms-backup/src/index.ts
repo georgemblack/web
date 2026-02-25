@@ -1,6 +1,8 @@
+import type { Post } from "../../cms-db/src/types";
+
 export default {
 	async scheduled(event, env, ctx): Promise<void> {
-		const posts = await queryPosts(env.WEB_DB);
+		const posts = await queryPosts(env.CMS_DB);
 		const postsJson = JSON.stringify(posts);
 		const postsHash = await sha256(postsJson);
 
@@ -30,45 +32,12 @@ export default {
 	},
 } satisfies ExportedHandler<Env>;
 
-interface PostRow {
-	id: string;
-	title: string;
-	published: string;
-	updated: string;
-	slug: string;
-	status: string;
-	hidden: number;
-	gallery: number;
-	external_link: string | null;
-	content: string;
-}
-
-interface Post {
-	id: string;
-	title: string;
-	published: string;
-	updated: string;
-	slug: string;
-	status: string;
-	hidden: boolean;
-	gallery: boolean;
-	external_link: string | null;
-	content: unknown;
-}
-
-async function queryPosts(db: D1Database): Promise<Post[]> {
-	const result = await db
-		.prepare(
-			"SELECT id, title, published, updated, slug, status, hidden, gallery, external_link, content FROM posts WHERE deleted = 0 ORDER BY published DESC",
-		)
-		.all<PostRow>();
-
-	return result.results.map((row) => ({
-		...row,
-		hidden: row.hidden === 1,
-		gallery: row.gallery === 1,
-		content: JSON.parse(row.content),
-	}));
+async function queryPosts(cmsDb: Env["CMS_DB"]): Promise<Post[]> {
+	const list = await cmsDb.listPosts();
+	const posts = await Promise.all(
+		list.map((item) => cmsDb.getPost(item.id)),
+	);
+	return posts.filter((post) => post !== null);
 }
 
 async function sha256(data: string): Promise<string> {
