@@ -7,6 +7,7 @@
 
   /* fonts */
   --font-family-display: system-ui;
+  --font-family-header: ui-rounded, system-ui;
   --font-family-text: system-ui;
   --font-family-rounded: ui-rounded, system-ui;
 
@@ -99,7 +100,7 @@ body {
 h1,
 h2,
 h3 {
-  font-family: var(--font-family-text);
+  font-family: var(--font-family-header);
   font-weight: var(--font-weight-bold);
   color: var(--header-color);
 }
