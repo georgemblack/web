@@ -30,7 +30,7 @@ type FeedItem = {
   image?: string;
 };
 
-export async function generate(): Promise<string> {
+export async function generateFeed(): Promise<Feed> {
   const posts = await getPosts();
 
   // Generate feed items
@@ -39,7 +39,7 @@ export async function generate(): Promise<string> {
       id: absoluteUrl(item),
       url: absoluteUrl(item),
       title: item.title,
-      content_html: item.content_html || "", // TODO
+      content_html: item.content_html,
       date_published: item.published,
     };
     if (image(item)) feedItem.image = image(item);
@@ -69,5 +69,5 @@ export async function generate(): Promise<string> {
     items: feedItems,
   };
 
-  return JSON.stringify(feed);
+  return feed;
 }
