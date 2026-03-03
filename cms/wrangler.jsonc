@@ -16,9 +16,22 @@
     {
       "binding": "CMS_DB",
       "service": "cms-db",
-      "remote": true
+      "remote": true,
     },
   ],
+  "r2_buckets": [
+    {
+      "binding": "WEB_FILES",
+      "bucket_name": "web-files",
+    },
+    {
+      "binding": "WEB_FILES_CACHE",
+      "bucket_name": "web-files-cache",
+    },
+  ],
+  "images": {
+    "binding": "IMAGES",
+  },
   "observability": {
     "enabled": true,
   },

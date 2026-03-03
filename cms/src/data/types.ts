@@ -105,6 +105,11 @@ export interface PostListItem {
   gallery: boolean;
 }
 
+export interface WebFile {
+  fileName: string;
+  optimized: boolean;
+}
+
 // Zod schemas for DB inputs
 const postStatusSchema = z.enum(["draft", "published"]);
 const iso8601String = z.iso.datetime();

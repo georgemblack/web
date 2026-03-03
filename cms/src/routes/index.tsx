@@ -75,9 +75,14 @@ function App() {
             <Breadcrumbs.Current>Home</Breadcrumbs.Current>
           </Breadcrumbs>
         </div>
-        <Button variant="primary" onClick={handleCreatePost}>
-          New Post
-        </Button>
+        <div className="flex gap-2">
+          <Link to="/files">
+            <Button variant="secondary">Files</Button>
+          </Link>
+          <Button variant="primary" onClick={handleCreatePost}>
+            New Post
+          </Button>
+        </div>
       </div>
       <div className="mt-4">
         <PaddedSurface>
