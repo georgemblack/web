@@ -10,12 +10,12 @@
     "format": "prettier . --write"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.12.4",
-    "@types/node": "^25.3.0",
+    "@cloudflare/vitest-pool-workers": "^0.12.18",
+    "@types/node": "^25.3.3",
     "prettier": "^3.8.1",
     "typescript": "^5.5.2",
     "vitest": "~4.0.18",
-    "wrangler": "^4.68.1"
+    "wrangler": "^4.69.0"
   },
   "dependencies": {
     "marked": "^17.0.3",
