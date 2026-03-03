@@ -10,7 +10,7 @@
     "deploy": "pnpm run build && wrangler deploy",
     "dryrun": "pnpm run build && wrangler deploy --dry-run",
     "preview": "pnpm run build && vite preview",
-    "typegen": "wrangler types -c ./wrangler.jsonc -c ../cms-db/wrangler.jsonc",
+    "typegen": "wrangler types -c ./wrangler.jsonc -c ../web-db/wrangler.jsonc",
     "typecheck": "tsc --noEmit",
     "format": "prettier . --write"
   },

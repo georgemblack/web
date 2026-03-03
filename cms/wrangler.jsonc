@@ -14,8 +14,8 @@
   ],
   "services": [
     {
-      "binding": "CMS_DB",
-      "service": "cms-db",
+      "binding": "WEB_DB_SERVICE",
+      "service": "web-db",
       "remote": true,
     },
   ],

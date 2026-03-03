@@ -4,7 +4,7 @@ This is a monorepo of services used to power my personal website. Each top-level
 
 * `web`: The front-end of the website
 * `cms`: The content management system
-* `cms-db`: Database functions
+* `web-db`: Database functions
 * `cms-backup`: Data backup
 
 For project-specific context, see `AGENTS.md` within each directory.

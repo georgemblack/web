@@ -26,7 +26,7 @@ export interface ListPostsFilters {
   state?: PostStatus;
 }
 
-export default class CmsDb extends WorkerEntrypoint<Env> {
+export default class WebDb extends WorkerEntrypoint<Env> {
   async fetch() {
     return new Response(null, { status: 404 });
   }

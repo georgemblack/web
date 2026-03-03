@@ -1,8 +1,8 @@
-import type { Post } from "../../cms-db/src/types";
+import type { Post } from "../../web-db/src/types";
 
 export default {
 	async scheduled(event, env, ctx): Promise<void> {
-		const posts = await queryPosts(env.CMS_DB);
+		const posts = await queryPosts(env.WEB_DB_SERVICE);
 		const postsJson = JSON.stringify(posts);
 		const postsHash = await sha256(postsJson);
 
@@ -32,11 +32,9 @@ export default {
 	},
 } satisfies ExportedHandler<Env>;
 
-async function queryPosts(cmsDb: Env["CMS_DB"]): Promise<Post[]> {
-	const list = await cmsDb.listPosts();
-	const posts = await Promise.all(
-		list.map((item) => cmsDb.getPost(item.id)),
-	);
+async function queryPosts(webDb: Env["WEB_DB_SERVICE"]): Promise<Post[]> {
+	const list = await webDb.listPosts();
+	const posts = await Promise.all(list.map((item) => webDb.getPost(item.id)));
 	return posts.filter((post) => post !== null);
 }
 

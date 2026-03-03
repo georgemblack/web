@@ -17,35 +17,35 @@ export interface ListPostsFilters {
 export const getPost = createServerFn({ method: "GET" })
   .inputValidator((id: string) => id)
   .handler(async ({ data: id }): Promise<Post | null> => {
-    return env.CMS_DB.getPost(id);
+    return env.WEB_DB_SERVICE.getPost(id);
   });
 
 export const getRenderedPost = createServerFn({ method: "GET" })
   .inputValidator((id: string) => id)
   .handler(async ({ data: id }): Promise<RenderedPost | null> => {
-    return env.CMS_DB.getRenderedPost(id);
+    return env.WEB_DB_SERVICE.getRenderedPost(id);
   });
 
 export const listPosts = createServerFn({ method: "GET" })
   .inputValidator((input: ListPostsFilters | undefined) => input)
   .handler(async ({ data: filters }): Promise<PostListItem[]> => {
-    return env.CMS_DB.listPosts(filters);
+    return env.WEB_DB_SERVICE.listPosts(filters);
   });
 
 export const createPost = createServerFn({ method: "POST" })
   .inputValidator(createPostInputSchema)
   .handler(async ({ data: input }): Promise<Post> => {
-    return env.CMS_DB.createPost(input);
+    return env.WEB_DB_SERVICE.createPost(input);
   });
 
 export const updatePost = createServerFn({ method: "POST" })
   .inputValidator(updatePostInputSchema)
   .handler(async ({ data: input }): Promise<Post | null> => {
-    return env.CMS_DB.updatePost(input);
+    return env.WEB_DB_SERVICE.updatePost(input);
   });
 
 export const deletePost = createServerFn({ method: "POST" })
   .inputValidator((id: string) => id)
   .handler(async ({ data: id }): Promise<boolean> => {
-    return env.CMS_DB.deletePost(id);
+    return env.WEB_DB_SERVICE.deletePost(id);
   });
