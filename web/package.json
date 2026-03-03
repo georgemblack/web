@@ -8,10 +8,10 @@
   },
   "dependencies": {
     "@astrojs/check": "0.9.7-beta.1",
-    "@astrojs/rss": "4.0.15-beta.3",
+    "@astrojs/rss": "4.0.15",
     "@astrojs/sitemap": "3.7.0",
-    "astro": "6.0.0-beta.14",
+    "astro": "6.0.0-beta.17",
     "typescript": "^5.9.3",
-    "wrangler": "^4.65.0"
+    "wrangler": "^4.69.0"
   }
 }
