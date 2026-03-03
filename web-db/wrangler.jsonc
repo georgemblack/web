@@ -6,8 +6,7 @@
   "observability": {
     "enabled": true,
   },
-  "compatibility_flags": ["nodejs_compat"],
-  "d1_databases": [
+"d1_databases": [
     {
       "binding": "WEB_DB",
       "database_name": "web",
