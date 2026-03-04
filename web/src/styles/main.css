@@ -122,10 +122,14 @@ h2 {
 }
 
 p,
-li,
-blockquote {
+li {
   font-family: var(--font-family-text);
   font-size: 1.125em;
+  color: var(--body-color);
+}
+
+blockquote {
+  font-family: var(--font-family-text);
   color: var(--body-color);
 }
 
