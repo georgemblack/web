@@ -34,7 +34,7 @@ export async function getPosts(): Promise<Post[]> {
     headers["CF-Access-Client-Id"] = CF_ACCESS_CLIENT_ID;
     headers["CF-Access-Client-Secret"] = CF_ACCESS_CLIENT_SECRET;
   }
-  const response = await fetch(`https://cms.george.black/api/posts`, {
+  const response = await fetch(`https://cms.georgeblack.workers.dev/api/posts`, {
     method: "GET",
     headers,
   });
@@ -46,7 +46,7 @@ export async function getPosts(): Promise<Post[]> {
   const rendered: Post[] = [];
   for (const item of published) {
     const response = await fetch(
-      `https://cms.george.black/api/posts/${item.id}/rendered`,
+      `https://cms.georgeblack.workers.dev/api/posts/${item.id}/rendered`,
       {
         method: "GET",
         headers,
