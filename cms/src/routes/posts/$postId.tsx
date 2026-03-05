@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getPost, updatePost } from "@/data/db";
+import { listFiles } from "@/data/files";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import {
   DndContext,
@@ -24,10 +25,21 @@ import {
 } from "@/components/SortableBlockItem";
 import PaddedSurface from "@/components/PaddedSurface";
 
+const currentYear = new Date().getFullYear();
+
 export const Route = createFileRoute("/posts/$postId")({
   ssr: "data-only",
   component: RouteComponent,
-  loader: async ({ params }) => await getPost({ data: params.postId }),
+  loader: async ({ params }) => {
+    const [post, files] = await Promise.all([
+      getPost({ data: params.postId }),
+      listFiles(),
+    ]);
+    const fileNames = files
+      .filter((f) => f.fileName.startsWith(`${currentYear}/`))
+      .map((f) => f.fileName);
+    return { post, fileNames };
+  },
 });
 
 function generateBlockId(): string {
@@ -263,20 +275,21 @@ function MetadataSection({
 }
 
 function RouteComponent() {
-  const post = Route.useLoaderData();
+  const { post, fileNames } = Route.useLoaderData();
 
   if (!post) {
     return <span>Post not found</span>;
   }
 
-  return <PostEditor key={post.updated} post={post} />;
+  return <PostEditor key={post.updated} post={post} fileNames={fileNames} />;
 }
 
 interface PostEditorProps {
   post: Post;
+  fileNames: string[];
 }
 
-function PostEditor({ post }: PostEditorProps) {
+function PostEditor({ post, fileNames }: PostEditorProps) {
   const router = useRouter();
 
   const [title, setTitle] = useState(
@@ -548,6 +561,7 @@ function PostEditor({ post }: PostEditorProps) {
                 <SortableBlockItem
                   key={block._id}
                   block={block}
+                  fileNames={fileNames}
                   onChange={(updatedBlock) =>
                     handleBlockChange(index, updatedBlock)
                   }
