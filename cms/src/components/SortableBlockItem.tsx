@@ -23,10 +23,11 @@ const EMOJI = {
 
 interface BlockEditorProps {
   block: BlockWithId;
+  fileNames: string[];
   onChange: (block: BlockWithId) => void;
 }
 
-function BlockEditor({ block, onChange }: BlockEditorProps) {
+function BlockEditor({ block, fileNames, onChange }: BlockEditorProps) {
   const handleChange = (updatedBlock: ContentBlock) => {
     onChange({ ...updatedBlock, _id: block._id } as BlockWithId);
   };
@@ -35,7 +36,13 @@ function BlockEditor({ block, onChange }: BlockEditorProps) {
     case "markdown":
       return <MarkdownBlockEditor block={block} onChange={handleChange} />;
     case "image":
-      return <ImageBlockEditor block={block} onChange={handleChange} />;
+      return (
+        <ImageBlockEditor
+          block={block}
+          fileNames={fileNames}
+          onChange={handleChange}
+        />
+      );
     case "video":
       return <VideoBlockEditor block={block} onChange={handleChange} />;
     case "text":
@@ -58,6 +65,7 @@ function BlockEditor({ block, onChange }: BlockEditorProps) {
 // Sortable Block Item
 interface SortableBlockItemProps {
   block: BlockWithId;
+  fileNames: string[];
   onChange: (block: BlockWithId) => void;
   onDelete: () => void;
   onMoveUp: () => void;
@@ -68,6 +76,7 @@ interface SortableBlockItemProps {
 
 export function SortableBlockItem({
   block,
+  fileNames,
   onChange,
   onDelete,
   onMoveUp,
@@ -133,7 +142,7 @@ export function SortableBlockItem({
           {EMOJI.trash}
         </Button>
       </div>
-      <BlockEditor block={block} onChange={onChange} />
+      <BlockEditor block={block} fileNames={fileNames} onChange={onChange} />
     </div>
   );
 }

@@ -1,12 +1,17 @@
-import { Input } from "@cloudflare/kumo";
+import { Input, Select } from "@cloudflare/kumo";
 import type { ImageBlock } from "@/data/types";
 
 interface ImageBlockEditorProps {
   block: ImageBlock;
+  fileNames: string[];
   onChange: (block: ImageBlock) => void;
 }
 
-export function ImageBlockEditor({ block, onChange }: ImageBlockEditorProps) {
+export function ImageBlockEditor({
+  block,
+  fileNames,
+  onChange,
+}: ImageBlockEditorProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
@@ -19,13 +24,34 @@ export function ImageBlockEditor({ block, onChange }: ImageBlockEditorProps) {
             />
           )}
         </div>
-        <div className="flex-1">
+        <div className="flex-1 flex gap-2">
           <Input
-            className="w-full"
+            className="flex-1"
             value={block.url}
             onChange={(e) => onChange({ ...block, url: e.target.value })}
             placeholder="/images/example.jpg"
           />
+          {fileNames.length > 0 && (
+            <Select
+              className="w-48"
+              value=""
+              onValueChange={(fileName) => {
+                if (fileName) {
+                  onChange({
+                    ...block,
+                    url: `https://george.black/files/${fileName}`,
+                  });
+                }
+              }}
+              placeholder="Select file..."
+            >
+              {fileNames.map((fileName) => (
+                <Select.Option key={fileName} value={fileName}>
+                  {fileName}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
         </div>
       </div>
       <div className="flex gap-2">
