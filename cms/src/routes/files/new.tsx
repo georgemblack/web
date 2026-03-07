@@ -30,7 +30,7 @@ function NewFilePage() {
       formData.append("file", file);
       if (optimize) formData.append("optimize", "on");
       await uploadFile({ data: formData });
-      await router.navigate({ to: "/files" });
+      await router.navigate({ to: "/files", search: { year } });
     } finally {
       setUploading(false);
     }

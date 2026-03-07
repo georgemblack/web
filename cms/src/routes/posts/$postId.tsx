@@ -33,11 +33,9 @@ export const Route = createFileRoute("/posts/$postId")({
   loader: async ({ params }) => {
     const [post, files] = await Promise.all([
       getPost({ data: params.postId }),
-      listFiles(),
+      listFiles({ data: `${currentYear}/` }),
     ]);
-    const fileNames = files
-      .filter((f) => f.fileName.startsWith(`${currentYear}/`))
-      .map((f) => f.fileName);
+    const fileNames = files.map((f) => f.fileName);
     return { post, fileNames };
   },
 });

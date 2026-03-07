@@ -75,7 +75,7 @@ function App() {
           </Breadcrumbs>
         </div>
         <div className="flex gap-2">
-          <Link to="/files">
+          <Link to="/files" search={{ year: String(new Date().getFullYear()) }}>
             <Button variant="secondary">Files</Button>
           </Link>
           <Button variant="primary" onClick={handleCreatePost}>

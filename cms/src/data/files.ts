@@ -6,11 +6,12 @@ const OPTIMIZED_IMAGE_FORMAT = "image/avif";
 const OPTIMIZED_IMAGE_WIDTH = 1200;
 const CACHE_CONTROL = "public, max-age=31536000";
 
-export const listFiles = createServerFn({ method: "GET" }).handler(
-  async (): Promise<WebFile[]> => {
+export const listFiles = createServerFn({ method: "GET" })
+  .inputValidator((prefix: string) => prefix)
+  .handler(async ({ data: prefix }): Promise<WebFile[]> => {
     const [originals, cached] = await Promise.all([
-      env.WEB_FILES.list(),
-      env.WEB_FILES_CACHE.list(),
+      env.WEB_FILES.list({ prefix }),
+      env.WEB_FILES_CACHE.list({ prefix }),
     ]);
 
     const cachedSet = new Set(cached.objects.map((obj) => obj.key));
@@ -19,8 +20,7 @@ export const listFiles = createServerFn({ method: "GET" }).handler(
       fileName: obj.key,
       optimized: cachedSet.has(obj.key),
     }));
-  },
-);
+  });
 
 export const uploadFile = createServerFn({ method: "POST" })
   .inputValidator((d: FormData) => d)

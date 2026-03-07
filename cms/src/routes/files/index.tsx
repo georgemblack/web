@@ -1,6 +1,11 @@
 import { useMemo, useState } from "react";
 import { deleteFile, listFiles, toggleOptimize } from "@/data/files";
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import {
   Badge,
   Breadcrumbs,
@@ -11,19 +16,25 @@ import {
 } from "@cloudflare/kumo";
 import PaddedSurface from "@/components/PaddedSurface";
 
+const currentYear = new Date().getFullYear();
 const YEARS = Array.from({ length: 16 }, (_, i) => String(2015 + i));
 
 export const Route = createFileRoute("/files/")({
   component: FilesPage,
-  loader: async () => await listFiles(),
+  validateSearch: (search: Record<string, unknown>) => ({
+    year: String(search.year ?? currentYear),
+  }),
+  loaderDeps: ({ search }) => ({ year: search.year }),
+  loader: async ({ deps }) => await listFiles({ data: `${deps.year}/` }),
 });
 
 function FilesPage() {
   const files = Route.useLoaderData();
+  const { year } = Route.useSearch();
   const router = useRouter();
+  const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [yearFilter, setYearFilter] = useState("all");
   const [showOptimizedOnly, setShowOptimizedOnly] = useState(false);
 
   const filteredFiles = useMemo(() => {
@@ -31,12 +42,10 @@ function FilesPage() {
       const matchesSearch = f.fileName
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
-      const matchesYear =
-        yearFilter === "all" || f.fileName.startsWith(`${yearFilter}/`);
       const matchesOptimized = !showOptimizedOnly || f.optimized;
-      return matchesSearch && matchesYear && matchesOptimized;
+      return matchesSearch && matchesOptimized;
     });
-  }, [files, searchQuery, yearFilter, showOptimizedOnly]);
+  }, [files, searchQuery, showOptimizedOnly]);
 
   const handleToggleOptimize = async (fileName: string) => {
     await toggleOptimize({ data: fileName });
@@ -81,10 +90,14 @@ function FilesPage() {
           <div className="mt-4 flex gap-3 items-center">
             <Select
               className="w-30"
-              value={yearFilter}
-              onValueChange={(v) => setYearFilter(v || "all")}
+              value={year}
+              onValueChange={(v) =>
+                navigate({
+                  to: "/files",
+                  search: { year: v || String(currentYear) },
+                })
+              }
             >
-              <Select.Option value="all">all years</Select.Option>
               {YEARS.map((y) => (
                 <Select.Option key={y} value={y}>
                   {y}
