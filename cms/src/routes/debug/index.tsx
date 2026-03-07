@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { createPost, listPosts, getPost } from "@/data/db";
+import { createPost, listPosts, getPost, updatePost } from "@/data/db";
+import { listFiles } from "@/data/files";
 import { Button } from "@cloudflare/kumo";
 import type { ContentBlock } from "@/data/types";
 
@@ -84,7 +85,15 @@ function RouteComponent() {
     setInvalidImages(null);
 
     try {
-      const posts = await listPosts({ data: undefined });
+      const [posts, files] = await Promise.all([
+        listPosts({ data: undefined }),
+        listFiles(),
+      ]);
+
+      const fileSet = new Set(
+        files.map((f) => `https://george.black/files/${f.fileName}`),
+      );
+
       const results: { postTitle: string; postId: string; url: string }[] = [];
 
       for (const item of posts) {
@@ -92,7 +101,7 @@ function RouteComponent() {
         if (!post) continue;
         for (const block of post.content) {
           if (block.type === "image" || block.type === "video") {
-            if (!block.url.startsWith("https://george.black/files/")) {
+            if (!fileSet.has(block.url)) {
               results.push({
                 postTitle: post.title,
                 postId: post.id,
@@ -114,6 +123,78 @@ function RouteComponent() {
     }
   };
 
+  const [isMigrating, setIsMigrating] = useState(false);
+  const [migratedUrls, setMigratedUrls] = useState<
+    { postTitle: string; postId: string; oldUrl: string; newUrl: string }[] | null
+  >(null);
+
+  const handleMigrateUrls = async () => {
+    setIsMigrating(true);
+    setMigratedUrls(null);
+
+    try {
+      const posts = await listPosts({ data: undefined });
+      const results: {
+        postTitle: string;
+        postId: string;
+        oldUrl: string;
+        newUrl: string;
+      }[] = [];
+
+      const OLD_PREFIX = "https://files.george.black/";
+      const NEW_PREFIX = "https://george.black/files/";
+
+      for (const item of posts) {
+        const post = await getPost({ data: item.id });
+        if (!post) continue;
+
+        let changed = false;
+        const updatedContent = post.content.map((block) => {
+          if (
+            (block.type === "image" || block.type === "video") &&
+            block.url.startsWith(OLD_PREFIX)
+          ) {
+            const newUrl = NEW_PREFIX + block.url.slice(OLD_PREFIX.length);
+            results.push({
+              postTitle: post.title,
+              postId: post.id,
+              oldUrl: block.url,
+              newUrl,
+            });
+            changed = true;
+            return { ...block, url: newUrl };
+          }
+          return block;
+        });
+
+        if (changed) {
+          await updatePost({
+            data: {
+              id: post.id,
+              title: post.title,
+              published: post.published,
+              slug: post.slug,
+              status: post.status,
+              hidden: post.hidden,
+              gallery: post.gallery,
+              content: updatedContent,
+              external_link: post.external_link,
+            },
+          });
+        }
+      }
+
+      setMigratedUrls(results);
+    } catch (error) {
+      setMessage({
+        type: "error",
+        text: `Failed to migrate URLs: ${error instanceof Error ? error.message : "Unknown error"}`,
+      });
+    } finally {
+      setIsMigrating(false);
+    }
+  };
+
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-6">Debug Tools</h1>
@@ -123,6 +204,9 @@ function RouteComponent() {
         </Button>
         <Button onClick={handleCheckImages} disabled={isCheckingImages}>
           {isCheckingImages ? "Checking..." : "Find Invalid Image URLs"}
+        </Button>
+        <Button onClick={handleMigrateUrls} disabled={isMigrating}>
+          {isMigrating ? "Migrating..." : "Migrate Legacy Image URLs"}
         </Button>
         {message && (
           <p
@@ -136,17 +220,42 @@ function RouteComponent() {
         {invalidImages !== null && (
           <div>
             <h2 className="text-lg font-semibold mt-4 mb-2">
-              Invalid Image URLs ({invalidImages.length})
+              Image URLs Without a File ({invalidImages.length})
             </h2>
             {invalidImages.length === 0 ? (
               <p className="text-green-600">
-                All image URLs match https://george.black/files/*
+                All image URLs map to an existing file.
               </p>
             ) : (
               <ul className="list-disc pl-6 space-y-1">
                 {invalidImages.map((img, i) => (
                   <li key={i}>
                     <Link to="/posts/$postId" params={{ postId: img.postId }} className="font-bold underline">{img.postTitle}</Link>: <code>{img.url}</code>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+        {migratedUrls !== null && (
+          <div>
+            <h2 className="text-lg font-semibold mt-4 mb-2">
+              Migrated Image URLs ({migratedUrls.length})
+            </h2>
+            {migratedUrls.length === 0 ? (
+              <p className="text-green-600">No legacy URLs found.</p>
+            ) : (
+              <ul className="list-disc pl-6 space-y-1">
+                {migratedUrls.map((item, i) => (
+                  <li key={i}>
+                    <Link
+                      to="/posts/$postId"
+                      params={{ postId: item.postId }}
+                      className="font-bold underline"
+                    >
+                      {item.postTitle}
+                    </Link>
+                    : <code>{item.oldUrl}</code> → <code>{item.newUrl}</code>
                   </li>
                 ))}
               </ul>
