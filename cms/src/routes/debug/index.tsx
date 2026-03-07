@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { createPost, listPosts, getPost, updatePost } from "@/data/db";
 import { listFiles, uploadFile } from "@/data/files";
-import { Button, Input } from "@cloudflare/kumo";
+import { Button, Input, Switch } from "@cloudflare/kumo";
 import type { ContentBlock } from "@/data/types";
 
 export const Route = createFileRoute("/debug/")({
@@ -275,6 +275,7 @@ const currentYear = new Date().getFullYear();
 
 function BulkUploadForm() {
   const [year, setYear] = useState(String(currentYear));
+  const [optimize, setOptimize] = useState(true);
   const [files, setFiles] = useState<FileList | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [results, setResults] = useState<
@@ -298,7 +299,7 @@ function BulkUploadForm() {
       formData.append("year", year);
       formData.append("title", title);
       formData.append("file", file);
-      formData.append("optimize", "on");
+      if (optimize) formData.append("optimize", "on");
 
       try {
         const result = await uploadFile({ data: formData });
@@ -329,6 +330,11 @@ function BulkUploadForm() {
           aria-label="Year"
           value={year}
           onChange={(e) => setYear(e.target.value)}
+        />
+        <Switch
+          label="Optimize"
+          checked={optimize}
+          onCheckedChange={setOptimize}
         />
         <input
           type="file"
