@@ -1,23 +1,17 @@
-import { useState } from "react";
-import {
-  deleteFile,
-  listFiles,
-  toggleOptimize,
-  uploadFile,
-} from "@/data/files";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
-import {
-  Badge,
-  Breadcrumbs,
-  Button,
-  Input,
-  Select,
-  Switch,
-} from "@cloudflare/kumo";
+import { useMemo, useState } from "react";
+import { deleteFile, listFiles, toggleOptimize } from "@/data/files";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { Badge, Breadcrumbs, Button, Input, Select } from "@cloudflare/kumo";
 import PaddedSurface from "@/components/PaddedSurface";
 
-const currentYear = new Date().getFullYear();
 const YEARS = Array.from({ length: 16 }, (_, i) => String(2015 + i));
+
+type OptimizedFilter = "all" | "optimized" | "unoptimized";
+const OPTIMIZED_OPTIONS: OptimizedFilter[] = [
+  "all",
+  "optimized",
+  "unoptimized",
+];
 
 export const Route = createFileRoute("/files/")({
   component: FilesPage,
@@ -28,30 +22,25 @@ function FilesPage() {
   const files = Route.useLoaderData();
   const router = useRouter();
 
-  const [year, setYear] = useState(String(currentYear));
-  const [title, setTitle] = useState("");
-  const [optimize, setOptimize] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [yearFilter, setYearFilter] = useState("all");
+  const [optimizedFilter, setOptimizedFilter] =
+    useState<OptimizedFilter>("all");
 
-  const handleUpload = async () => {
-    if (!file || !title) return;
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("year", year);
-      formData.append("title", title);
-      formData.append("file", file);
-      if (optimize) formData.append("optimize", "on");
-      await uploadFile({ data: formData });
-      setTitle("");
-      setFile(null);
-      setOptimize(false);
-      await router.invalidate();
-    } finally {
-      setUploading(false);
-    }
-  };
+  const filteredFiles = useMemo(() => {
+    return files.filter((f) => {
+      const matchesSearch = f.fileName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesYear =
+        yearFilter === "all" || f.fileName.startsWith(`${yearFilter}/`);
+      const matchesOptimized =
+        optimizedFilter === "all" ||
+        (optimizedFilter === "optimized" && f.optimized) ||
+        (optimizedFilter === "unoptimized" && !f.optimized);
+      return matchesSearch && matchesYear && matchesOptimized;
+    });
+  }, [files, searchQuery, yearFilter, optimizedFilter]);
 
   const handleToggleOptimize = async (fileName: string) => {
     await toggleOptimize({ data: fileName });
@@ -76,54 +65,53 @@ function FilesPage() {
           <Breadcrumbs.Separator />
           <Breadcrumbs.Current>Files</Breadcrumbs.Current>
         </Breadcrumbs>
+        <div className="flex gap-2">
+          <Link to="/files/new">
+            <Button variant="primary">New File</Button>
+          </Link>
+        </div>
       </div>
       <div className="mt-4">
         <PaddedSurface>
-          <div className="flex flex-col gap-3">
-            <div className="flex gap-3">
-              <Select
-                className="w-24"
-                value={year}
-                onValueChange={(v) => setYear(v || String(currentYear))}
-              >
-                {YEARS.map((y) => (
-                  <Select.Option key={y} value={y}>
-                    {y}
-                  </Select.Option>
-                ))}
-              </Select>
-              <Input
-                className="flex-1"
-                placeholder="Title"
-                aria-label="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-            <div className="flex items-center gap-3">
-              <Switch
-                label="Optimize"
-                checked={optimize}
-                onCheckedChange={setOptimize}
-              />
-            </div>
-            <div className="flex items-center gap-3">
-              <input
-                type="file"
-                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              />
-              <Button
-                variant="primary"
-                onClick={handleUpload}
-                disabled={!file || !title || uploading}
-              >
-                {uploading ? "Uploading..." : "Upload"}
-              </Button>
-            </div>
+          <div>
+            <Input
+              className="w-full"
+              placeholder="Search..."
+              aria-label="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <div className="mt-4 flex gap-3 items-center">
+            <Select
+              className="w-30"
+              value={yearFilter}
+              onValueChange={(v) => setYearFilter(v || "all")}
+            >
+              <Select.Option value="all">all years</Select.Option>
+              {YEARS.map((y) => (
+                <Select.Option key={y} value={y}>
+                  {y}
+                </Select.Option>
+              ))}
+            </Select>
+            <Select
+              className="w-36"
+              value={optimizedFilter}
+              onValueChange={(v) =>
+                setOptimizedFilter((v as OptimizedFilter) || "all")
+              }
+            >
+              {OPTIMIZED_OPTIONS.map((opt) => (
+                <Select.Option key={opt} value={opt}>
+                  {opt}
+                </Select.Option>
+              ))}
+            </Select>
           </div>
         </PaddedSurface>
         <div className="mt-4 flex flex-col gap-4">
-          {files.map((f) => (
+          {filteredFiles.map((f) => (
             <div className="flex items-center gap-3" key={f.fileName}>
               <img
                 src={`https://george.black/files/${f.fileName}`}
