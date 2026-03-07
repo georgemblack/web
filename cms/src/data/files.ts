@@ -84,6 +84,27 @@ export const toggleOptimize = createServerFn({ method: "POST" })
     return { optimized: true };
   });
 
+export const uploadOptimizedFile = createServerFn({ method: "POST" })
+  .inputValidator((d: FormData) => d)
+  .handler(async ({ data: formData }) => {
+    const key = formData.get("key") as string;
+    const file = formData.get("file") as File;
+
+    const exists = await env.WEB_FILES_CACHE.head(key);
+    if (exists) {
+      throw new Error("An optimized version already exists for this file");
+    }
+
+    await env.WEB_FILES_CACHE.put(key, file, {
+      httpMetadata: {
+        contentType: file.type,
+        cacheControl: CACHE_CONTROL,
+      },
+    });
+
+    return { key };
+  });
+
 export const deleteFile = createServerFn({ method: "POST" })
   .inputValidator((fileName: string) => fileName)
   .handler(async ({ data: key }) => {

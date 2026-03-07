@@ -7,7 +7,7 @@ import PaddedSurface from "@/components/PaddedSurface";
 const currentYear = new Date().getFullYear();
 const YEARS = Array.from({ length: 16 }, (_, i) => String(2015 + i));
 
-export const Route = createFileRoute("/files/new")({
+export const Route = createFileRoute("/files/new/")({
   component: NewFilePage,
 });
 
