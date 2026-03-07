@@ -1,11 +1,16 @@
+import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Button } from "@cloudflare/kumo";
+import type { Editor } from "@tiptap/react";
 import type { ContentBlock } from "@/data/types";
 import { MarkdownBlockEditor } from "@/components/blocks/MarkdownBlock";
 import { ImageBlockEditor } from "@/components/blocks/ImageBlock";
 import { VideoBlockEditor } from "@/components/blocks/VideoBlock";
-import { TextBlockEditor } from "@/components/blocks/TextBlock";
+import {
+  TextBlockEditor,
+  TextBlockToolbar,
+} from "@/components/blocks/TextBlock";
 import { HeadingBlockEditor } from "@/components/blocks/HeadingBlock";
 import { QuoteBlockEditor } from "@/components/blocks/QuoteBlock";
 import { CodeBlockEditor } from "@/components/blocks/CodeBlock";
@@ -25,9 +30,15 @@ interface BlockEditorProps {
   block: BlockWithId;
   fileNames: string[];
   onChange: (block: BlockWithId) => void;
+  onTextEditor?: (editor: Editor | null) => void;
 }
 
-function BlockEditor({ block, fileNames, onChange }: BlockEditorProps) {
+function BlockEditor({
+  block,
+  fileNames,
+  onChange,
+  onTextEditor,
+}: BlockEditorProps) {
   const handleChange = (updatedBlock: ContentBlock) => {
     onChange({ ...updatedBlock, _id: block._id } as BlockWithId);
   };
@@ -52,7 +63,13 @@ function BlockEditor({ block, fileNames, onChange }: BlockEditorProps) {
         />
       );
     case "text":
-      return <TextBlockEditor block={block} onChange={handleChange} />;
+      return (
+        <TextBlockEditor
+          block={block}
+          onChange={handleChange}
+          onEditor={onTextEditor}
+        />
+      );
     case "heading":
       return <HeadingBlockEditor block={block} onChange={handleChange} />;
     case "quote":
@@ -90,6 +107,7 @@ export function SortableBlockItem({
   isFirst,
   isLast,
 }: SortableBlockItemProps) {
+  const [textEditor, setTextEditor] = useState<Editor | null>(null);
   const {
     attributes,
     listeners,
@@ -107,45 +125,55 @@ export function SortableBlockItem({
 
   return (
     <div ref={setNodeRef} style={style}>
-      <div className="flex justify-end gap-1">
-        <Button
-          variant="secondary"
-          shape="square"
-          {...attributes}
-          {...listeners}
-          aria-label="Drag to reorder"
-        >
-          {EMOJI.grip}
-        </Button>
-        <Button
-          variant="secondary"
-          shape="square"
-          onClick={onMoveUp}
-          disabled={isFirst}
-          aria-label="Move block up"
-        >
-          {EMOJI.up}
-        </Button>
-        <Button
-          variant="secondary"
-          shape="square"
-          onClick={onMoveDown}
-          disabled={isLast}
-          aria-label="Move block down"
-        >
-          {EMOJI.down}
-        </Button>
-        <Button
-          variant="secondary-destructive"
-          shape="square"
-          onClick={onDelete}
-          aria-label="Delete block"
-        >
-          {EMOJI.trash}
-        </Button>
+      <div className="flex justify-between">
+        <div>
+          {block.type === "text" && <TextBlockToolbar editor={textEditor} />}
+        </div>
+        <div className="flex gap-1">
+          <Button
+            variant="secondary"
+            shape="square"
+            {...attributes}
+            {...listeners}
+            aria-label="Drag to reorder"
+          >
+            {EMOJI.grip}
+          </Button>
+          <Button
+            variant="secondary"
+            shape="square"
+            onClick={onMoveUp}
+            disabled={isFirst}
+            aria-label="Move block up"
+          >
+            {EMOJI.up}
+          </Button>
+          <Button
+            variant="secondary"
+            shape="square"
+            onClick={onMoveDown}
+            disabled={isLast}
+            aria-label="Move block down"
+          >
+            {EMOJI.down}
+          </Button>
+          <Button
+            variant="secondary-destructive"
+            shape="square"
+            onClick={onDelete}
+            aria-label="Delete block"
+          >
+            {EMOJI.trash}
+          </Button>
+        </div>
       </div>
       <div className="mt-2">
-        <BlockEditor block={block} fileNames={fileNames} onChange={onChange} />
+        <BlockEditor
+          block={block}
+          fileNames={fileNames}
+          onChange={onChange}
+          onTextEditor={setTextEditor}
+        />
       </div>
     </div>
   );
