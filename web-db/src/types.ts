@@ -9,7 +9,7 @@ export interface MarkdownBlock {
 
 export interface ImageBlock {
   type: "image";
-  url: string;
+  key: string;
   alt: string;
   caption?: string;
 }
@@ -117,7 +117,7 @@ const markdownBlockSchema = z.object({
 
 const imageBlockSchema = z.object({
   type: z.literal("image"),
-  url: z.string().min(1),
+  key: z.string().min(1),
   alt: z.string().min(1),
   caption: z.string().optional(),
 });

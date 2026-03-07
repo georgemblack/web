@@ -1,6 +1,7 @@
 import { env } from "cloudflare:workers";
 import { createServerFn } from "@tanstack/react-start";
 import {
+  ContentBlock,
   createPostInputSchema,
   Post,
   PostListItem,
@@ -49,3 +50,52 @@ export const deletePost = createServerFn({ method: "POST" })
   .handler(async ({ data: id }): Promise<boolean> => {
     return env.WEB_DB_SERVICE.deletePost(id);
   });
+
+export const migrateImageUrls = createServerFn({ method: "POST" }).handler(
+  async (): Promise<number> => {
+    const posts = await env.WEB_DB_SERVICE.listPosts();
+    let migratedCount = 0;
+
+    for (const postListItem of posts) {
+      const post = await env.WEB_DB_SERVICE.getPost(postListItem.id);
+      if (!post) continue;
+
+      let hasImageBlocks = false;
+      const migratedContent: ContentBlock[] = post.content.map((block) => {
+        if (block.type !== "image") return block;
+        // Handle blocks that still have the old "url" field
+        const oldBlock = block as Record<string, unknown>;
+        if ("url" in oldBlock && !("key" in oldBlock)) {
+          hasImageBlocks = true;
+          const url = oldBlock.url as string;
+          // Extract key from full URL like https://george.black/files/2020/pic.jpg
+          const key = url.replace("https://george.black/files/", "");
+          return {
+            type: "image" as const,
+            key,
+            alt: oldBlock.alt as string,
+            caption: oldBlock.caption as string | undefined,
+          };
+        }
+        return block;
+      });
+
+      if (hasImageBlocks) {
+        await env.WEB_DB_SERVICE.updatePost({
+          id: post.id,
+          title: post.title,
+          published: post.published,
+          slug: post.slug,
+          status: post.status,
+          hidden: post.hidden,
+          gallery: post.gallery,
+          external_link: post.external_link,
+          content: migratedContent,
+        });
+        migratedCount++;
+      }
+    }
+
+    return migratedCount;
+  },
+);

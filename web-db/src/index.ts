@@ -85,7 +85,7 @@ export default class WebDb extends WorkerEntrypoint<Env> {
         (block): block is ContentBlock & { type: "image" } =>
           block.type === "image",
       )
-      .map((block) => block.url);
+      .map((block) => `/files/${block.key}`);
 
     return {
       id: row.id,

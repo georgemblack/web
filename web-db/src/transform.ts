@@ -19,7 +19,7 @@ function renderText(block: TextBlock): string {
 }
 
 function renderImage(block: ImageBlock): string {
-  const img = `<img src="${block.url}" alt="${block.alt}">`;
+  const img = `<img src="/files/${block.key}" alt="${block.alt}">`;
   if (block.caption) {
     return `<figure>${img}<figcaption>${block.caption}</figcaption></figure>`;
   }

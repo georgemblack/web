@@ -394,7 +394,7 @@ function PostEditor({ post, fileNames }: PostEditorProps) {
         newBlock = {
           _id: generateBlockId(),
           type: "image",
-          url: "",
+          key: "",
           alt: "",
         };
         break;

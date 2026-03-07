@@ -125,7 +125,7 @@ function FilesPage() {
                 )}
               </div>
               <div className="flex gap-1">
-<Button
+                <Button
                   variant="secondary"
                   shape="square"
                   onClick={() => handleToggleOptimize(f.fileName)}

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { createPost, deletePost, listPosts } from "@/data/db";
+import { createPost, deletePost, listPosts, migrateImageUrls } from "@/data/db";
 import { PostStatus } from "@/data/types";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import {
@@ -58,6 +58,31 @@ function App() {
     });
   };
 
+  const [isMigrating, setIsMigrating] = useState(false);
+  const [migrateResult, setMigrateResult] = useState<string | null>(null);
+
+  const handleMigrateImages = async () => {
+    if (
+      !window.confirm(
+        "This will migrate all image blocks from url to key. Continue?",
+      )
+    ) {
+      return;
+    }
+    setIsMigrating(true);
+    setMigrateResult(null);
+    try {
+      const count = await migrateImageUrls();
+      setMigrateResult(`Migrated ${count} post(s)`);
+      await router.invalidate();
+    } catch (err) {
+      console.error("Migration error:", err);
+      setMigrateResult("Migration failed");
+    } finally {
+      setIsMigrating(false);
+    }
+  };
+
   const handleDelete = async (postId: string, postTitle: string) => {
     if (!window.confirm(`Are you sure you want to delete "${postTitle}"?`)) {
       return;
@@ -74,7 +99,15 @@ function App() {
             <Breadcrumbs.Current>Home</Breadcrumbs.Current>
           </Breadcrumbs>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
+          {migrateResult && <span className="text-sm">{migrateResult}</span>}
+          <Button
+            variant="secondary"
+            onClick={handleMigrateImages}
+            loading={isMigrating}
+          >
+            Migrate Images
+          </Button>
           <Link to="/files" search={{ year: String(new Date().getFullYear()) }}>
             <Button variant="secondary">Files</Button>
           </Link>

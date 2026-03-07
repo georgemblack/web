@@ -16,9 +16,9 @@ export function ImageBlockEditor({
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
         <div className="h-10 w-10 flex-shrink-0 rounded border border-gray-300 bg-gray-100 overflow-hidden">
-          {block.url && (
+          {block.key && (
             <img
-              src={block.url}
+              src={`/files/${block.key}`}
               alt={block.alt || "Preview"}
               className="h-full w-full object-cover"
             />
@@ -27,9 +27,9 @@ export function ImageBlockEditor({
         <div className="flex-1 flex gap-2">
           <Input
             className="flex-1"
-            value={block.url}
-            onChange={(e) => onChange({ ...block, url: e.target.value })}
-            placeholder="/images/example.jpg"
+            value={block.key}
+            onChange={(e) => onChange({ ...block, key: e.target.value })}
+            placeholder="2020/picture.jpg"
           />
           {fileNames.length > 0 && (
             <Select
@@ -39,7 +39,7 @@ export function ImageBlockEditor({
                 if (fileName) {
                   onChange({
                     ...block,
-                    url: `https://george.black/files/${fileName}`,
+                    key: fileName,
                   });
                 }
               }}
