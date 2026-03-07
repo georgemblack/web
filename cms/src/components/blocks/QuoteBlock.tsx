@@ -14,6 +14,7 @@ export function QuoteBlockEditor({ block, onChange }: QuoteBlockEditorProps) {
         onChange={(e) => onChange({ ...block, text: e.target.value })}
         rows={8}
         placeholder="Quote text..."
+        aria-label="Quote text"
       />
     </div>
   );

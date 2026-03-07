@@ -30,6 +30,7 @@ export const Route = createFileRoute("/posts/$postId")({
   component: RouteComponent,
   loader: async ({ params }) => {
     const post = await getPost({ data: params.postId });
+    if (!post) throw new Error("Post not found");
     const postYear = new Date(post.published).getFullYear();
     const files = await listFiles({ data: `${postYear}/` });
     const fileNames = files.map((f) => f.fileName);

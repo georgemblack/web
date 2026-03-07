@@ -17,6 +17,7 @@ export function MarkdownBlockEditor({
         onChange={(e) => onChange({ ...block, text: e.target.value })}
         rows={8}
         placeholder="Start writing..."
+        aria-label="Markdown"
       />
     </div>
   );

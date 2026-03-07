@@ -14,6 +14,7 @@ export function CodeBlockEditor({ block, onChange }: CodeBlockEditorProps) {
         onChange={(e) => onChange({ ...block, text: e.target.value })}
         rows={8}
         placeholder="Code..."
+        aria-label="Code"
       />
     </div>
   );
