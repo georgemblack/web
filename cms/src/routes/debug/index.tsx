@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { createPost } from "@/data/db";
+import { createPost, listPosts, getPost } from "@/data/db";
 import { Button } from "@cloudflare/kumo";
 import type { ContentBlock } from "@/data/types";
 
@@ -74,12 +74,55 @@ function RouteComponent() {
     }
   };
 
+  const [isCheckingImages, setIsCheckingImages] = useState(false);
+  const [invalidImages, setInvalidImages] = useState<
+    { postTitle: string; postId: string; url: string }[] | null
+  >(null);
+
+  const handleCheckImages = async () => {
+    setIsCheckingImages(true);
+    setInvalidImages(null);
+
+    try {
+      const posts = await listPosts({ data: undefined });
+      const results: { postTitle: string; postId: string; url: string }[] = [];
+
+      for (const item of posts) {
+        const post = await getPost({ data: item.id });
+        if (!post) continue;
+        for (const block of post.content) {
+          if (block.type === "image" || block.type === "video") {
+            if (!block.url.startsWith("https://george.black/files/")) {
+              results.push({
+                postTitle: post.title,
+                postId: post.id,
+                url: block.url,
+              });
+            }
+          }
+        }
+      }
+
+      setInvalidImages(results);
+    } catch (error) {
+      setMessage({
+        type: "error",
+        text: `Failed to check images: ${error instanceof Error ? error.message : "Unknown error"}`,
+      });
+    } finally {
+      setIsCheckingImages(false);
+    }
+  };
+
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-6">Debug Tools</h1>
       <div className="space-y-4">
         <Button onClick={handleGeneratePost} disabled={isGenerating}>
           {isGenerating ? "Generating..." : "Generate Random Post"}
+        </Button>
+        <Button onClick={handleCheckImages} disabled={isCheckingImages}>
+          {isCheckingImages ? "Checking..." : "Find Invalid Image URLs"}
         </Button>
         {message && (
           <p
@@ -89,6 +132,26 @@ function RouteComponent() {
           >
             {message.text}
           </p>
+        )}
+        {invalidImages !== null && (
+          <div>
+            <h2 className="text-lg font-semibold mt-4 mb-2">
+              Invalid Image URLs ({invalidImages.length})
+            </h2>
+            {invalidImages.length === 0 ? (
+              <p className="text-green-600">
+                All image URLs match https://george.black/files/*
+              </p>
+            ) : (
+              <ul className="list-disc pl-6 space-y-1">
+                {invalidImages.map((img, i) => (
+                  <li key={i}>
+                    <strong>{img.postTitle}</strong>: <code>{img.url}</code>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         )}
       </div>
     </div>
