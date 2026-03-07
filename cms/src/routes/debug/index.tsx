@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { createPost, listPosts, getPost } from "@/data/db";
 import { Button } from "@cloudflare/kumo";
 import type { ContentBlock } from "@/data/types";
@@ -146,7 +146,7 @@ function RouteComponent() {
               <ul className="list-disc pl-6 space-y-1">
                 {invalidImages.map((img, i) => (
                   <li key={i}>
-                    <strong>{img.postTitle}</strong>: <code>{img.url}</code>
+                    <Link to="/posts/$postId" params={{ postId: img.postId }} className="font-bold underline">{img.postTitle}</Link>: <code>{img.url}</code>
                   </li>
                 ))}
               </ul>
