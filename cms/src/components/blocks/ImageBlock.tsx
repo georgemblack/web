@@ -18,7 +18,7 @@ export function ImageBlockEditor({
         <div className="h-10 w-10 flex-shrink-0 rounded border border-gray-300 bg-gray-100 overflow-hidden">
           {block.key && (
             <img
-              src={`/files/${block.key}`}
+              src={`https://george.black/files/${block.key}`}
               alt={block.alt || "Preview"}
               className="h-full w-full object-cover"
             />
