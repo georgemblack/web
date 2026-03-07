@@ -16,13 +16,12 @@ import {
 } from "@cloudflare/kumo";
 import PaddedSurface from "@/components/PaddedSurface";
 
-const currentYear = new Date().getFullYear();
 const YEARS = Array.from({ length: 16 }, (_, i) => String(2015 + i));
 
 export const Route = createFileRoute("/files/")({
   component: FilesPage,
   validateSearch: (search: Record<string, unknown>) => ({
-    year: String(search.year ?? currentYear),
+    year: String(search.year ?? new Date().getFullYear()),
   }),
   loaderDeps: ({ search }) => ({ year: search.year }),
   loader: async ({ deps }) => await listFiles({ data: `${deps.year}/` }),
@@ -94,7 +93,7 @@ function FilesPage() {
               onValueChange={(v) =>
                 navigate({
                   to: "/files",
-                  search: { year: v || String(currentYear) },
+                  search: { year: v || String(new Date().getFullYear()) },
                 })
               }
             >
