@@ -33,7 +33,7 @@ export default class WebDb extends WorkerEntrypoint<Env> {
 
   async getPost(id: string): Promise<Post | null> {
     const row = await this.env.WEB_DB.prepare(
-      "SELECT id, title, published, updated, slug, status, hidden, gallery, external_link, content FROM posts WHERE id = ? AND deleted = 0",
+      "SELECT id, title, published, slug, status, hidden, gallery, external_link, content FROM posts WHERE id = ? AND deleted = 0",
     )
       .bind(id)
       .first<
@@ -58,14 +58,13 @@ export default class WebDb extends WorkerEntrypoint<Env> {
 
   async getRenderedPost(id: string): Promise<RenderedPost | null> {
     const row = await this.env.WEB_DB.prepare(
-      "SELECT id, title, published, updated, slug, status, hidden, gallery, external_link, content, content_html, preview_html FROM posts WHERE id = ? AND deleted = 0",
+      "SELECT id, title, published, slug, status, hidden, gallery, external_link, content, content_html, preview_html FROM posts WHERE id = ? AND deleted = 0",
     )
       .bind(id)
       .first<{
         id: string;
         title: string;
         published: string;
-        updated: string;
         slug: string;
         status: PostStatus;
         hidden: number;
@@ -92,7 +91,6 @@ export default class WebDb extends WorkerEntrypoint<Env> {
       id: row.id,
       title: row.title,
       published: row.published,
-      updated: row.updated,
       slug: row.slug,
       status: row.status,
       hidden: row.hidden === 1,
@@ -144,13 +142,12 @@ export default class WebDb extends WorkerEntrypoint<Env> {
     const previewHtml = renderPreview(validated.content);
 
     await this.env.WEB_DB.prepare(
-      "INSERT INTO posts (id, title, published, updated, slug, status, hidden, gallery, external_link, content, content_html, preview_html) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO posts (id, title, published, slug, status, hidden, gallery, external_link, content, content_html, preview_html) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     )
       .bind(
         id,
         validated.title,
         validated.published,
-        validated.updated,
         validated.slug,
         validated.status,
         validated.hidden ? 1 : 0,
@@ -166,7 +163,6 @@ export default class WebDb extends WorkerEntrypoint<Env> {
       id,
       title: validated.title,
       published: validated.published,
-      updated: validated.updated,
       slug: validated.slug,
       status: validated.status,
       hidden: validated.hidden,
@@ -184,7 +180,6 @@ export default class WebDb extends WorkerEntrypoint<Env> {
       return null;
     }
 
-    const updated = new Date().toISOString();
     const contentHtml = render(validated.content);
     const previewHtml = renderPreview(validated.content);
 
@@ -192,7 +187,6 @@ export default class WebDb extends WorkerEntrypoint<Env> {
       id: validated.id,
       title: validated.title,
       published: validated.published,
-      updated,
       slug: validated.slug,
       status: validated.status,
       hidden: validated.hidden,
@@ -202,12 +196,11 @@ export default class WebDb extends WorkerEntrypoint<Env> {
     };
 
     await this.env.WEB_DB.prepare(
-      "UPDATE posts SET title = ?, published = ?, updated = ?, slug = ?, status = ?, hidden = ?, gallery = ?, external_link = ?, content = ?, content_html = ?, preview_html = ? WHERE id = ?",
+      "UPDATE posts SET title = ?, published = ?, slug = ?, status = ?, hidden = ?, gallery = ?, external_link = ?, content = ?, content_html = ?, preview_html = ? WHERE id = ?",
     )
       .bind(
         newPost.title,
         newPost.published,
-        newPost.updated,
         newPost.slug,
         newPost.status,
         newPost.hidden ? 1 : 0,

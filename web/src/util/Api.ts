@@ -6,7 +6,6 @@ export interface Post {
   id: string;
   title: string;
   published: string;
-  updated: string;
   slug: string;
   status: PostStatus;
   hidden: boolean;

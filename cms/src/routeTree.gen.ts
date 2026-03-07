@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FilesIndexRouteImport } from './routes/files/index'
-import { Route as DebugIndexRouteImport } from './routes/debug/index'
 import { Route as PostsPostIdRouteImport } from './routes/posts/$postId'
 import { Route as ApiPostsIndexRouteImport } from './routes/api/posts/index'
 import { Route as ApiPostsPostIdIndexRouteImport } from './routes/api/posts/$postId/index'
@@ -25,11 +24,6 @@ const IndexRoute = IndexRouteImport.update({
 const FilesIndexRoute = FilesIndexRouteImport.update({
   id: '/files/',
   path: '/files/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DebugIndexRoute = DebugIndexRouteImport.update({
-  id: '/debug/',
-  path: '/debug/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostsPostIdRoute = PostsPostIdRouteImport.update({
@@ -57,7 +51,6 @@ const ApiPostsPostIdRenderedIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/posts/$postId': typeof PostsPostIdRoute
-  '/debug/': typeof DebugIndexRoute
   '/files/': typeof FilesIndexRoute
   '/api/posts/': typeof ApiPostsIndexRoute
   '/api/posts/$postId/': typeof ApiPostsPostIdIndexRoute
@@ -66,7 +59,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/posts/$postId': typeof PostsPostIdRoute
-  '/debug': typeof DebugIndexRoute
   '/files': typeof FilesIndexRoute
   '/api/posts': typeof ApiPostsIndexRoute
   '/api/posts/$postId': typeof ApiPostsPostIdIndexRoute
@@ -76,7 +68,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/posts/$postId': typeof PostsPostIdRoute
-  '/debug/': typeof DebugIndexRoute
   '/files/': typeof FilesIndexRoute
   '/api/posts/': typeof ApiPostsIndexRoute
   '/api/posts/$postId/': typeof ApiPostsPostIdIndexRoute
@@ -87,7 +78,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/posts/$postId'
-    | '/debug/'
     | '/files/'
     | '/api/posts/'
     | '/api/posts/$postId/'
@@ -96,7 +86,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/posts/$postId'
-    | '/debug'
     | '/files'
     | '/api/posts'
     | '/api/posts/$postId'
@@ -105,7 +94,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/posts/$postId'
-    | '/debug/'
     | '/files/'
     | '/api/posts/'
     | '/api/posts/$postId/'
@@ -115,7 +103,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PostsPostIdRoute: typeof PostsPostIdRoute
-  DebugIndexRoute: typeof DebugIndexRoute
   FilesIndexRoute: typeof FilesIndexRoute
   ApiPostsIndexRoute: typeof ApiPostsIndexRoute
   ApiPostsPostIdIndexRoute: typeof ApiPostsPostIdIndexRoute
@@ -136,13 +123,6 @@ declare module '@tanstack/react-router' {
       path: '/files'
       fullPath: '/files/'
       preLoaderRoute: typeof FilesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/debug/': {
-      id: '/debug/'
-      path: '/debug'
-      fullPath: '/debug/'
-      preLoaderRoute: typeof DebugIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/posts/$postId': {
@@ -179,7 +159,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PostsPostIdRoute: PostsPostIdRoute,
-  DebugIndexRoute: DebugIndexRoute,
   FilesIndexRoute: FilesIndexRoute,
   ApiPostsIndexRoute: ApiPostsIndexRoute,
   ApiPostsPostIdIndexRoute: ApiPostsPostIdIndexRoute,

@@ -45,7 +45,6 @@ function App() {
         title: "Untitled",
         slug: `untitled-${Date.now()}`,
         published: now,
-        updated: now,
         status: "draft",
         hidden: false,
         gallery: false,

@@ -281,7 +281,7 @@ function RouteComponent() {
     return <span>Post not found</span>;
   }
 
-  return <PostEditor key={post.updated} post={post} fileNames={fileNames} />;
+  return <PostEditor key={post.published} post={post} fileNames={fileNames} />;
 }
 
 interface PostEditorProps {

@@ -68,7 +68,6 @@ export interface Post {
   id: string;
   title: string;
   published: string;
-  updated: string;
   slug: string;
   status: PostStatus;
   hidden: boolean;
@@ -85,7 +84,6 @@ export interface RenderedPost {
   id: string;
   title: string;
   published: string;
-  updated: string;
   slug: string;
   status: PostStatus;
   hidden: boolean;
@@ -181,7 +179,6 @@ const contentBlockSchema = z.discriminatedUnion("type", [
 export const createPostInputSchema = z.object({
   title: z.string(),
   published: iso8601String,
-  updated: iso8601String,
   slug: slugString,
   status: postStatusSchema,
   hidden: z.boolean(),
