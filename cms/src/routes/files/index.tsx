@@ -34,17 +34,17 @@ function FilesPage() {
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [showOptimizedOnly, setShowOptimizedOnly] = useState(false);
+  const [showUnoptimizedOnly, setShowUnoptimizedOnly] = useState(false);
 
   const filteredFiles = useMemo(() => {
     return files.filter((f) => {
       const matchesSearch = f.fileName
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
-      const matchesOptimized = !showOptimizedOnly || f.optimized;
-      return matchesSearch && matchesOptimized;
+      const matchesFilter = !showUnoptimizedOnly || !f.optimized;
+      return matchesSearch && matchesFilter;
     });
-  }, [files, searchQuery, showOptimizedOnly]);
+  }, [files, searchQuery, showUnoptimizedOnly]);
 
   const handleToggleOptimize = async (fileName: string) => {
     await toggleOptimize({ data: fileName });
@@ -55,10 +55,6 @@ function FilesPage() {
     if (!window.confirm(`Delete "${fileName}"?`)) return;
     await deleteFile({ data: fileName });
     await router.invalidate();
-  };
-
-  const copyToClipboard = (fileName: string) => {
-    navigator.clipboard.writeText(`https://george.black/files/${fileName}`);
   };
 
   return (
@@ -105,9 +101,9 @@ function FilesPage() {
             </Select>
             <div>
               <Switch
-                label="Optimized"
-                checked={showOptimizedOnly}
-                onCheckedChange={setShowOptimizedOnly}
+                label="Unoptimized"
+                checked={showUnoptimizedOnly}
+                onCheckedChange={setShowUnoptimizedOnly}
               />
             </div>
           </div>
@@ -129,18 +125,9 @@ function FilesPage() {
                 )}
               </div>
               <div className="flex gap-1">
-                <Button
+<Button
                   variant="secondary"
                   shape="square"
-                  size="sm"
-                  onClick={() => copyToClipboard(f.fileName)}
-                >
-                  ✏️
-                </Button>
-                <Button
-                  variant="secondary"
-                  shape="square"
-                  size="sm"
                   onClick={() => handleToggleOptimize(f.fileName)}
                 >
                   🐳
@@ -148,7 +135,6 @@ function FilesPage() {
                 <Button
                   variant="secondary-destructive"
                   shape="square"
-                  size="sm"
                   onClick={() => handleDelete(f.fileName)}
                 >
                   🗑️

@@ -25,16 +25,13 @@ import {
 } from "@/components/SortableBlockItem";
 import PaddedSurface from "@/components/PaddedSurface";
 
-const currentYear = new Date().getFullYear();
-
 export const Route = createFileRoute("/posts/$postId")({
   ssr: "data-only",
   component: RouteComponent,
   loader: async ({ params }) => {
-    const [post, files] = await Promise.all([
-      getPost({ data: params.postId }),
-      listFiles({ data: `${currentYear}/` }),
-    ]);
+    const post = await getPost({ data: params.postId });
+    const postYear = new Date(post.published).getFullYear();
+    const files = await listFiles({ data: `${postYear}/` });
     const fileNames = files.map((f) => f.fileName);
     return { post, fileNames };
   },
