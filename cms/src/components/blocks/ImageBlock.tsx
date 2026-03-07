@@ -30,6 +30,7 @@ export function ImageBlockEditor({
             value={block.key}
             onChange={(e) => onChange({ ...block, key: e.target.value })}
             placeholder="2020/picture.jpg"
+            aria-label="Image key"
           />
           {fileNames.length > 0 && (
             <Select
@@ -61,6 +62,7 @@ export function ImageBlockEditor({
             value={block.alt}
             onChange={(e) => onChange({ ...block, alt: e.target.value })}
             placeholder="Alt text"
+            aria-label="Alt text"
           />
         </div>
         <div className="flex-1">
@@ -74,6 +76,7 @@ export function ImageBlockEditor({
               })
             }
             placeholder="Caption"
+            aria-label="Caption"
           />
         </div>
       </div>

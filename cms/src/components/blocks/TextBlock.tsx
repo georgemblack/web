@@ -53,7 +53,6 @@ export function TextBlockEditor({ block, onChange }: TextBlockEditorProps) {
       <div className="flex gap-1">
         <Button
           variant={editor?.isActive("bold") ? "primary" : "secondary"}
-          size="sm"
           onClick={() => editor?.chain().focus().toggleBold().run()}
           aria-label="Bold"
         >
@@ -61,7 +60,6 @@ export function TextBlockEditor({ block, onChange }: TextBlockEditorProps) {
         </Button>
         <Button
           variant={editor?.isActive("italic") ? "primary" : "secondary"}
-          size="sm"
           onClick={() => editor?.chain().focus().toggleItalic().run()}
           aria-label="Italic"
         >
@@ -69,7 +67,6 @@ export function TextBlockEditor({ block, onChange }: TextBlockEditorProps) {
         </Button>
         <Button
           variant={editor?.isActive("link") ? "primary" : "secondary"}
-          size="sm"
           onClick={handleLink}
           aria-label="Link"
         >
@@ -77,7 +74,6 @@ export function TextBlockEditor({ block, onChange }: TextBlockEditorProps) {
         </Button>
         <Button
           variant={editor?.isActive("bulletList") ? "primary" : "secondary"}
-          size="sm"
           onClick={() => editor?.chain().focus().toggleBulletList().run()}
           aria-label="Bullet List"
         >
@@ -85,7 +81,6 @@ export function TextBlockEditor({ block, onChange }: TextBlockEditorProps) {
         </Button>
         <Button
           variant={editor?.isActive("orderedList") ? "primary" : "secondary"}
-          size="sm"
           onClick={() => editor?.chain().focus().toggleOrderedList().run()}
           aria-label="Ordered List"
         >

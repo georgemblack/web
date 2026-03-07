@@ -27,7 +27,7 @@ function renderImage(block: ImageBlock): string {
 }
 
 function renderVideo(block: VideoBlock): string {
-  const video = `<video src="${block.url}" controls></video>`;
+  const video = `<video src="/files/${block.key}" controls></video>`;
   if (block.caption) {
     return `<figure>${video}<figcaption>${block.caption}</figcaption></figure>`;
   }

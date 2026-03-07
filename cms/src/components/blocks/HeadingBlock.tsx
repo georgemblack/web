@@ -1,4 +1,4 @@
-import { Input } from "@cloudflare/kumo";
+import { Input, Select } from "@cloudflare/kumo";
 import type { HeadingBlock } from "@/data/types";
 
 interface HeadingBlockEditorProps {
@@ -19,25 +19,28 @@ export function HeadingBlockEditor({
             value={block.text}
             onChange={(e) => onChange({ ...block, text: e.target.value })}
             placeholder="Heading text"
+            aria-label="Heading text"
           />
         </div>
-        <select
-          className="rounded border border-gray-300 bg-white px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-800"
-          value={block.level}
-          onChange={(e) =>
-            onChange({
-              ...block,
-              level: parseInt(e.target.value) as HeadingBlock["level"],
-            })
-          }
+        <Select
+          value={String(block.level)}
+          onValueChange={(value) => {
+            if (value) {
+              onChange({
+                ...block,
+                level: parseInt(value) as HeadingBlock["level"],
+              });
+            }
+          }}
+          aria-label="Heading level"
         >
-          <option value={1}>H1</option>
-          <option value={2}>H2</option>
-          <option value={3}>H3</option>
-          <option value={4}>H4</option>
-          <option value={5}>H5</option>
-          <option value={6}>H6</option>
-        </select>
+          <Select.Option value="1">H1</Select.Option>
+          <Select.Option value="2">H2</Select.Option>
+          <Select.Option value="3">H3</Select.Option>
+          <Select.Option value="4">H4</Select.Option>
+          <Select.Option value="5">H5</Select.Option>
+          <Select.Option value="6">H6</Select.Option>
+        </Select>
       </div>
     </div>
   );

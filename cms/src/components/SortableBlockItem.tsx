@@ -44,7 +44,13 @@ function BlockEditor({ block, fileNames, onChange }: BlockEditorProps) {
         />
       );
     case "video":
-      return <VideoBlockEditor block={block} onChange={handleChange} />;
+      return (
+        <VideoBlockEditor
+          block={block}
+          fileNames={fileNames}
+          onChange={handleChange}
+        />
+      );
     case "text":
       return <TextBlockEditor block={block} onChange={handleChange} />;
     case "heading":
@@ -101,11 +107,10 @@ export function SortableBlockItem({
 
   return (
     <div ref={setNodeRef} style={style}>
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-end gap-1">
         <Button
           variant="secondary"
           shape="square"
-          size="sm"
           {...attributes}
           {...listeners}
           aria-label="Drag to reorder"
@@ -115,7 +120,6 @@ export function SortableBlockItem({
         <Button
           variant="secondary"
           shape="square"
-          size="sm"
           onClick={onMoveUp}
           disabled={isFirst}
           aria-label="Move block up"
@@ -125,7 +129,6 @@ export function SortableBlockItem({
         <Button
           variant="secondary"
           shape="square"
-          size="sm"
           onClick={onMoveDown}
           disabled={isLast}
           aria-label="Move block down"
@@ -135,14 +138,15 @@ export function SortableBlockItem({
         <Button
           variant="secondary-destructive"
           shape="square"
-          size="sm"
           onClick={onDelete}
           aria-label="Delete block"
         >
           {EMOJI.trash}
         </Button>
       </div>
-      <BlockEditor block={block} fileNames={fileNames} onChange={onChange} />
+      <div className="mt-2">
+        <BlockEditor block={block} fileNames={fileNames} onChange={onChange} />
+      </div>
     </div>
   );
 }

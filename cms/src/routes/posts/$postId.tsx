@@ -80,7 +80,6 @@ function AddBlockRow({ onAdd }: AddBlockRowProps) {
     <div className="flex flex-wrap items-center gap-2 pt-2">
       <Button
         variant="secondary"
-        size="sm"
         onClick={() => onAdd("text")}
         aria-label="Add Text"
       >
@@ -88,7 +87,6 @@ function AddBlockRow({ onAdd }: AddBlockRowProps) {
       </Button>
       <Button
         variant="secondary"
-        size="sm"
         onClick={() => onAdd("markdown")}
         aria-label="Add Markdown"
       >
@@ -96,7 +94,6 @@ function AddBlockRow({ onAdd }: AddBlockRowProps) {
       </Button>
       <Button
         variant="secondary"
-        size="sm"
         onClick={() => onAdd("image")}
         aria-label="Add Image"
       >
@@ -104,7 +101,6 @@ function AddBlockRow({ onAdd }: AddBlockRowProps) {
       </Button>
       <Button
         variant="secondary"
-        size="sm"
         onClick={() => onAdd("video")}
         aria-label="Add Video"
       >
@@ -112,7 +108,6 @@ function AddBlockRow({ onAdd }: AddBlockRowProps) {
       </Button>
       <Button
         variant="secondary"
-        size="sm"
         onClick={() => onAdd("heading")}
         aria-label="Add Heading"
       >
@@ -120,7 +115,6 @@ function AddBlockRow({ onAdd }: AddBlockRowProps) {
       </Button>
       <Button
         variant="secondary"
-        size="sm"
         onClick={() => onAdd("quote")}
         aria-label="Add Quote"
       >
@@ -128,7 +122,6 @@ function AddBlockRow({ onAdd }: AddBlockRowProps) {
       </Button>
       <Button
         variant="secondary"
-        size="sm"
         onClick={() => onAdd("code")}
         aria-label="Add Code"
       >
@@ -136,7 +129,6 @@ function AddBlockRow({ onAdd }: AddBlockRowProps) {
       </Button>
       <Button
         variant="secondary"
-        size="sm"
         onClick={() => onAdd("line")}
         aria-label="Add Line"
       >
@@ -144,7 +136,6 @@ function AddBlockRow({ onAdd }: AddBlockRowProps) {
       </Button>
       <Button
         variant="secondary"
-        size="sm"
         onClick={() => onAdd("break")}
         aria-label="Add Break"
       >
@@ -202,6 +193,7 @@ function MetadataSection({
               value={title}
               onChange={(e) => onChange("title", e.target.value)}
               placeholder="Title"
+              aria-label="Title"
             />
             <Button
               variant="secondary"
@@ -228,6 +220,7 @@ function MetadataSection({
             type="datetime-local"
             value={toDatetimeLocal(published)}
             onChange={(e) => onChange("published", toISOString(e.target.value))}
+            aria-label="Published date"
           />
           <Button
             variant="secondary"
@@ -244,6 +237,7 @@ function MetadataSection({
           value={externalLink ?? ""}
           onChange={(e) => onChange("externalLink", e.target.value || null)}
           placeholder="https://example.com"
+          aria-label="External link"
         />
         <div className="flex gap-3">
           <Switch
@@ -402,7 +396,7 @@ function PostEditor({ post, fileNames }: PostEditorProps) {
         newBlock = {
           _id: generateBlockId(),
           type: "video",
-          url: "",
+          key: "",
         };
         break;
       case "text":

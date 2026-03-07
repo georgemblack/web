@@ -16,7 +16,7 @@ export interface ImageBlock {
 
 export interface VideoBlock {
   type: "video";
-  url: string;
+  key: string;
   caption?: string;
 }
 
@@ -129,7 +129,7 @@ const imageBlockSchema = z.object({
 
 const videoBlockSchema = z.object({
   type: z.literal("video"),
-  url: z.string().min(1),
+  key: z.string().min(1),
   caption: z.string().optional(),
 });
 
