@@ -1,17 +1,17 @@
 import { useMemo, useState } from "react";
 import { deleteFile, listFiles, toggleOptimize } from "@/data/files";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { Badge, Breadcrumbs, Button, Input, Select } from "@cloudflare/kumo";
+import {
+  Badge,
+  Breadcrumbs,
+  Button,
+  Input,
+  Select,
+  Switch,
+} from "@cloudflare/kumo";
 import PaddedSurface from "@/components/PaddedSurface";
 
 const YEARS = Array.from({ length: 16 }, (_, i) => String(2015 + i));
-
-type OptimizedFilter = "all" | "optimized" | "unoptimized";
-const OPTIMIZED_OPTIONS: OptimizedFilter[] = [
-  "all",
-  "optimized",
-  "unoptimized",
-];
 
 export const Route = createFileRoute("/files/")({
   component: FilesPage,
@@ -24,8 +24,7 @@ function FilesPage() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [yearFilter, setYearFilter] = useState("all");
-  const [optimizedFilter, setOptimizedFilter] =
-    useState<OptimizedFilter>("all");
+  const [showOptimizedOnly, setShowOptimizedOnly] = useState(false);
 
   const filteredFiles = useMemo(() => {
     return files.filter((f) => {
@@ -34,13 +33,10 @@ function FilesPage() {
         .includes(searchQuery.toLowerCase());
       const matchesYear =
         yearFilter === "all" || f.fileName.startsWith(`${yearFilter}/`);
-      const matchesOptimized =
-        optimizedFilter === "all" ||
-        (optimizedFilter === "optimized" && f.optimized) ||
-        (optimizedFilter === "unoptimized" && !f.optimized);
+      const matchesOptimized = !showOptimizedOnly || f.optimized;
       return matchesSearch && matchesYear && matchesOptimized;
     });
-  }, [files, searchQuery, yearFilter, optimizedFilter]);
+  }, [files, searchQuery, yearFilter, showOptimizedOnly]);
 
   const handleToggleOptimize = async (fileName: string) => {
     await toggleOptimize({ data: fileName });
@@ -95,19 +91,13 @@ function FilesPage() {
                 </Select.Option>
               ))}
             </Select>
-            <Select
-              className="w-36"
-              value={optimizedFilter}
-              onValueChange={(v) =>
-                setOptimizedFilter((v as OptimizedFilter) || "all")
-              }
-            >
-              {OPTIMIZED_OPTIONS.map((opt) => (
-                <Select.Option key={opt} value={opt}>
-                  {opt}
-                </Select.Option>
-              ))}
-            </Select>
+            <div>
+              <Switch
+                label="Optimized"
+                checked={showOptimizedOnly}
+                onCheckedChange={setShowOptimizedOnly}
+              />
+            </div>
           </div>
         </PaddedSurface>
         <div className="mt-4 flex flex-col gap-4">
