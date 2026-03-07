@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { createPost, listPosts, getPost, updatePost } from "@/data/db";
-import { listFiles } from "@/data/files";
-import { Button } from "@cloudflare/kumo";
+import { listFiles, uploadFile } from "@/data/files";
+import { Button, Input } from "@cloudflare/kumo";
 import type { ContentBlock } from "@/data/types";
 
 export const Route = createFileRoute("/debug/")({
@@ -237,6 +237,10 @@ function RouteComponent() {
             )}
           </div>
         )}
+        <hr className="my-6 border-gray-300" />
+        <h2 className="text-lg font-semibold mb-2">Bulk File Upload</h2>
+        <BulkUploadForm />
+
         {migratedUrls !== null && (
           <div>
             <h2 className="text-lg font-semibold mt-4 mb-2">
@@ -263,6 +267,95 @@ function RouteComponent() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+const currentYear = new Date().getFullYear();
+
+function BulkUploadForm() {
+  const [year, setYear] = useState(String(currentYear));
+  const [files, setFiles] = useState<FileList | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [results, setResults] = useState<
+    { name: string; status: "success" | "error"; message: string }[]
+  >([]);
+
+  const handleUpload = async () => {
+    if (!files || files.length === 0) return;
+    setIsUploading(true);
+    setResults([]);
+
+    const uploadResults: {
+      name: string;
+      status: "success" | "error";
+      message: string;
+    }[] = [];
+
+    for (const file of Array.from(files)) {
+      const title = file.name.replace(/\.[^.]+$/, "");
+      const formData = new FormData();
+      formData.append("year", year);
+      formData.append("title", title);
+      formData.append("file", file);
+      formData.append("optimize", "on");
+
+      try {
+        const result = await uploadFile({ data: formData });
+        uploadResults.push({
+          name: file.name,
+          status: "success",
+          message: result.key,
+        });
+      } catch (error) {
+        uploadResults.push({
+          name: file.name,
+          status: "error",
+          message: error instanceof Error ? error.message : "Unknown error",
+        });
+      }
+    }
+
+    setResults(uploadResults);
+    setIsUploading(false);
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-3">
+        <Input
+          className="w-24"
+          placeholder="Year"
+          aria-label="Year"
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
+        />
+        <input
+          type="file"
+          multiple
+          onChange={(e) => setFiles(e.target.files)}
+        />
+      </div>
+      <Button
+        onClick={handleUpload}
+        disabled={isUploading || !files || files.length === 0}
+      >
+        {isUploading ? "Uploading..." : "Upload Files"}
+      </Button>
+      {results.length > 0 && (
+        <ul className="list-disc pl-6 space-y-1">
+          {results.map((r, i) => (
+            <li
+              key={i}
+              className={
+                r.status === "success" ? "text-green-600" : "text-red-600"
+              }
+            >
+              {r.name}: {r.status === "success" ? r.message : `Error: ${r.message}`}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
