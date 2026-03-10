@@ -1,16 +1,16 @@
 ---
-import { getPosts } from "../util/Api";
+import { getCollection } from "astro:content";
 import Post from "../layouts/Post.astro";
 import { slug } from "../util/Format";
 
 export async function getStaticPaths() {
-  const posts = await getPosts();
-  return posts.map((item) => ({
+  const entries = await getCollection("posts");
+  return entries.map((entry) => ({
     params: {
-      slug: slug(item),
+      slug: slug(entry.data),
     },
     props: {
-      post: item,
+      post: entry.data,
     },
   }));
 }

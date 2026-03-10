@@ -1,4 +1,14 @@
-import type { Post } from "./Api";
+export interface Post {
+  title: string;
+  published: string;
+  slug: string;
+  hidden: boolean;
+  gallery: boolean;
+  external_link: string | null;
+  content_html: string;
+  preview_html: string | null;
+  images: string[];
+}
 
 export function slug(item: Post): string {
   const year = new Date(item.published).getFullYear().toString();

@@ -1,10 +1,12 @@
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
-import { getPosts } from "../../util/Api";
+import { getCollection } from "astro:content";
 import { url } from "../../util/Format";
 
 export async function GET(context: APIContext) {
-  const posts = await getPosts();
+  const entries = await getCollection("posts");
+  const posts = entries.map((e) => e.data);
+  posts.sort((a, b) => (a.published < b.published ? 1 : -1));
   return rss({
     title: "George Black",
     description:

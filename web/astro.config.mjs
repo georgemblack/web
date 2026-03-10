@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, envField } from "astro/config";
+import { defineConfig } from "astro/config";
 
 import sitemap from "@astrojs/sitemap";
 
@@ -14,16 +14,4 @@ export default defineConfig({
       },
     }),
   ],
-  env: {
-    schema: {
-      CF_ACCESS_CLIENT_ID: envField.string({
-        context: "server",
-        access: "public",
-      }),
-      CF_ACCESS_CLIENT_SECRET: envField.string({
-        context: "server",
-        access: "public",
-      }),
-    },
-  },
 });

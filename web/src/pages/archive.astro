@@ -1,10 +1,12 @@
 ---
-import type { Post } from "../util/Api";
-import { getPosts } from "../util/Api";
+import { getCollection } from "astro:content";
+import type { Post } from "../util/Format";
 import { slug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 
-const posts = await getPosts();
+const entries = await getCollection("posts");
+const posts = entries.map((e) => e.data);
+posts.sort((a, b) => (a.published < b.published ? 1 : -1));
 
 // Group posts by year
 const years: { [key: string]: Post[] } = {};
@@ -20,7 +22,7 @@ posts.forEach((post) => {
 <Page title="Archive">
   <h1>Archive</h1>
   <p>
-    All the dumb shit I’ve said, organized in one place for your convenience.
+    All the dumb shit I've said, organized in one place for your convenience.
   </p>
   {
     Object.keys(years)

@@ -1,10 +1,12 @@
 ---
-import { getPosts } from "../util/Api";
+import { getCollection } from "astro:content";
 import { subtitle, url, preview, images, readMore } from "../util/Format";
 import Page from "../layouts/Page.astro";
 import LinkIcon from "../components/LinkIcon.astro";
 
-const posts = await getPosts();
+const entries = await getCollection("posts");
+const posts = entries.map((e) => e.data);
+posts.sort((a, b) => (a.published < b.published ? 1 : -1));
 const visible = posts.filter((post) => !post.hidden);
 const selected = visible.slice(0, 20);
 ---
