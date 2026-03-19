@@ -20,5 +20,8 @@
   "dependencies": {
     "marked": "^17.0.4",
     "zod": "^4.3.6"
+  },
+  "volta": {
+    "node": "24.14.0"
   }
 }
