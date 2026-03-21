@@ -1,4 +1,5 @@
 import { Input, Select } from "@cloudflare/kumo";
+
 import type { VideoBlock } from "@/data/types";
 
 interface VideoBlockEditorProps {

@@ -1,25 +1,25 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "cms-backup",
-	"main": "src/index.ts",
-	"compatibility_date": "2026-02-19",
-	"observability": {
-		"enabled": true,
-	},
-	"triggers": {
-		"crons": ["0 12 * * *"],
-	},
-	"services": [
-		{
-			"binding": "WEB_DB_SERVICE",
-			"service": "web-db",
-			"remote": true,
-		},
-	],
-	"r2_buckets": [
-		{
-			"binding": "BACKUP_BUCKET",
-			"bucket_name": "cms-backups",
-		},
-	],
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cms-backup",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-02-19",
+  "observability": {
+    "enabled": true,
+  },
+  "triggers": {
+    "crons": ["0 12 * * *"],
+  },
+  "services": [
+    {
+      "binding": "WEB_DB_SERVICE",
+      "service": "web-db",
+      "remote": true,
+    },
+  ],
+  "r2_buckets": [
+    {
+      "binding": "BACKUP_BUCKET",
+      "bucket_name": "cms-backups",
+    },
+  ],
 }

@@ -1,5 +1,5 @@
-import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
+import { defineCollection } from "astro:content";
 
 const posts = defineCollection({
   loader: async () => {
@@ -33,9 +33,8 @@ const posts = defineCollection({
       posts.push(await res.json());
     }
 
-    posts.sort(
-      (a: { published: string }, b: { published: string }) =>
-        a.published < b.published ? 1 : -1,
+    posts.sort((a: { published: string }, b: { published: string }) =>
+      a.published < b.published ? 1 : -1,
     );
 
     return posts;

@@ -1,5 +1,6 @@
-import { getRenderedPost } from "@/data/db";
 import { createFileRoute } from "@tanstack/react-router";
+
+import { getRenderedPost } from "@/data/db";
 
 export const Route = createFileRoute("/api/posts/$postId/rendered/")({
   server: {

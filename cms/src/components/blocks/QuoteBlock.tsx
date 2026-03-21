@@ -1,4 +1,5 @@
 import { InputArea } from "@cloudflare/kumo";
+
 import type { QuoteBlock } from "@/data/types";
 
 interface QuoteBlockEditorProps {

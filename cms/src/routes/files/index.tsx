@@ -1,11 +1,3 @@
-import { useMemo, useState } from "react";
-import { deleteFile, listFiles, toggleOptimize } from "@/data/files";
-import {
-  createFileRoute,
-  Link,
-  useNavigate,
-  useRouter,
-} from "@tanstack/react-router";
 import {
   Badge,
   Breadcrumbs,
@@ -14,7 +6,16 @@ import {
   Select,
   Switch,
 } from "@cloudflare/kumo";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+
 import PaddedSurface from "@/components/PaddedSurface";
+import { deleteFile, listFiles, toggleOptimize } from "@/data/files";
 
 const YEARS = Array.from({ length: 16 }, (_, i) => String(2015 + i));
 

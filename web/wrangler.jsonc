@@ -1,19 +1,19 @@
 {
-    "name": "web",
-    "account_id": "bc4564dd499c0a9b8a7bb79c9bd5ea6d",
-    "compatibility_date": "2026-01-15",
-    "observability": {
-      "enabled": true
+  "name": "web",
+  "account_id": "bc4564dd499c0a9b8a7bb79c9bd5ea6d",
+  "compatibility_date": "2026-01-15",
+  "observability": {
+    "enabled": true,
+  },
+  "routes": [
+    {
+      "pattern": "george.black",
+      "custom_domain": true,
     },
-    "routes": [
-      {
-        "pattern": "george.black",
-        "custom_domain": true
-      }
-    ],
-    "preview_urls": false,
-    "workers_dev": false,
-    "assets": {
-      "directory": "./dist"
-    }
-  }
+  ],
+  "preview_urls": false,
+  "workers_dev": false,
+  "assets": {
+    "directory": "./dist",
+  },
+}

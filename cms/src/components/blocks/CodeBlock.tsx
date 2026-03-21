@@ -1,4 +1,5 @@
 import { InputArea } from "@cloudflare/kumo";
+
 import type { CodeBlock } from "@/data/types";
 
 interface CodeBlockEditorProps {

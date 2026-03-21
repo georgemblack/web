@@ -1,4 +1,5 @@
 import { Input, Select } from "@cloudflare/kumo";
+
 import type { ImageBlock } from "@/data/types";
 
 interface ImageBlockEditorProps {

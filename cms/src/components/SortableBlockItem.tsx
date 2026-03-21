@@ -1,21 +1,22 @@
-import { useState } from "react";
+import { Button } from "@cloudflare/kumo";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Button } from "@cloudflare/kumo";
 import type { Editor } from "@tiptap/react";
-import type { ContentBlock } from "@/data/types";
-import { MarkdownBlockEditor } from "@/components/blocks/MarkdownBlock";
+import { useState } from "react";
+
+import { BreakBlockEditor } from "@/components/blocks/BreakBlock";
+import { CodeBlockEditor } from "@/components/blocks/CodeBlock";
+import { HeadingBlockEditor } from "@/components/blocks/HeadingBlock";
 import { ImageBlockEditor } from "@/components/blocks/ImageBlock";
-import { VideoBlockEditor } from "@/components/blocks/VideoBlock";
+import { LineBlockEditor } from "@/components/blocks/LineBlock";
+import { MarkdownBlockEditor } from "@/components/blocks/MarkdownBlock";
+import { QuoteBlockEditor } from "@/components/blocks/QuoteBlock";
 import {
   TextBlockEditor,
   TextBlockToolbar,
 } from "@/components/blocks/TextBlock";
-import { HeadingBlockEditor } from "@/components/blocks/HeadingBlock";
-import { QuoteBlockEditor } from "@/components/blocks/QuoteBlock";
-import { CodeBlockEditor } from "@/components/blocks/CodeBlock";
-import { LineBlockEditor } from "@/components/blocks/LineBlock";
-import { BreakBlockEditor } from "@/components/blocks/BreakBlock";
+import { VideoBlockEditor } from "@/components/blocks/VideoBlock";
+import type { ContentBlock } from "@/data/types";
 
 export type BlockWithId = ContentBlock & { _id: string };
 

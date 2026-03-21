@@ -1,4 +1,5 @@
 import { InputArea } from "@cloudflare/kumo";
+
 import type { MarkdownBlock } from "@/data/types";
 
 interface MarkdownBlockEditorProps {

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import { listFiles, uploadOptimizedFile } from "@/data/files";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Breadcrumbs, Button, Select, Text } from "@cloudflare/kumo";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+
 import PaddedSurface from "@/components/PaddedSurface";
+import { listFiles, uploadOptimizedFile } from "@/data/files";
 
 const currentYear = new Date().getFullYear();
 const YEARS = Array.from({ length: 16 }, (_, i) => String(2015 + i));

@@ -1,5 +1,6 @@
-import { deletePost, getPost } from "@/data/db";
 import { createFileRoute } from "@tanstack/react-router";
+
+import { deletePost, getPost } from "@/data/db";
 
 export const Route = createFileRoute("/api/posts/$postId/")({
   server: {

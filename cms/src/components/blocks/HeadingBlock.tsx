@@ -1,4 +1,5 @@
 import { Input, Select } from "@cloudflare/kumo";
+
 import type { HeadingBlock } from "@/data/types";
 
 interface HeadingBlockEditorProps {

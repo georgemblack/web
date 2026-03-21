@@ -1,7 +1,4 @@
-import { useState } from "react";
-import { getPost, updatePost } from "@/data/db";
-import { listFiles } from "@/data/files";
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { Breadcrumbs, Button, Input, Switch, Text } from "@cloudflare/kumo";
 import {
   DndContext,
   closestCenter,
@@ -17,13 +14,17 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Breadcrumbs, Button, Input, Switch, Text } from "@cloudflare/kumo";
-import type { Post, ContentBlock, PostStatus } from "@/data/types";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
+
+import PaddedSurface from "@/components/PaddedSurface";
 import {
   SortableBlockItem,
   type BlockWithId,
 } from "@/components/SortableBlockItem";
-import PaddedSurface from "@/components/PaddedSurface";
+import { getPost, updatePost } from "@/data/db";
+import { listFiles } from "@/data/files";
+import type { Post, ContentBlock, PostStatus } from "@/data/types";
 
 export const Route = createFileRoute("/posts/$postId")({
   ssr: "data-only",

@@ -1,6 +1,7 @@
+import { createFileRoute } from "@tanstack/react-router";
+
 import { createPost, listPosts } from "@/data/db";
 import { PostStatus } from "@/data/types";
-import { createFileRoute } from "@tanstack/react-router";
 
 const validStates: PostStatus[] = ["draft", "published"];
 

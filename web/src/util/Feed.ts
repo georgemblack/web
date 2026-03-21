@@ -1,4 +1,5 @@
 import { getCollection } from "astro:content";
+
 import { absoluteUrl, image } from "./Format";
 
 type Feed = {

@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { Button } from "@cloudflare/kumo";
+import Link from "@tiptap/extension-link";
 import { useEditor, EditorContent } from "@tiptap/react";
 import type { Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
-import { Button } from "@cloudflare/kumo";
+import { useEffect } from "react";
+
 import type { TextBlock } from "@/data/types";
 
 interface TextBlockEditorProps {
