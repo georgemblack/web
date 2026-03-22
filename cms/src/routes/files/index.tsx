@@ -83,7 +83,7 @@ function FilesPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="mt-4 flex gap-3 items-center">
+          <div className="mt-4 flex items-center gap-3">
             <Select
               className="w-30"
               value={year}
@@ -117,8 +117,8 @@ function FilesPage() {
                 className="h-12 w-12 rounded object-cover"
                 alt=""
               />
-              <div className="flex-1 min-w-0">
-                <div className="font-mono text-sm truncate">{f.fileName}</div>
+              <div className="min-w-0 flex-1">
+                <div className="truncate font-mono text-sm">{f.fileName}</div>
                 {f.optimized && (
                   <Badge variant="primary" className="mt-1">
                     optimized
@@ -129,6 +129,7 @@ function FilesPage() {
                 <Button
                   variant="secondary"
                   shape="square"
+                  aria-label="Toggle optimize"
                   onClick={() => handleToggleOptimize(f.fileName)}
                 >
                   🐳
@@ -136,6 +137,7 @@ function FilesPage() {
                 <Button
                   variant="secondary-destructive"
                   shape="square"
+                  aria-label="Delete file"
                   onClick={() => handleDelete(f.fileName)}
                 >
                   🗑️

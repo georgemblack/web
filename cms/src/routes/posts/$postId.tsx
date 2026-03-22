@@ -212,7 +212,7 @@ function MetadataSection({
               Slug
             </Button>
           </div>
-          <div className="ml-1 mt-1">
+          <div className="mt-1 ml-1">
             <Text variant="secondary">{slug}</Text>
           </div>
         </div>
@@ -502,7 +502,7 @@ function PostEditor({ post, fileNames }: PostEditorProps) {
             <Breadcrumbs.Current>{title || "Untitled"}</Breadcrumbs.Current>
           </Breadcrumbs>
         </div>
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-4">
           {statusMessage === "error" && (
             <Text variant="secondary">Error saving post</Text>
           )}

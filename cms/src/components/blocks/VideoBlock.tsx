@@ -16,7 +16,7 @@ export function VideoBlockEditor({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <div className="flex-1 flex gap-2">
+        <div className="flex flex-1 gap-2">
           <Input
             className="flex-1"
             value={block.key}

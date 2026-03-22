@@ -16,7 +16,7 @@ export function ImageBlockEditor({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <div className="h-10 w-10 flex-shrink-0 rounded border border-gray-300 bg-gray-100 overflow-hidden">
+        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded border border-gray-300 bg-gray-100">
           {block.key && (
             <img
               src={`https://george.black/files/${block.key}`}
@@ -25,7 +25,7 @@ export function ImageBlockEditor({
             />
           )}
         </div>
-        <div className="flex-1 flex gap-2">
+        <div className="flex flex-1 gap-2">
           <Input
             className="flex-1"
             value={block.key}

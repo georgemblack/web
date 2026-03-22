@@ -95,7 +95,7 @@ function App() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <div className="mt-4 flex gap-3 items-center">
+          <div className="mt-4 flex items-center gap-3">
             <Select
               className="w-30"
               value={statusFilter}
@@ -118,7 +118,7 @@ function App() {
         </PaddedSurface>
         <div className="mt-4 flex flex-col gap-6">
           {filteredPosts.map((post) => (
-            <div className="flex justify-between items-center" key={post.id}>
+            <div className="flex items-center justify-between" key={post.id}>
               <Link to="/posts/$postId" params={{ postId: post.id }}>
                 <h2 className="font-bold">{post.title}</h2>
                 <div className="flex gap-4">
@@ -143,6 +143,7 @@ function App() {
               <Button
                 variant="secondary"
                 shape="square"
+                aria-label="Delete post"
                 onClick={() => handleDelete(post.id, post.title)}
               >
                 🗑️
