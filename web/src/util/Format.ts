@@ -45,7 +45,8 @@ export function images(item: Post): string[] {
 
 export function readMore(item: Post): boolean {
   if (item.external_link) return false;
-  return item.content_html !== item.preview_html;
+  if (!item.preview_html) return false;
+  return true;
 }
 
 export function timestamp(timestamp: string): string {
