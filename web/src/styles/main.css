@@ -58,8 +58,8 @@
 }
 
 /* ==========================================================================
-     General-Purpose Classes
-     ========================================================================== */
+   General-Purpose Classes
+   ========================================================================== */
 .subtitle {
   margin-top: 0;
   font-family: var(--font-family-display);
@@ -82,8 +82,8 @@
 }
 
 /* ==========================================================================
-     Essential Elements
-     ========================================================================== */
+   Essential Elements
+   ========================================================================== */
 * {
   margin: 0;
   padding: 0;
@@ -147,8 +147,8 @@ a:hover {
 }
 
 /* ==========================================================================
-     Header and Navigation
-     ========================================================================== */
+   Header and Navigation
+   ========================================================================== */
 header {
   display: flex;
   align-items: center;
@@ -157,8 +157,18 @@ header {
   border-bottom: 2px solid var(--line-separator-color);
 }
 
+header .title {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+header .title img {
+  width: 2rem;
+  border-radius: 100%;
+}
+
 header h1 a {
-  margin: 0 0.25em 0 0;
   font-family: var(--font-family-rounded);
   font-weight: var(--font-weight-extreme);
   color: var(--header-color);
@@ -169,12 +179,11 @@ header h1 a:hover {
 }
 
 nav {
-  font-size: 1.125em;
+  font-size: 1.5em;
   font-family: var(--font-family-rounded);
   font-weight: var(--font-weight-extreme);
   display: flex;
-  justify-content: space-between;
-  gap: 0.75em;
+  gap: 1rem;
 }
 
 nav a {
@@ -185,17 +194,9 @@ nav a:hover {
   color: var(--nav-link-hover-color);
 }
 
-/* xsmall break-point */
-@media screen and (max-width: 22.5em) {
-  nav {
-    font-size: 1em;
-    gap: 0.5em;
-  }
-}
-
 /* ==========================================================================
-     Primary Content
-     ========================================================================== */
+   Primary Content
+   ========================================================================== */
 main {
   margin: 2em 0 0 0;
 }
@@ -278,38 +279,17 @@ main hr {
 }
 
 /* ==========================================================================
-     Footer
-     ========================================================================== */
+   Footer
+   ========================================================================== */
 footer {
   margin: 6em 0 4em 0;
 }
 
 /* ==========================================================================
-     Homepage
-     ========================================================================== */
-.bio {
-  display: flex;
-  gap: 1.5em;
-  align-items: center;
-}
-
-.bio img {
-  width: 6em;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 100%;
-}
-
-.bio p {
-  margin: 0;
-  font-family: var(--font-family-display);
-}
-
-/* small break-point */
-@media screen and (max-width: 32em) {
-  .bio {
-    flex-direction: column;
-    gap: 1em;
-  }
+   Homepage
+   ========================================================================== */
+.posts article:not(:first-child) {
+  margin-top: 4em;
 }
 
 .image-grid {
