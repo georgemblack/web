@@ -18,6 +18,10 @@ export interface VideoBlock {
   type: "video";
   key: string;
   caption?: string;
+  controls?: boolean;
+  autoplay?: boolean;
+  muted?: boolean;
+  loop?: boolean;
 }
 
 export interface TextBlock {
@@ -131,6 +135,10 @@ const videoBlockSchema = z.object({
   type: z.literal("video"),
   key: z.string().min(1),
   caption: z.string().optional(),
+  controls: z.boolean().optional(),
+  autoplay: z.boolean().optional(),
+  muted: z.boolean().optional(),
+  loop: z.boolean().optional(),
 });
 
 const textBlockSchema = z.object({

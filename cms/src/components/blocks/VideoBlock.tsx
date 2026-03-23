@@ -1,4 +1,4 @@
-import { Input, Select } from "@cloudflare/kumo";
+import { Input, Select, Switch } from "@cloudflare/kumo";
 
 import type { VideoBlock } from "@/data/types";
 
@@ -62,6 +62,36 @@ export function VideoBlockEditor({
             aria-label="Caption"
           />
         </div>
+      </div>
+      <div className="flex gap-3">
+        <Switch
+          label="Controls"
+          checked={block.controls ?? false}
+          onCheckedChange={(checked) =>
+            onChange({ ...block, controls: checked || undefined })
+          }
+        />
+        <Switch
+          label="Autoplay"
+          checked={block.autoplay ?? false}
+          onCheckedChange={(checked) =>
+            onChange({ ...block, autoplay: checked || undefined })
+          }
+        />
+        <Switch
+          label="Muted"
+          checked={block.muted ?? false}
+          onCheckedChange={(checked) =>
+            onChange({ ...block, muted: checked || undefined })
+          }
+        />
+        <Switch
+          label="Loop"
+          checked={block.loop ?? false}
+          onCheckedChange={(checked) =>
+            onChange({ ...block, loop: checked || undefined })
+          }
+        />
       </div>
     </div>
   );

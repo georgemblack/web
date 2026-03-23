@@ -28,7 +28,12 @@ function renderImage(block: ImageBlock): string {
 }
 
 function renderVideo(block: VideoBlock): string {
-  const video = `<video src="/files/${block.key}" controls></video>`;
+  const attrs = [`src="/files/${block.key}"`, "playsinline"];
+  if (block.controls) attrs.push("controls");
+  if (block.autoplay) attrs.push("autoplay");
+  if (block.muted) attrs.push("muted");
+  if (block.loop) attrs.push("loop");
+  const video = `<video ${attrs.join(" ")}></video>`;
   if (block.caption) {
     return `<figure>${video}<figcaption>${block.caption}</figcaption></figure>`;
   }
