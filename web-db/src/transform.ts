@@ -28,7 +28,7 @@ function renderImage(block: ImageBlock): string {
 }
 
 function renderVideo(block: VideoBlock): string {
-  const attrs = [`src="/files/${block.key}"`, "playsinline"];
+  const attrs = [`src="/files/${block.key}"`, 'loading="lazy"', "playsinline"];
   if (block.controls) attrs.push("controls");
   if (block.autoplay) attrs.push("autoplay");
   if (block.muted) attrs.push("muted");
