@@ -229,7 +229,7 @@ main li {
 
 main :is(img, video) {
   width: 100%;
-  border-radius: 0.25em;
+  border-radius: 0.5em;
 }
 
 main figure {
