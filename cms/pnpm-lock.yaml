@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@cloudflare/kumo':
-        specifier: ^1.10.0
-        version: 1.10.0(@phosphor-icons/react@2.1.10(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(echarts@6.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@4.3.6)
+        specifier: ^1.16.0
+        version: 1.16.0(@phosphor-icons/react@2.1.10(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(echarts@6.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@4.3.6)
       '@cloudflare/vite-plugin':
         specifier: ^1.26.1
         version: 1.26.1(vite@7.3.1(@types/node@25.4.0)(jiti@2.6.1)(lightningcss@1.31.1)(tsx@4.21.0))(workerd@1.20260301.1)(wrangler@4.71.0)
@@ -264,8 +264,8 @@ packages:
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
 
-  '@cloudflare/kumo@1.10.0':
-    resolution: {integrity: sha512-6Q89+LqUsBUxEmFe6mBPruKsIFviUqkXYi5DvRaIWDgSeFjLKEISVosHeu8Ufecs9MLg6vBV3xtYjjTSddqMOg==}
+  '@cloudflare/kumo@1.16.0':
+    resolution: {integrity: sha512-uCrj7jGPvdXj8lrdQBfMGKzV3JTDi7hUBsLf4jpirD7QHvZMsGe6XuU+KKvQFqDTmj5ELXQVES4YVoducxZ7Tg==}
     hasBin: true
     peerDependencies:
       '@phosphor-icons/react': ^2.1.10
@@ -3155,10 +3155,12 @@ snapshots:
     dependencies:
       css-tree: 3.1.0
 
-  '@cloudflare/kumo@1.10.0(@phosphor-icons/react@2.1.10(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(echarts@6.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@4.3.6)':
+  '@cloudflare/kumo@1.16.0(@phosphor-icons/react@2.1.10(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(@types/react@19.2.14)(echarts@6.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(zod@4.3.6)':
     dependencies:
       '@base-ui/react': 1.2.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@phosphor-icons/react': 2.1.10(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@shikijs/langs': 4.0.2
+      '@shikijs/themes': 4.0.2
       clsx: 2.1.1
       echarts: 6.0.0
       motion: 12.35.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
