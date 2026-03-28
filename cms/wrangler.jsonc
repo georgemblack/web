@@ -32,6 +32,10 @@
   "images": {
     "binding": "IMAGES",
   },
+  "vars": {
+    "CF_ACCESS_TEAM_DOMAIN": "georgeblack",
+    "CF_ACCESS_AUD": "f27fb64ff93c1b3f85e8590eceaab8612ab1215793072d79de0661495835e4c5",
+  },
   "observability": {
     "enabled": true,
   },
