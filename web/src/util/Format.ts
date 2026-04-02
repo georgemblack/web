@@ -55,6 +55,7 @@ export function timestamp(timestamp: string): string {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "America/Chicago",
   });
 }
 
