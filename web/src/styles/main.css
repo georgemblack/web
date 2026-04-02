@@ -223,9 +223,8 @@ main :is(ul, ol) {
   line-height: 160%;
 }
 
-main li {
-  line-height: 160%;
-  text-rendering: optimizeLegibility;
+main li p {
+  margin: 0;
 }
 
 main :is(img, video) {
