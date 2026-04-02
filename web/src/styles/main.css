@@ -114,7 +114,7 @@ h3 {
 }
 
 h1 {
-  font-size: 2em;
+  font-size: 1.75em;
 }
 
 h2 {
@@ -124,7 +124,7 @@ h2 {
 p,
 li {
   font-family: var(--font-family-text);
-  font-size: 1.125em;
+  font-size: 1em;
   color: var(--body-color);
 }
 
@@ -169,6 +169,7 @@ header .title img {
 }
 
 header h1 a {
+  font-size: 2rem;
   font-family: var(--font-family-rounded);
   font-weight: var(--font-weight-extreme);
   color: var(--header-color);
