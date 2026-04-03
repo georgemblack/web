@@ -42,7 +42,11 @@ export const createPost = createServerFn({ method: "POST" })
 export const updatePost = createServerFn({ method: "POST" })
   .inputValidator(updatePostInputSchema)
   .handler(async ({ data: input }): Promise<Post | null> => {
-    return env.WEB_DB_SERVICE.updatePost(input);
+    const post = await env.WEB_DB_SERVICE.updatePost(input);
+    if (post && post.status === "published") {
+      await fetch(env.DEPLOY_HOOK_URL, { method: "POST" });
+    }
+    return post;
   });
 
 export const deletePost = createServerFn({ method: "POST" })
