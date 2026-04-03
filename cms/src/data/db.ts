@@ -52,5 +52,10 @@ export const updatePost = createServerFn({ method: "POST" })
 export const deletePost = createServerFn({ method: "POST" })
   .inputValidator((id: string) => id)
   .handler(async ({ data: id }): Promise<boolean> => {
-    return env.WEB_DB_SERVICE.deletePost(id);
+    const post = await env.WEB_DB_SERVICE.getPost(id);
+    const deleted = await env.WEB_DB_SERVICE.deletePost(id);
+    if (deleted && post?.status === "published") {
+      await fetch(env.DEPLOY_HOOK_URL, { method: "POST" });
+    }
+    return deleted;
   });
