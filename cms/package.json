@@ -21,6 +21,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@portabletext/editor": "^6.6.0",
+    "@portabletext/toolbar": "^7.0.23",
     "@tailwindcss/vite": "^4.2.1",
     "@tanstack/react-devtools": "^0.9.10",
     "@tanstack/react-router": "^1.166.6",

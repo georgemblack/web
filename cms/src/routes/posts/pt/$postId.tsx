@@ -4,12 +4,19 @@ import {
   EditorProvider,
   PortableTextEditable,
 } from "@portabletext/editor";
-import type {
-  PortableTextBlock,
-  RenderDecoratorFunction,
-  RenderStyleFunction,
-} from "@portabletext/editor";
+import type { PortableTextBlock } from "@portabletext/editor";
 import { EventListenerPlugin } from "@portabletext/editor/plugins";
+import {
+  useDecoratorButton,
+  useListButton,
+  useStyleSelector,
+  useToolbarSchema,
+} from "@portabletext/toolbar";
+import type {
+  ToolbarDecoratorSchemaType,
+  ToolbarListSchemaType,
+  ToolbarStyleSchemaType,
+} from "@portabletext/toolbar";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
 
@@ -52,41 +59,88 @@ const schemaDefinition = defineSchema({
   blockObjects: [],
 });
 
-const renderStyle: RenderStyleFunction = (props) => {
-  if (props.schemaType.value === "h1") {
-    return <h1 className="text-2xl font-bold">{props.children}</h1>;
-  }
-  if (props.schemaType.value === "h2") {
-    return <h2 className="text-xl font-bold">{props.children}</h2>;
-  }
-  if (props.schemaType.value === "h3") {
-    return <h3 className="text-lg font-bold">{props.children}</h3>;
-  }
-  if (props.schemaType.value === "h4") {
-    return <h4 className="text-base font-bold">{props.children}</h4>;
-  }
-  if (props.schemaType.value === "blockquote") {
-    return (
-      <blockquote className="border-l-4 border-gray-300 pl-4 italic">
-        {props.children}
-      </blockquote>
-    );
-  }
-  return <p>{props.children}</p>;
+const DECORATOR_LABELS: Record<string, string> = {
+  strong: "B",
+  em: "I",
+  underline: "U",
 };
 
-const renderDecorator: RenderDecoratorFunction = (props) => {
-  if (props.value === "strong") {
-    return <strong>{props.children}</strong>;
-  }
-  if (props.value === "em") {
-    return <em>{props.children}</em>;
-  }
-  if (props.value === "underline") {
-    return <u>{props.children}</u>;
-  }
-  return <>{props.children}</>;
+const LIST_LABELS: Record<string, string> = {
+  bullet: "UL",
+  number: "OL",
 };
+
+function DecoratorButton({
+  schemaType,
+}: {
+  schemaType: ToolbarDecoratorSchemaType;
+}) {
+  const button = useDecoratorButton({ schemaType });
+  const isActive = button.snapshot.matches({ enabled: "active" });
+  return (
+    <button
+      type="button"
+      className={`rounded px-2 py-1 text-sm ${isActive ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-700"}`}
+      onClick={() => button.send({ type: "toggle" })}
+    >
+      {DECORATOR_LABELS[schemaType.name] ?? schemaType.name}
+    </button>
+  );
+}
+
+function ListToggleButton({
+  schemaType,
+}: {
+  schemaType: ToolbarListSchemaType;
+}) {
+  const button = useListButton({ schemaType });
+  const isActive = button.snapshot.matches({ enabled: "active" });
+  return (
+    <button
+      type="button"
+      className={`rounded px-2 py-1 text-sm ${isActive ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-700"}`}
+      onClick={() => button.send({ type: "toggle" })}
+    >
+      {LIST_LABELS[schemaType.name] ?? schemaType.name}
+    </button>
+  );
+}
+
+function StyleSelect({
+  schemaTypes,
+}: {
+  schemaTypes: ReadonlyArray<ToolbarStyleSchemaType>;
+}) {
+  const selector = useStyleSelector({ schemaTypes });
+  return (
+    <select
+      className="rounded border border-gray-300 px-2 py-1 text-sm"
+      value={selector.snapshot.context.activeStyle ?? "normal"}
+      onChange={(e) => selector.send({ type: "toggle", style: e.target.value })}
+    >
+      {schemaTypes.map((style) => (
+        <option key={style.name} value={style.name}>
+          {style.name}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+function Toolbar() {
+  const schema = useToolbarSchema({});
+  return (
+    <div className="mb-3 flex flex-wrap items-center gap-2 border-b border-gray-200 pb-3">
+      {schema.styles && <StyleSelect schemaTypes={schema.styles} />}
+      {schema.decorators?.map((dec) => (
+        <DecoratorButton key={dec.name} schemaType={dec} />
+      ))}
+      {schema.lists?.map((list) => (
+        <ListToggleButton key={list.name} schemaType={list} />
+      ))}
+    </div>
+  );
+}
 
 interface MetadataSectionProps {
   title: string;
@@ -368,13 +422,8 @@ function PortableTextPostEditor({ post }: PortableTextPostEditorProps) {
             }}
           >
             <EventListenerPlugin on={handleMutation} />
-            <PortableTextEditable
-              className="min-h-64 focus:outline-none [&_blockquote]:border-l-4 [&_blockquote]:border-gray-300 [&_blockquote]:pl-4 [&_blockquote]:italic [&_h1]:text-2xl [&_h1]:font-bold [&_h2]:text-xl [&_h2]:font-bold [&_h3]:text-lg [&_h3]:font-bold [&_h4]:text-base [&_h4]:font-bold [&_li]:ml-6 [&_ol]:list-decimal [&_p]:mb-2 [&_ul]:list-disc"
-              renderStyle={renderStyle}
-              renderDecorator={renderDecorator}
-              renderBlock={(props) => <div>{props.children}</div>}
-              renderListItem={(props) => <li>{props.children}</li>}
-            />
+            <Toolbar />
+            <PortableTextEditable className="min-h-64 focus:outline-none" />
           </EditorProvider>
         </PaddedSurface>
       </div>
