@@ -19,6 +19,8 @@
     "wrangler": "^4.71.0"
   },
   "dependencies": {
+    "@portabletext/to-html": "^5.0.2",
+    "@portabletext/types": "^4.0.2",
     "marked": "^17.0.4",
     "zod": "^4.3.6"
   },

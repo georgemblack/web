@@ -1,3 +1,5 @@
+import { toHTML } from "@portabletext/to-html";
+import type { PortableTextBlock } from "@portabletext/types";
 import { marked } from "marked";
 
 import {
@@ -97,4 +99,26 @@ export function renderPreview(content: ContentBlock[]): string | null {
     return null;
   }
   return content.slice(0, breakIndex).map(renderBlock).join("");
+}
+
+/**
+ * Renders Portable Text blocks to HTML.
+ */
+export function renderPortableText(
+  blocks: Array<Record<string, unknown>>,
+): string {
+  return toHTML(blocks as unknown as PortableTextBlock[]);
+}
+
+/**
+ * Renders Portable Text blocks to preview HTML.
+ * Uses the first block only as preview, or null if empty.
+ */
+export function renderPortableTextPreview(
+  blocks: Array<Record<string, unknown>>,
+): string | null {
+  if (blocks.length === 0) {
+    return null;
+  }
+  return toHTML([blocks[0]] as unknown as PortableTextBlock[]);
 }

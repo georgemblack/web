@@ -295,7 +295,7 @@ function PostEditor({ post, fileNames }: PostEditorProps) {
     post.external_link,
   );
   const [blocks, setBlocks] = useState<BlockWithId[]>(() =>
-    addIdsToBlocks(post.content),
+    addIdsToBlocks(post.content as ContentBlock[]),
   );
 
   const [isSaving, setIsSaving] = useState(false);
@@ -474,6 +474,7 @@ function PostEditor({ post, fileNames }: PostEditorProps) {
           hidden,
           gallery,
           external_link: externalLink,
+          portable_text: false,
           content: removeIdsFromBlocks(blocks),
         },
       });

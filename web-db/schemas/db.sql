@@ -10,5 +10,6 @@ CREATE TABLE posts (
     content TEXT NOT NULL,
     content_html TEXT NOT NULL,
     preview_html TEXT,
-    deleted INTEGER NOT NULL DEFAULT 0
+    deleted INTEGER NOT NULL DEFAULT 0,
+    portable_text INTEGER NOT NULL DEFAULT 0
 );

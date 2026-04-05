@@ -14,6 +14,7 @@ import { Route as FilesIndexRouteImport } from './routes/files/index'
 import { Route as PostsPostIdRouteImport } from './routes/posts/$postId'
 import { Route as FilesNewIndexRouteImport } from './routes/files/new/index'
 import { Route as ApiPostsIndexRouteImport } from './routes/api/posts/index'
+import { Route as PostsPtPostIdRouteImport } from './routes/posts/pt/$postId'
 import { Route as FilesNewOptimizedRouteImport } from './routes/files/new/optimized'
 import { Route as ApiPostsPostIdIndexRouteImport } from './routes/api/posts/$postId/index'
 import { Route as ApiPostsPostIdRenderedIndexRouteImport } from './routes/api/posts/$postId/rendered/index'
@@ -43,6 +44,11 @@ const ApiPostsIndexRoute = ApiPostsIndexRouteImport.update({
   path: '/api/posts/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PostsPtPostIdRoute = PostsPtPostIdRouteImport.update({
+  id: '/posts/pt/$postId',
+  path: '/posts/pt/$postId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FilesNewOptimizedRoute = FilesNewOptimizedRouteImport.update({
   id: '/files/new/optimized',
   path: '/files/new/optimized',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/posts/$postId': typeof PostsPostIdRoute
   '/files/': typeof FilesIndexRoute
   '/files/new/optimized': typeof FilesNewOptimizedRoute
+  '/posts/pt/$postId': typeof PostsPtPostIdRoute
   '/api/posts/': typeof ApiPostsIndexRoute
   '/files/new/': typeof FilesNewIndexRoute
   '/api/posts/$postId/': typeof ApiPostsPostIdIndexRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/posts/$postId': typeof PostsPostIdRoute
   '/files': typeof FilesIndexRoute
   '/files/new/optimized': typeof FilesNewOptimizedRoute
+  '/posts/pt/$postId': typeof PostsPtPostIdRoute
   '/api/posts': typeof ApiPostsIndexRoute
   '/files/new': typeof FilesNewIndexRoute
   '/api/posts/$postId': typeof ApiPostsPostIdIndexRoute
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/posts/$postId': typeof PostsPostIdRoute
   '/files/': typeof FilesIndexRoute
   '/files/new/optimized': typeof FilesNewOptimizedRoute
+  '/posts/pt/$postId': typeof PostsPtPostIdRoute
   '/api/posts/': typeof ApiPostsIndexRoute
   '/files/new/': typeof FilesNewIndexRoute
   '/api/posts/$postId/': typeof ApiPostsPostIdIndexRoute
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/posts/$postId'
     | '/files/'
     | '/files/new/optimized'
+    | '/posts/pt/$postId'
     | '/api/posts/'
     | '/files/new/'
     | '/api/posts/$postId/'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/posts/$postId'
     | '/files'
     | '/files/new/optimized'
+    | '/posts/pt/$postId'
     | '/api/posts'
     | '/files/new'
     | '/api/posts/$postId'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/posts/$postId'
     | '/files/'
     | '/files/new/optimized'
+    | '/posts/pt/$postId'
     | '/api/posts/'
     | '/files/new/'
     | '/api/posts/$postId/'
@@ -129,6 +141,7 @@ export interface RootRouteChildren {
   PostsPostIdRoute: typeof PostsPostIdRoute
   FilesIndexRoute: typeof FilesIndexRoute
   FilesNewOptimizedRoute: typeof FilesNewOptimizedRoute
+  PostsPtPostIdRoute: typeof PostsPtPostIdRoute
   ApiPostsIndexRoute: typeof ApiPostsIndexRoute
   FilesNewIndexRoute: typeof FilesNewIndexRoute
   ApiPostsPostIdIndexRoute: typeof ApiPostsPostIdIndexRoute
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPostsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/posts/pt/$postId': {
+      id: '/posts/pt/$postId'
+      path: '/posts/pt/$postId'
+      fullPath: '/posts/pt/$postId'
+      preLoaderRoute: typeof PostsPtPostIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/files/new/optimized': {
       id: '/files/new/optimized'
       path: '/files/new/optimized'
@@ -201,6 +221,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostsPostIdRoute: PostsPostIdRoute,
   FilesIndexRoute: FilesIndexRoute,
   FilesNewOptimizedRoute: FilesNewOptimizedRoute,
+  PostsPtPostIdRoute: PostsPtPostIdRoute,
   ApiPostsIndexRoute: ApiPostsIndexRoute,
   FilesNewIndexRoute: FilesNewIndexRoute,
   ApiPostsPostIdIndexRoute: ApiPostsPostIdIndexRoute,

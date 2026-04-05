@@ -77,7 +77,9 @@ export interface Post {
   hidden: boolean;
   gallery: boolean;
   external_link: string | null;
-  content: ContentBlock[];
+  portable_text: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  content: ContentBlock[] | any[];
 }
 
 /**
@@ -93,6 +95,7 @@ export interface RenderedPost {
   hidden: boolean;
   gallery: boolean;
   external_link: string | null;
+  portable_text: boolean;
   content_html: string;
   preview_html: string | null;
   images: string[];
@@ -105,6 +108,7 @@ export interface PostListItem {
   status: PostStatus;
   hidden: boolean;
   gallery: boolean;
+  portable_text: boolean;
 }
 
 // Zod schemas for DB inputs
@@ -113,77 +117,6 @@ const iso8601String = z.iso.datetime();
 const slugString = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
 const urlString = z.string().url().nullable();
 
-// Content Block Zod Schemas
-const markdownBlockSchema = z.object({
-  type: z.literal("markdown"),
-  text: z.string().min(1),
-});
-
-const imageBlockSchema = z.object({
-  type: z.literal("image"),
-  key: z.string().min(1),
-  alt: z.string().min(1),
-  caption: z.string().optional(),
-});
-
-const videoBlockSchema = z.object({
-  type: z.literal("video"),
-  key: z.string().min(1),
-  caption: z.string().optional(),
-  controls: z.boolean().optional(),
-  autoplay: z.boolean().optional(),
-  muted: z.boolean().optional(),
-  loop: z.boolean().optional(),
-});
-
-const textBlockSchema = z.object({
-  type: z.literal("text"),
-  text: z.string().min(1),
-});
-
-const headingBlockSchema = z.object({
-  type: z.literal("heading"),
-  text: z.string().min(1),
-  level: z.union([
-    z.literal(1),
-    z.literal(2),
-    z.literal(3),
-    z.literal(4),
-    z.literal(5),
-    z.literal(6),
-  ]),
-});
-
-const quoteBlockSchema = z.object({
-  type: z.literal("quote"),
-  text: z.string().min(1),
-});
-
-const codeBlockSchema = z.object({
-  type: z.literal("code"),
-  text: z.string().min(1),
-});
-
-const lineBlockSchema = z.object({
-  type: z.literal("line"),
-});
-
-const breakBlockSchema = z.object({
-  type: z.literal("break"),
-});
-
-const contentBlockSchema = z.discriminatedUnion("type", [
-  markdownBlockSchema,
-  imageBlockSchema,
-  videoBlockSchema,
-  textBlockSchema,
-  headingBlockSchema,
-  quoteBlockSchema,
-  codeBlockSchema,
-  lineBlockSchema,
-  breakBlockSchema,
-]);
-
 export const createPostInputSchema = z.object({
   title: z.string(),
   published: iso8601String,
@@ -191,7 +124,8 @@ export const createPostInputSchema = z.object({
   status: postStatusSchema,
   hidden: z.boolean(),
   gallery: z.boolean(),
-  content: z.array(contentBlockSchema),
+  portable_text: z.boolean(),
+  content: z.array(z.any()),
   external_link: urlString,
 });
 
@@ -203,7 +137,8 @@ export const updatePostInputSchema = z.object({
   status: postStatusSchema,
   hidden: z.boolean(),
   gallery: z.boolean(),
-  content: z.array(contentBlockSchema),
+  portable_text: z.boolean(),
+  content: z.array(z.any()),
   external_link: urlString,
 });
 
