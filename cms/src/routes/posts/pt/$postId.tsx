@@ -11,10 +11,13 @@ import {
   defineSchema,
   EditorProvider,
   PortableTextEditable,
+  useEditor,
 } from "@portabletext/editor";
 import type {
+  BlockPath,
   PortableTextBlock,
   RenderAnnotationFunction,
+  RenderBlockFunction,
   RenderDecoratorFunction,
   RenderListItemFunction,
   RenderStyleFunction,
@@ -22,6 +25,7 @@ import type {
 import { EventListenerPlugin } from "@portabletext/editor/plugins";
 import {
   useAnnotationButton,
+  useBlockObjectButton,
   useDecoratorButton,
   useListButton,
   useStyleSelector,
@@ -29,15 +33,17 @@ import {
 } from "@portabletext/toolbar";
 import type {
   ToolbarAnnotationSchemaType,
+  ToolbarBlockObjectSchemaType,
   ToolbarDecoratorSchemaType,
   ToolbarListSchemaType,
   ToolbarStyleSchemaType,
 } from "@portabletext/toolbar";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 import PaddedSurface from "@/components/PaddedSurface";
 import { getPost, updatePost } from "@/data/db";
+import { listFiles } from "@/data/files";
 import type { Post, PostStatus } from "@/data/types";
 
 export const Route = createFileRoute("/posts/pt/$postId")({
@@ -46,7 +52,10 @@ export const Route = createFileRoute("/posts/pt/$postId")({
   loader: async ({ params }) => {
     const post = await getPost({ data: params.postId });
     if (!post) throw new Error("Post not found");
-    return { post };
+    const postYear = new Date(post.published).getFullYear();
+    const files = await listFiles({ data: `${postYear}/` });
+    const fileNames = files.map((f) => f.fileName);
+    return { post, fileNames };
   },
 });
 
@@ -70,7 +79,7 @@ const schemaDefinition = defineSchema({
   annotations: [{ name: "link" }],
   lists: [{ name: "bullet" }, { name: "number" }],
   inlineObjects: [],
-  blockObjects: [],
+  blockObjects: [{ name: "image" }],
 });
 
 const renderStyle: RenderStyleFunction = (props) => {
@@ -113,6 +122,92 @@ const renderAnnotation: RenderAnnotationFunction = (props) => {
 
 const renderListItem: RenderListItemFunction = (props) => {
   return <li className="ml-6">{props.children}</li>;
+};
+
+const FileNamesContext = createContext<string[]>([]);
+
+function ImageBlockObjectEditor({
+  value,
+  path,
+}: {
+  value: PortableTextBlock;
+  path: BlockPath;
+}) {
+  const editor = useEditor();
+  const fileNames = useContext(FileNamesContext);
+  const key = (value as Record<string, unknown>).key as string | undefined;
+  const alt = (value as Record<string, unknown>).alt as string | undefined;
+  const caption = (value as Record<string, unknown>).caption as
+    | string
+    | undefined;
+
+  const update = (props: Record<string, unknown>) => {
+    editor.send({ type: "block.set", at: path, props });
+  };
+
+  return (
+    <div className="my-2 flex flex-col gap-2 rounded border border-gray-200 p-3">
+      <div className="flex items-center gap-2">
+        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded border border-gray-300 bg-gray-100">
+          {key && (
+            <img
+              src={`https://george.black/files/${key}`}
+              alt={alt || "Preview"}
+              className="h-full w-full object-cover"
+            />
+          )}
+        </div>
+        <div className="flex flex-1 gap-2">
+          <Input
+            className="flex-1"
+            value={key ?? ""}
+            onChange={(e) => update({ key: e.target.value })}
+            placeholder="2020/picture.jpg"
+            aria-label="Image key"
+          />
+          {fileNames.length > 0 && (
+            <Select
+              className="w-48"
+              value=""
+              onValueChange={(fileName) => {
+                if (fileName) update({ key: fileName });
+              }}
+              placeholder="Select file..."
+            >
+              {fileNames.map((fileName) => (
+                <Select.Option key={fileName} value={fileName}>
+                  {fileName}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+        </div>
+      </div>
+      <div className="flex gap-2">
+        <Input
+          className="flex-1"
+          value={alt ?? ""}
+          onChange={(e) => update({ alt: e.target.value })}
+          placeholder="Alt text"
+          aria-label="Alt text"
+        />
+        <Input
+          className="flex-1"
+          value={caption ?? ""}
+          onChange={(e) => update({ caption: e.target.value || undefined })}
+          placeholder="Caption"
+          aria-label="Caption"
+        />
+      </div>
+    </div>
+  );
+}
+
+const renderBlock: RenderBlockFunction = (props) => {
+  if (props.schemaType.name === "image") {
+    return <ImageBlockObjectEditor value={props.value} path={props.path} />;
+  }
+  return <div>{props.children}</div>;
 };
 
 const DECORATOR_LABELS: Record<string, string> = {
@@ -248,6 +343,28 @@ function StyleSelect({
   );
 }
 
+function ImageInsertButton({
+  schemaType,
+}: {
+  schemaType: ToolbarBlockObjectSchemaType;
+}) {
+  const button = useBlockObjectButton({ schemaType });
+  return (
+    <Button
+      variant="ghost"
+      onClick={() =>
+        button.send({
+          type: "insert",
+          value: { key: "", alt: "" },
+          placement: undefined,
+        })
+      }
+    >
+      Image
+    </Button>
+  );
+}
+
 function Toolbar() {
   const schema = useToolbarSchema({});
   return (
@@ -261,6 +378,9 @@ function Toolbar() {
         ))}
         {schema.annotations?.map((ann) => (
           <LinkButton key={ann.name} schemaType={ann} />
+        ))}
+        {schema.blockObjects?.map((obj) => (
+          <ImageInsertButton key={obj.name} schemaType={obj} />
         ))}
       </div>
       <div>{schema.styles && <StyleSelect schemaTypes={schema.styles} />}</div>
@@ -387,20 +507,30 @@ function MetadataSection({
 }
 
 function RouteComponent() {
-  const { post } = Route.useLoaderData();
+  const { post, fileNames } = Route.useLoaderData();
 
   if (!post) {
     return <span>Post not found</span>;
   }
 
-  return <PortableTextPostEditor key={post.published} post={post} />;
+  return (
+    <PortableTextPostEditor
+      key={post.published}
+      post={post}
+      fileNames={fileNames}
+    />
+  );
 }
 
 interface PortableTextPostEditorProps {
   post: Post;
+  fileNames: string[];
 }
 
-function PortableTextPostEditor({ post }: PortableTextPostEditorProps) {
+function PortableTextPostEditor({
+  post,
+  fileNames,
+}: PortableTextPostEditorProps) {
   const router = useRouter();
 
   const [title, setTitle] = useState(
@@ -541,22 +671,25 @@ function PortableTextPostEditor({ post }: PortableTextPostEditorProps) {
 
       <div className="mt-6">
         <PaddedSurface>
-          <EditorProvider
-            initialConfig={{
-              schemaDefinition,
-              initialValue: ptValue.length > 0 ? ptValue : undefined,
-            }}
-          >
-            <EventListenerPlugin on={handleMutation} />
-            <Toolbar />
-            <PortableTextEditable
-              className="min-h-64 [&_ol]:list-decimal [&_ul]:list-disc"
-              renderStyle={renderStyle}
-              renderDecorator={renderDecorator}
-              renderAnnotation={renderAnnotation}
-              renderListItem={renderListItem}
-            />
-          </EditorProvider>
+          <FileNamesContext.Provider value={fileNames}>
+            <EditorProvider
+              initialConfig={{
+                schemaDefinition,
+                initialValue: ptValue.length > 0 ? ptValue : undefined,
+              }}
+            >
+              <EventListenerPlugin on={handleMutation} />
+              <Toolbar />
+              <PortableTextEditable
+                className="min-h-64 [&_ol]:list-decimal [&_ul]:list-disc"
+                renderStyle={renderStyle}
+                renderBlock={renderBlock}
+                renderDecorator={renderDecorator}
+                renderAnnotation={renderAnnotation}
+                renderListItem={renderListItem}
+              />
+            </EditorProvider>
+          </FileNamesContext.Provider>
         </PaddedSurface>
       </div>
     </>
