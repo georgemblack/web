@@ -1,18 +1,34 @@
-import { Breadcrumbs, Button, Input, Switch, Text } from "@cloudflare/kumo";
+import {
+  Breadcrumbs,
+  Button,
+  Input,
+  Popover,
+  Select,
+  Switch,
+  Text,
+} from "@cloudflare/kumo";
 import {
   defineSchema,
   EditorProvider,
   PortableTextEditable,
 } from "@portabletext/editor";
-import type { PortableTextBlock } from "@portabletext/editor";
+import type {
+  PortableTextBlock,
+  RenderAnnotationFunction,
+  RenderDecoratorFunction,
+  RenderListItemFunction,
+  RenderStyleFunction,
+} from "@portabletext/editor";
 import { EventListenerPlugin } from "@portabletext/editor/plugins";
 import {
+  useAnnotationButton,
   useDecoratorButton,
   useListButton,
   useStyleSelector,
   useToolbarSchema,
 } from "@portabletext/toolbar";
 import type {
+  ToolbarAnnotationSchemaType,
   ToolbarDecoratorSchemaType,
   ToolbarListSchemaType,
   ToolbarStyleSchemaType,
@@ -47,10 +63,8 @@ const schemaDefinition = defineSchema({
   decorators: [{ name: "strong" }, { name: "em" }, { name: "underline" }],
   styles: [
     { name: "normal" },
-    { name: "h1" },
     { name: "h2" },
     { name: "h3" },
-    { name: "h4" },
     { name: "blockquote" },
   ],
   annotations: [{ name: "link" }],
@@ -58,6 +72,48 @@ const schemaDefinition = defineSchema({
   inlineObjects: [],
   blockObjects: [],
 });
+
+const renderStyle: RenderStyleFunction = (props) => {
+  const tag = props.schemaType.value;
+  switch (tag) {
+    case "h2":
+      return <h2 className="text-xl font-bold">{props.children}</h2>;
+    case "h3":
+      return <h3 className="text-lg font-semibold">{props.children}</h3>;
+    case "blockquote":
+      return (
+        <blockquote className="border-l-4 border-gray-300 pl-4 text-gray-600 italic">
+          {props.children}
+        </blockquote>
+      );
+    default:
+      return <p>{props.children}</p>;
+  }
+};
+
+const renderDecorator: RenderDecoratorFunction = (props) => {
+  switch (props.value) {
+    case "strong":
+      return <strong>{props.children}</strong>;
+    case "em":
+      return <em>{props.children}</em>;
+    case "underline":
+      return <u>{props.children}</u>;
+    default:
+      return <>{props.children}</>;
+  }
+};
+
+const renderAnnotation: RenderAnnotationFunction = (props) => {
+  if (props.schemaType.name === "link") {
+    return <span className="text-blue-600 underline">{props.children}</span>;
+  }
+  return <>{props.children}</>;
+};
+
+const renderListItem: RenderListItemFunction = (props) => {
+  return <li className="ml-6">{props.children}</li>;
+};
 
 const DECORATOR_LABELS: Record<string, string> = {
   strong: "B",
@@ -78,13 +134,12 @@ function DecoratorButton({
   const button = useDecoratorButton({ schemaType });
   const isActive = button.snapshot.matches({ enabled: "active" });
   return (
-    <button
-      type="button"
-      className={`rounded px-2 py-1 text-sm ${isActive ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-700"}`}
+    <Button
+      variant={isActive ? "primary" : "ghost"}
       onClick={() => button.send({ type: "toggle" })}
     >
       {DECORATOR_LABELS[schemaType.name] ?? schemaType.name}
-    </button>
+    </Button>
   );
 }
 
@@ -96,13 +151,77 @@ function ListToggleButton({
   const button = useListButton({ schemaType });
   const isActive = button.snapshot.matches({ enabled: "active" });
   return (
-    <button
-      type="button"
-      className={`rounded px-2 py-1 text-sm ${isActive ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-700"}`}
+    <Button
+      variant={isActive ? "primary" : "ghost"}
       onClick={() => button.send({ type: "toggle" })}
     >
       {LIST_LABELS[schemaType.name] ?? schemaType.name}
-    </button>
+    </Button>
+  );
+}
+
+function LinkButton({
+  schemaType,
+}: {
+  schemaType: ToolbarAnnotationSchemaType;
+}) {
+  const button = useAnnotationButton({ schemaType });
+  const isActive = button.snapshot.matches({ enabled: "active" });
+  const isShowingDialog = button.snapshot.matches({
+    enabled: { inactive: "showing dialog" },
+  });
+  const [href, setHref] = useState("");
+
+  return (
+    <Popover
+      open={isShowingDialog}
+      onOpenChange={(open) => {
+        if (!open) {
+          button.send({ type: "close dialog" });
+          setHref("");
+        }
+      }}
+    >
+      <Popover.Trigger asChild>
+        <Button
+          variant={isActive ? "primary" : "ghost"}
+          onClick={() => {
+            if (isActive) {
+              button.send({ type: "remove" });
+            } else {
+              button.send({ type: "open dialog" });
+            }
+          }}
+        >
+          Link
+        </Button>
+      </Popover.Trigger>
+      <Popover.Content side="bottom" align="start">
+        <form
+          className="flex gap-2"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (href) {
+              button.send({
+                type: "add",
+                annotation: { value: { href } },
+              });
+              setHref("");
+            }
+          }}
+        >
+          <Input
+            aria-label="URL"
+            placeholder="https://..."
+            value={href}
+            onChange={(e) => setHref(e.target.value)}
+          />
+          <Button variant="primary" type="submit">
+            Add
+          </Button>
+        </form>
+      </Popover.Content>
+    </Popover>
   );
 }
 
@@ -113,31 +232,38 @@ function StyleSelect({
 }) {
   const selector = useStyleSelector({ schemaTypes });
   return (
-    <select
-      className="rounded border border-gray-300 px-2 py-1 text-sm"
+    <Select
+      aria-label="Block style"
       value={selector.snapshot.context.activeStyle ?? "normal"}
-      onChange={(e) => selector.send({ type: "toggle", style: e.target.value })}
+      onValueChange={(value) =>
+        selector.send({ type: "toggle", style: value as string })
+      }
     >
       {schemaTypes.map((style) => (
-        <option key={style.name} value={style.name}>
+        <Select.Option key={style.name} value={style.name}>
           {style.name}
-        </option>
+        </Select.Option>
       ))}
-    </select>
+    </Select>
   );
 }
 
 function Toolbar() {
   const schema = useToolbarSchema({});
   return (
-    <div className="mb-3 flex flex-wrap items-center gap-2 border-b border-gray-200 pb-3">
-      {schema.styles && <StyleSelect schemaTypes={schema.styles} />}
-      {schema.decorators?.map((dec) => (
-        <DecoratorButton key={dec.name} schemaType={dec} />
-      ))}
-      {schema.lists?.map((list) => (
-        <ListToggleButton key={list.name} schemaType={list} />
-      ))}
+    <div className="mb-3 flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        {schema.decorators?.map((dec) => (
+          <DecoratorButton key={dec.name} schemaType={dec} />
+        ))}
+        {schema.lists?.map((list) => (
+          <ListToggleButton key={list.name} schemaType={list} />
+        ))}
+        {schema.annotations?.map((ann) => (
+          <LinkButton key={ann.name} schemaType={ann} />
+        ))}
+      </div>
+      <div>{schema.styles && <StyleSelect schemaTypes={schema.styles} />}</div>
     </div>
   );
 }
@@ -423,7 +549,13 @@ function PortableTextPostEditor({ post }: PortableTextPostEditorProps) {
           >
             <EventListenerPlugin on={handleMutation} />
             <Toolbar />
-            <PortableTextEditable className="min-h-64 focus:outline-none" />
+            <PortableTextEditable
+              className="min-h-64 [&_ol]:list-decimal [&_ul]:list-disc"
+              renderStyle={renderStyle}
+              renderDecorator={renderDecorator}
+              renderAnnotation={renderAnnotation}
+              renderListItem={renderListItem}
+            />
           </EditorProvider>
         </PaddedSurface>
       </div>
