@@ -2,7 +2,7 @@ import {
   Breadcrumbs,
   Button,
   Input,
-  Popover,
+  Dialog,
   Select,
   Switch,
   Text,
@@ -25,7 +25,6 @@ import type {
 import { EventListenerPlugin } from "@portabletext/editor/plugins";
 import {
   useAnnotationButton,
-  useBlockObjectButton,
   useDecoratorButton,
   useListButton,
   useStyleSelector,
@@ -33,7 +32,6 @@ import {
 } from "@portabletext/toolbar";
 import type {
   ToolbarAnnotationSchemaType,
-  ToolbarBlockObjectSchemaType,
   ToolbarDecoratorSchemaType,
   ToolbarListSchemaType,
   ToolbarStyleSchemaType,
@@ -79,7 +77,12 @@ const schemaDefinition = defineSchema({
   annotations: [{ name: "link" }],
   lists: [{ name: "bullet" }, { name: "number" }],
   inlineObjects: [],
-  blockObjects: [{ name: "image" }],
+  blockObjects: [
+    { name: "image" },
+    { name: "line" },
+    { name: "break" },
+    { name: "code" },
+  ],
 });
 
 const renderStyle: RenderStyleFunction = (props) => {
@@ -203,11 +206,52 @@ function ImageBlockObjectEditor({
   );
 }
 
+function CodeBlockObjectEditor({
+  value,
+  path,
+}: {
+  value: PortableTextBlock;
+  path: BlockPath;
+}) {
+  const editor = useEditor();
+  const text = (value as Record<string, unknown>).text as string | undefined;
+
+  return (
+    <div className="my-2">
+      <textarea
+        className="w-full rounded border border-gray-200 bg-gray-50 p-3 font-mono text-sm"
+        value={text ?? ""}
+        onChange={(e) =>
+          editor.send({
+            type: "block.set",
+            at: path,
+            props: { text: e.target.value },
+          })
+        }
+        rows={6}
+        placeholder="Code..."
+      />
+    </div>
+  );
+}
+
 const renderBlock: RenderBlockFunction = (props) => {
-  if (props.schemaType.name === "image") {
-    return <ImageBlockObjectEditor value={props.value} path={props.path} />;
+  switch (props.schemaType.name) {
+    case "image":
+      return <ImageBlockObjectEditor value={props.value} path={props.path} />;
+    case "line":
+      return <hr className="my-4 border-gray-300" />;
+    case "break":
+      return (
+        <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">
+          Preview break
+        </div>
+      );
+    case "code":
+      return <CodeBlockObjectEditor value={props.value} path={props.path} />;
+    default:
+      return <div>{props.children}</div>;
   }
-  return <div>{props.children}</div>;
 };
 
 const DECORATOR_LABELS: Record<string, string> = {
@@ -268,55 +312,77 @@ function LinkButton({
   const [href, setHref] = useState("");
 
   return (
-    <Popover
-      open={isShowingDialog}
-      onOpenChange={(open) => {
-        if (!open) {
-          button.send({ type: "close dialog" });
-          setHref("");
-        }
-      }}
-    >
-      <Popover.Trigger asChild>
-        <Button
-          variant={isActive ? "primary" : "ghost"}
-          onClick={() => {
-            if (isActive) {
-              button.send({ type: "remove" });
-            } else {
-              button.send({ type: "open dialog" });
-            }
-          }}
-        >
-          Link
-        </Button>
-      </Popover.Trigger>
-      <Popover.Content side="bottom" align="start">
-        <form
-          className="flex gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (href) {
-              button.send({
-                type: "add",
-                annotation: { value: { href } },
-              });
-              setHref("");
-            }
-          }}
-        >
-          <Input
-            aria-label="URL"
-            placeholder="https://..."
-            value={href}
-            onChange={(e) => setHref(e.target.value)}
-          />
-          <Button variant="primary" type="submit">
-            Add
-          </Button>
-        </form>
-      </Popover.Content>
-    </Popover>
+    <>
+      <Button
+        variant={isActive ? "primary" : "ghost"}
+        onClick={() => {
+          if (isActive) {
+            button.send({ type: "remove" });
+          } else {
+            button.send({ type: "open dialog" });
+          }
+        }}
+      >
+        🔗
+      </Button>
+      <Dialog.Root
+        open={isShowingDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            button.send({ type: "close dialog" });
+            setHref("");
+          }
+        }}
+      >
+        <Dialog className="p-8" size="sm">
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <Dialog.Title className="text-2xl font-semibold">
+              Add Link
+            </Dialog.Title>
+            <Dialog.Close
+              aria-label="Close"
+              render={(props) => (
+                <Button {...props} variant="secondary" aria-label="Close">
+                  ✕
+                </Button>
+              )}
+            />
+          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (href) {
+                button.send({
+                  type: "add",
+                  annotation: { value: { href } },
+                });
+                setHref("");
+              }
+            }}
+          >
+            <Input
+              aria-label="URL"
+              placeholder="https://..."
+              value={href}
+              onChange={(e) => setHref(e.target.value)}
+              autoFocus
+            />
+            <div className="mt-8 flex justify-end gap-2">
+              <Dialog.Close
+                render={(props) => (
+                  <Button {...props} variant="secondary">
+                    Cancel
+                  </Button>
+                )}
+              />
+              <Button variant="primary" type="submit">
+                Add
+              </Button>
+            </div>
+          </form>
+        </Dialog>
+      </Dialog.Root>
+    </>
   );
 }
 
@@ -343,24 +409,31 @@ function StyleSelect({
   );
 }
 
-function ImageInsertButton({
-  schemaType,
+function BlockObjectInsertButton({
+  name,
+  label,
+  defaultValue,
 }: {
-  schemaType: ToolbarBlockObjectSchemaType;
+  name: string;
+  label: string;
+  defaultValue?: Record<string, unknown>;
 }) {
-  const button = useBlockObjectButton({ schemaType });
+  const editor = useEditor();
   return (
     <Button
       variant="ghost"
       onClick={() =>
-        button.send({
-          type: "insert",
-          value: { key: "", alt: "" },
-          placement: undefined,
+        editor.send({
+          type: "insert.block object",
+          blockObject: {
+            name,
+            value: defaultValue ?? {},
+          },
+          placement: "auto",
         })
       }
     >
-      Image
+      {label}
     </Button>
   );
 }
@@ -368,7 +441,29 @@ function ImageInsertButton({
 function Toolbar() {
   const schema = useToolbarSchema({});
   return (
-    <div className="mb-3 flex items-center justify-between">
+    <div className="mb-3 flex flex-col gap-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {schema.annotations?.map((ann) => (
+            <LinkButton key={ann.name} schemaType={ann} />
+          ))}
+          <BlockObjectInsertButton
+            name="image"
+            label="🖼️"
+            defaultValue={{ key: "", alt: "" }}
+          />
+          <BlockObjectInsertButton
+            name="code"
+            label="💻"
+            defaultValue={{ text: "" }}
+          />
+          <BlockObjectInsertButton name="line" label="➖" />
+          <BlockObjectInsertButton name="break" label="✂️" />
+        </div>
+        <div>
+          {schema.styles && <StyleSelect schemaTypes={schema.styles} />}
+        </div>
+      </div>
       <div className="flex items-center gap-2">
         {schema.decorators?.map((dec) => (
           <DecoratorButton key={dec.name} schemaType={dec} />
@@ -376,14 +471,7 @@ function Toolbar() {
         {schema.lists?.map((list) => (
           <ListToggleButton key={list.name} schemaType={list} />
         ))}
-        {schema.annotations?.map((ann) => (
-          <LinkButton key={ann.name} schemaType={ann} />
-        ))}
-        {schema.blockObjects?.map((obj) => (
-          <ImageInsertButton key={obj.name} schemaType={obj} />
-        ))}
       </div>
-      <div>{schema.styles && <StyleSelect schemaTypes={schema.styles} />}</div>
     </div>
   );
 }
