@@ -2,35 +2,30 @@
    CSS Variables
    ========================================================================== */
 :root {
+  color-scheme: light dark;
+
   /* defined widths */
   --page-max-width: 42rem;
 
   /* fonts */
   --font-family-display: system-ui;
-  --font-family-header: ui-rounded, system-ui;
+  --font-family-header: ui-rounded, "SF Pro Rounded", system-ui;
   --font-family-text: system-ui;
-  --font-family-rounded: ui-rounded, system-ui;
+  --font-family-rounded: ui-rounded, "SF Pro Rounded", system-ui;
 
   /* font weights */
   --font-weight-bold: 900;
   --font-weight-extreme: 900;
 
   /* general purpose colors */
-  --background-color: #f0ece9;
   --blockquote-border-color: #e4e1de;
   --line-separator-color: rgba(0, 0, 0, 0.05);
 
-  /* header colors */
-  --nav-link-color: rgba(0, 0, 0, 0.5);
-  --nav-link-hover-color: #302b29;
-
   /* text colors */
   --header-color: #2e2e2e;
-  --header-link-color: #284273;
-  --header-link-hover-color: #35589c;
   --body-color: #242424;
-  --link-color: #35589c;
-  --link-hover-color: #302b29;
+  --link-color: #0064e0;
+  --link-hover-color: color-mix(in srgb, #0064e0, black 20%);
   --faded-text-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -38,22 +33,22 @@
 @media screen and (prefers-color-scheme: dark) {
   :root {
     /* general purpose colors */
-    --background-color: #101212;
     --blockquote-border-color: #313641;
     --line-separator-color: rgba(255, 255, 255, 0.05);
 
-    /* header colors */
-    --nav-link-color: rgba(255, 255, 255, 0.5);
-    --nav-link-hover-color: #dddddd;
-
     /* text colors */
     --header-color: #dddddd;
-    --header-link-color: #70b0ff;
-    --header-link-hover-color: #5da6ff;
     --body-color: #f7f7f7;
-    --link-color: #70b0ff;
-    --link-hover-color: #5da6ff;
+    --link-color: #1e8dff;
+    --link-hover-color: color-mix(in srgb, #1e8dff, black 20%);
     --faded-text-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+@supports (color: AccentColor) {
+  :root {
+    --link-color: AccentColor;
+    --link-hover-color: color-mix(in srgb, AccentColor, black 20%);
   }
 }
 
@@ -94,7 +89,6 @@ body {
   margin: 0 auto;
   padding: 0 1em;
   max-width: var(--page-max-width);
-  background-color: var(--background-color);
 }
 
 h1,
@@ -106,11 +100,11 @@ h3 {
 }
 
 :is(h1, h2, h3) a {
-  color: var(--header-link-color);
+  color: var(--link-color);
 }
 
 :is(h1, h2, h3) a:hover {
-  color: var(--header-link-hover-color);
+  color: var(--link-hover-color);
 }
 
 h1 {
@@ -185,14 +179,6 @@ nav {
   font-weight: var(--font-weight-extreme);
   display: flex;
   gap: 1rem;
-}
-
-nav a {
-  color: var(--nav-link-color);
-}
-
-nav a:hover {
-  color: var(--nav-link-hover-color);
 }
 
 /* ==========================================================================
