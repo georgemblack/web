@@ -1,14 +1,17 @@
-import type { Post } from "../../web-db/src/types";
+import type { Post, WebDbFile } from "../../web-db/src/types";
 
 export default {
   async scheduled(event, env, ctx): Promise<void> {
-    const posts = await queryPosts(env.WEB_DB_SERVICE);
-    const postsJson = JSON.stringify(posts);
-    const postsHash = await sha256(postsJson);
+    const [posts, files] = await Promise.all([
+      queryPosts(env.WEB_DB_SERVICE),
+      env.WEB_DB_SERVICE.listAllFiles(),
+    ]);
+
+    const contentHash = await sha256(JSON.stringify({ posts, files }));
 
     const latestHash = await getLatestBackupHash(env.BACKUP_BUCKET);
 
-    if (latestHash !== null && latestHash === postsHash) {
+    if (latestHash !== null && latestHash === contentHash) {
       console.log("No changes detected since last backup. Skipping.");
       return;
     }
@@ -17,18 +20,22 @@ export default {
     const key = `backups/${now.toISOString().replace(/[:.]/g, "-")}.json`;
 
     const backup = {
-      version: 1,
+      version: 2,
       created: now.toISOString(),
       postCount: posts.length,
+      fileCount: files.length,
       posts,
+      files,
     };
 
     await env.BACKUP_BUCKET.put(key, JSON.stringify(backup, null, 2), {
       httpMetadata: { contentType: "application/json" },
-      customMetadata: { postsHash },
+      customMetadata: { contentHash },
     });
 
-    console.log(`Backup saved: ${key} (${posts.length} posts)`);
+    console.log(
+      `Backup saved: ${key} (${posts.length} posts, ${files.length} files)`,
+    );
   },
 } satisfies ExportedHandler<Env>;
 
@@ -58,5 +65,5 @@ async function getLatestBackupHash(bucket: R2Bucket): Promise<string | null> {
     .at(-1)!;
 
   const head = await bucket.head(latest.key);
-  return head?.customMetadata?.postsHash ?? null;
+  return head?.customMetadata?.contentHash ?? null;
 }

@@ -268,6 +268,16 @@ export default class WebDb extends WorkerEntrypoint<Env> {
     }));
   }
 
+  async listAllFiles(): Promise<WebDbFile[]> {
+    const result = await this.env.WEB_DB.prepare(
+      "SELECT key, type, year, optimized FROM files ORDER BY year DESC, key",
+    ).all<{ key: string; type: FileType; year: number; optimized: number }>();
+    return result.results.map((row) => ({
+      ...row,
+      optimized: row.optimized === 1,
+    }));
+  }
+
   async getFile(key: string): Promise<WebDbFile | null> {
     const row = await this.env.WEB_DB.prepare(
       "SELECT key, type, year, optimized FROM files WHERE key = ?",
