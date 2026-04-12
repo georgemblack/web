@@ -4,7 +4,6 @@ This is a monorepo of services used to power my personal website. Each top-level
 
 * `web`: The front-end of the website
 * `cms`: The content management system
-* `web-db`: Database functions
 * `cms-backup`: Data backup
 * `files`: File serving and caching
 

@@ -1,48 +1,44 @@
 import { createServerFn } from "@tanstack/react-start";
 import { env } from "cloudflare:workers";
 
+import * as queries from "./queries";
 import {
   createPostInputSchema,
+  ListPostsFilters,
   Post,
   PostListItem,
-  PostStatus,
   RenderedPost,
   updatePostInputSchema,
 } from "./types";
 
-export interface ListPostsFilters {
-  hidden?: boolean;
-  state?: PostStatus;
-}
-
 export const getPost = createServerFn({ method: "GET" })
   .inputValidator((id: string) => id)
   .handler(async ({ data: id }): Promise<Post | null> => {
-    return env.WEB_DB_SERVICE.getPost(id);
+    return queries.getPost(env.WEB_DB, id);
   });
 
 export const getRenderedPost = createServerFn({ method: "GET" })
   .inputValidator((id: string) => id)
   .handler(async ({ data: id }): Promise<RenderedPost | null> => {
-    return env.WEB_DB_SERVICE.getRenderedPost(id);
+    return queries.getRenderedPost(env.WEB_DB, id);
   });
 
 export const listPosts = createServerFn({ method: "GET" })
   .inputValidator((input: ListPostsFilters | undefined) => input)
   .handler(async ({ data: filters }): Promise<PostListItem[]> => {
-    return env.WEB_DB_SERVICE.listPosts(filters);
+    return queries.listPosts(env.WEB_DB, filters);
   });
 
 export const createPost = createServerFn({ method: "POST" })
   .inputValidator(createPostInputSchema)
   .handler(async ({ data: input }): Promise<Post> => {
-    return env.WEB_DB_SERVICE.createPost(input);
+    return queries.createPost(env.WEB_DB, input);
   });
 
 export const updatePost = createServerFn({ method: "POST" })
   .inputValidator(updatePostInputSchema)
   .handler(async ({ data: input }): Promise<Post | null> => {
-    const post = await env.WEB_DB_SERVICE.updatePost(input);
+    const post = await queries.updatePost(env.WEB_DB, input);
     if (post && post.status === "published") {
       await fetch(env.DEPLOY_HOOK_URL, { method: "POST" });
     }
@@ -52,8 +48,8 @@ export const updatePost = createServerFn({ method: "POST" })
 export const deletePost = createServerFn({ method: "POST" })
   .inputValidator((id: string) => id)
   .handler(async ({ data: id }): Promise<boolean> => {
-    const post = await env.WEB_DB_SERVICE.getPost(id);
-    const deleted = await env.WEB_DB_SERVICE.deletePost(id);
+    const post = await queries.getPost(env.WEB_DB, id);
+    const deleted = await queries.deletePost(env.WEB_DB, id);
     if (deleted && post?.status === "published") {
       await fetch(env.DEPLOY_HOOK_URL, { method: "POST" });
     }

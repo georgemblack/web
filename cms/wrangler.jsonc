@@ -12,13 +12,6 @@
       "remote": true,
     },
   ],
-  "services": [
-    {
-      "binding": "WEB_DB_SERVICE",
-      "service": "web-db",
-      "remote": true,
-    },
-  ],
   "r2_buckets": [
     {
       "binding": "WEB_FILES",

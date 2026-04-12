@@ -113,6 +113,11 @@ export interface PostListItem {
   portable_text: boolean;
 }
 
+export interface ListPostsFilters {
+  hidden?: boolean;
+  state?: PostStatus;
+}
+
 export type FileType = "IMAGE" | "VIDEO" | "DOCUMENT";
 
 export interface WebFile {
@@ -128,8 +133,6 @@ const iso8601String = z.iso.datetime();
 const slugString = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
 const urlString = z.string().url().nullable();
 
-// Content validation happens in web-db. The CMS schemas validate metadata only.
-
 export const createPostInputSchema = z.object({
   title: z.string(),
   published: iso8601String,
@@ -138,7 +141,7 @@ export const createPostInputSchema = z.object({
   hidden: z.boolean(),
   gallery: z.boolean(),
   portable_text: z.boolean(),
-  content: z.any(),
+  content: z.array(z.any()),
   external_link: urlString,
 });
 
@@ -151,7 +154,7 @@ export const updatePostInputSchema = z.object({
   hidden: z.boolean(),
   gallery: z.boolean(),
   portable_text: z.boolean(),
-  content: z.any(),
+  content: z.array(z.any()),
   external_link: urlString,
 });
 

@@ -89,10 +89,6 @@ export function render(content: ContentBlock[]): string {
   return content.map(renderBlock).join("");
 }
 
-/**
- * Renders HTML for blocks up until the first BreakBlock.
- * Returns null if there is no BreakBlock in the content.
- */
 export function renderPreview(content: ContentBlock[]): string | null {
   const breakIndex = content.findIndex((block) => block.type === "break");
   if (breakIndex === -1) {
@@ -101,19 +97,12 @@ export function renderPreview(content: ContentBlock[]): string | null {
   return content.slice(0, breakIndex).map(renderBlock).join("");
 }
 
-/**
- * Renders Portable Text blocks to HTML.
- */
 export function renderPortableText(
   blocks: Array<Record<string, unknown>>,
 ): string {
   return toHTML(blocks as unknown as PortableTextBlock[]);
 }
 
-/**
- * Renders Portable Text blocks to preview HTML.
- * Uses the first block only as preview, or null if empty.
- */
 export function renderPortableTextPreview(
   blocks: Array<Record<string, unknown>>,
 ): string | null {
