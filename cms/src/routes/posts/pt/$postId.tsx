@@ -149,7 +149,10 @@ function ImageBlockObjectEditor({
   };
 
   return (
-    <div className="my-2 flex flex-col gap-2 rounded border border-gray-200 p-3">
+    <div
+      contentEditable={false}
+      className="my-2 flex flex-col gap-2 rounded border border-gray-200 p-3"
+    >
       <div className="flex items-center gap-2">
         <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded border border-gray-300 bg-gray-100">
           {key && (
@@ -217,7 +220,7 @@ function CodeBlockObjectEditor({
   const text = (value as Record<string, unknown>).text as string | undefined;
 
   return (
-    <div className="my-2">
+    <div contentEditable={false} className="my-2">
       <textarea
         className="w-full rounded border border-gray-200 bg-gray-50 p-3 font-mono text-sm"
         value={text ?? ""}
