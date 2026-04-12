@@ -13,3 +13,10 @@ CREATE TABLE posts (
     deleted INTEGER NOT NULL DEFAULT 0,
     portable_text INTEGER NOT NULL DEFAULT 0
 );
+
+CREATE TABLE files (
+    key TEXT PRIMARY KEY,
+    type TEXT NOT NULL,
+    year INTEGER NOT NULL,
+    optimized INTEGER NOT NULL DEFAULT 0
+);

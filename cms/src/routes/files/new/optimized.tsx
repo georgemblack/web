@@ -17,7 +17,7 @@ function NewOptimizedFilePage() {
 
   const [year, setYear] = useState(String(currentYear));
   const [files, setFiles] = useState<
-    Array<{ fileName: string; optimized: boolean }>
+    Array<{ key: string; optimized: boolean }>
   >([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [selectedKey, setSelectedKey] = useState("");
@@ -34,7 +34,7 @@ function NewOptimizedFilePage() {
     setSelectedKey("");
     setError(null);
     try {
-      const result = await listFiles({ data: `${selectedYear}/` });
+      const result = await listFiles({ data: Number(selectedYear) });
       setFiles(result);
     } finally {
       setLoadingFiles(false);
@@ -106,8 +106,8 @@ function NewOptimizedFilePage() {
                   <>
                     <Select.Option value="">Select an image...</Select.Option>
                     {unoptimizedFiles.map((f) => (
-                      <Select.Option key={f.fileName} value={f.fileName}>
-                        {f.fileName}
+                      <Select.Option key={f.key} value={f.key}>
+                        {f.key}
                       </Select.Option>
                     ))}
                   </>

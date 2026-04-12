@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+export type FileType = "IMAGE" | "VIDEO" | "DOCUMENT";
+
+export interface WebDbFile {
+  key: string;
+  type: FileType;
+  year: number;
+  optimized: boolean;
+}
+
 export type PostStatus = "draft" | "published";
 
 export interface MarkdownBlock {

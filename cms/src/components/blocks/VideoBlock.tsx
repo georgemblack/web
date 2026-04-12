@@ -21,7 +21,7 @@ export function VideoBlockEditor({
             className="flex-1"
             value={block.key}
             onChange={(e) => onChange({ ...block, key: e.target.value })}
-            placeholder="2020/video.mp4"
+            placeholder="video.mp4"
             aria-label="Video key"
           />
           {fileNames.length > 0 && (

@@ -25,7 +25,7 @@ export const Route = createFileRoute("/files/")({
     year: String(search.year ?? new Date().getFullYear()),
   }),
   loaderDeps: ({ search }) => ({ year: search.year }),
-  loader: async ({ deps }) => await listFiles({ data: `${deps.year}/` }),
+  loader: async ({ deps }) => await listFiles({ data: Number(deps.year) }),
 });
 
 function FilesPage() {
@@ -39,7 +39,7 @@ function FilesPage() {
 
   const filteredFiles = useMemo(() => {
     return files.filter((f) => {
-      const matchesSearch = f.fileName
+      const matchesSearch = f.key
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
       const matchesFilter = !showUnoptimizedOnly || !f.optimized;
@@ -111,14 +111,14 @@ function FilesPage() {
         </PaddedSurface>
         <div className="mt-4 flex flex-col gap-4">
           {filteredFiles.map((f) => (
-            <div className="flex items-center gap-3" key={f.fileName}>
+            <div className="flex items-center gap-3" key={f.key}>
               <img
-                src={`https://george.black/files/${f.fileName}`}
+                src={`https://george.black/files/${f.key}`}
                 className="h-12 w-12 rounded object-cover"
                 alt=""
               />
               <div className="min-w-0 flex-1">
-                <div className="truncate font-mono text-sm">{f.fileName}</div>
+                <div className="truncate font-mono text-sm">{f.key}</div>
                 {f.optimized && (
                   <Badge variant="primary" className="mt-1">
                     optimized
@@ -130,7 +130,7 @@ function FilesPage() {
                   variant="secondary"
                   shape="square"
                   aria-label="Toggle optimize"
-                  onClick={() => handleToggleOptimize(f.fileName)}
+                  onClick={() => handleToggleOptimize(f.key)}
                 >
                   🐳
                 </Button>
@@ -138,7 +138,7 @@ function FilesPage() {
                   variant="secondary-destructive"
                   shape="square"
                   aria-label="Delete file"
-                  onClick={() => handleDelete(f.fileName)}
+                  onClick={() => handleDelete(f.key)}
                 >
                   🗑️
                 </Button>

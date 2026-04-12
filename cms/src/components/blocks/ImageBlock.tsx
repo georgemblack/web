@@ -30,7 +30,7 @@ export function ImageBlockEditor({
             className="flex-1"
             value={block.key}
             onChange={(e) => onChange({ ...block, key: e.target.value })}
-            placeholder="2020/picture.jpg"
+            placeholder="picture.jpg"
             aria-label="Image key"
           />
           {fileNames.length > 0 && (

@@ -4,9 +4,11 @@ import { useState } from "react";
 
 import PaddedSurface from "@/components/PaddedSurface";
 import { uploadFile } from "@/data/files";
+import type { FileType } from "@/data/types";
 
 const currentYear = new Date().getFullYear();
 const YEARS = Array.from({ length: 16 }, (_, i) => String(2015 + i));
+const FILE_TYPES: FileType[] = ["IMAGE", "VIDEO", "DOCUMENT"];
 
 export const Route = createFileRoute("/files/new/")({
   component: NewFilePage,
@@ -17,6 +19,7 @@ function NewFilePage() {
 
   const [year, setYear] = useState(String(currentYear));
   const [title, setTitle] = useState("");
+  const [fileType, setFileType] = useState<FileType>("IMAGE");
   const [optimize, setOptimize] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -28,6 +31,7 @@ function NewFilePage() {
       const formData = new FormData();
       formData.append("year", year);
       formData.append("title", title);
+      formData.append("type", fileType);
       formData.append("file", file);
       if (optimize) formData.append("optimize", "on");
       await uploadFile({ data: formData });
@@ -60,6 +64,17 @@ function NewFilePage() {
                 {YEARS.map((y) => (
                   <Select.Option key={y} value={y}>
                     {y}
+                  </Select.Option>
+                ))}
+              </Select>
+              <Select
+                className="w-36"
+                value={fileType}
+                onValueChange={(v) => setFileType((v as FileType) || "IMAGE")}
+              >
+                {FILE_TYPES.map((t) => (
+                  <Select.Option key={t} value={t}>
+                    {t}
                   </Select.Option>
                 ))}
               </Select>

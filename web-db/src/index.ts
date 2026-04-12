@@ -8,6 +8,8 @@ import {
 } from "./transform";
 import {
   ContentBlock,
+  FileType,
+  WebDbFile,
   Post,
   PostListItem,
   PostStatus,
@@ -20,6 +22,8 @@ import {
 
 export type {
   ContentBlock,
+  FileType,
+  WebDbFile,
   Post,
   PostListItem,
   RenderedPost,
@@ -248,6 +252,63 @@ export default class WebDb extends WorkerEntrypoint<Env> {
   async deletePost(id: string): Promise<boolean> {
     await this.env.WEB_DB.prepare("UPDATE posts SET deleted = 1 WHERE id = ?")
       .bind(id)
+      .run();
+    return true;
+  }
+
+  async listFiles(year: number): Promise<WebDbFile[]> {
+    const result = await this.env.WEB_DB.prepare(
+      "SELECT key, type, year, optimized FROM files WHERE year = ? ORDER BY key",
+    )
+      .bind(year)
+      .all<{ key: string; type: FileType; year: number; optimized: number }>();
+    return result.results.map((row) => ({
+      ...row,
+      optimized: row.optimized === 1,
+    }));
+  }
+
+  async getFile(key: string): Promise<WebDbFile | null> {
+    const row = await this.env.WEB_DB.prepare(
+      "SELECT key, type, year, optimized FROM files WHERE key = ?",
+    )
+      .bind(key)
+      .first<{
+        key: string;
+        type: FileType;
+        year: number;
+        optimized: number;
+      }>();
+    if (!row) return null;
+    return { ...row, optimized: row.optimized === 1 };
+  }
+
+  async createFile(
+    key: string,
+    type: FileType,
+    year: number,
+    optimized: boolean,
+  ): Promise<WebDbFile> {
+    await this.env.WEB_DB.prepare(
+      "INSERT INTO files (key, type, year, optimized) VALUES (?, ?, ?, ?)",
+    )
+      .bind(key, type, year, optimized ? 1 : 0)
+      .run();
+    return { key, type, year, optimized };
+  }
+
+  async updateFileOptimized(key: string, optimized: boolean): Promise<boolean> {
+    await this.env.WEB_DB.prepare(
+      "UPDATE files SET optimized = ? WHERE key = ?",
+    )
+      .bind(optimized ? 1 : 0, key)
+      .run();
+    return true;
+  }
+
+  async deleteFile(key: string): Promise<boolean> {
+    await this.env.WEB_DB.prepare("DELETE FROM files WHERE key = ?")
+      .bind(key)
       .run();
     return true;
   }

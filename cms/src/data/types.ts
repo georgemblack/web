@@ -113,8 +113,12 @@ export interface PostListItem {
   portable_text: boolean;
 }
 
+export type FileType = "IMAGE" | "VIDEO" | "DOCUMENT";
+
 export interface WebFile {
-  fileName: string;
+  key: string;
+  type: FileType;
+  year: number;
   optimized: boolean;
 }
 
