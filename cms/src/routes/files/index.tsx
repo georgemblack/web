@@ -112,11 +112,17 @@ function FilesPage() {
         <div className="mt-4 flex flex-col gap-4">
           {filteredFiles.map((f) => (
             <div className="flex items-center gap-3" key={f.key}>
-              <img
-                src={`https://george.black/files/${f.key}`}
-                className="h-12 w-12 rounded object-cover"
-                alt=""
-              />
+              {f.type === "DOCUMENT" ? (
+                <div className="flex h-12 w-12 items-center justify-center rounded bg-gray-100 text-2xl">
+                  📄
+                </div>
+              ) : (
+                <img
+                  src={`https://george.black/files/${f.key}`}
+                  className="h-12 w-12 rounded object-cover"
+                  alt=""
+                />
+              )}
               <div className="min-w-0 flex-1">
                 <div className="truncate font-mono text-sm">{f.key}</div>
                 {f.optimized && (

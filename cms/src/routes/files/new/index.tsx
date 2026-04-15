@@ -70,7 +70,11 @@ function NewFilePage() {
               <Select
                 className="w-36"
                 value={fileType}
-                onValueChange={(v) => setFileType((v as FileType) || "IMAGE")}
+                onValueChange={(v) => {
+                  const next = (v as FileType) || "IMAGE";
+                  setFileType(next);
+                  if (next !== "IMAGE") setOptimize(false);
+                }}
               >
                 {FILE_TYPES.map((t) => (
                   <Select.Option key={t} value={t}>
@@ -86,13 +90,15 @@ function NewFilePage() {
                 onChange={(e) => setTitle(e.target.value)}
               />
             </div>
-            <div className="flex items-center gap-3">
-              <Switch
-                label="Optimize"
-                checked={optimize}
-                onCheckedChange={setOptimize}
-              />
-            </div>
+            {fileType === "IMAGE" && (
+              <div className="flex items-center gap-3">
+                <Switch
+                  label="Optimize"
+                  checked={optimize}
+                  onCheckedChange={setOptimize}
+                />
+              </div>
+            )}
             <div className="flex items-center gap-3">
               <input
                 type="file"
