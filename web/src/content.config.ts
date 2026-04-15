@@ -48,7 +48,12 @@ const posts = defineCollection({
     external_link: z.string().nullable(),
     content_html: z.string(),
     preview_html: z.string().nullable(),
-    images: z.array(z.string()),
+    images: z.array(
+      z.object({
+        src: z.string(),
+        alt: z.string(),
+      }),
+    ),
   }),
 });
 

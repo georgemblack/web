@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { post }: { post: Post } = Astro.props;
-const ogImage = post.images.length > 0 ? post.images[0] : undefined;
+const ogImage = post.images.length > 0 ? post.images[0].src : undefined;
 ---
 
 <!doctype html>

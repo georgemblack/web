@@ -25,7 +25,7 @@ const selected = visible.slice(0, 20);
               {images(item).map((image) => {
                 return (
                   <a href={url(item)}>
-                    <img src={image} />
+                    <img src={image.src} alt={image.alt} />
                   </a>
                 );
               })}

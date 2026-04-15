@@ -14,6 +14,7 @@ import {
   PostListItem,
   PostStatus,
   RenderedPost,
+  RenderedPostImage,
   UpdatePostInput,
   WebFile,
   createPostInputSchema,
@@ -80,7 +81,7 @@ export async function getRenderedPost(
   }
 
   const isPortableText = row.portable_text === 1;
-  let images: string[] = [];
+  let images: RenderedPostImage[] = [];
 
   if (!isPortableText) {
     const blocks = JSON.parse(row.content) as ContentBlock[];
@@ -89,7 +90,7 @@ export async function getRenderedPost(
         (block): block is ContentBlock & { type: "image" } =>
           block.type === "image",
       )
-      .map((block) => `/files/${block.key}`);
+      .map((block) => ({ src: `/files/${block.key}`, alt: block.alt }));
   }
 
   return {

@@ -100,7 +100,12 @@ export interface RenderedPost {
   portable_text: boolean;
   content_html: string;
   preview_html: string | null;
-  images: string[];
+  images: RenderedPostImage[];
+}
+
+export interface RenderedPostImage {
+  src: string;
+  alt: string;
 }
 
 export interface PostListItem {

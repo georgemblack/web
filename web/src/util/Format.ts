@@ -1,3 +1,8 @@
+export interface PostImage {
+  src: string;
+  alt: string;
+}
+
 export interface Post {
   title: string;
   published: string;
@@ -7,7 +12,7 @@ export interface Post {
   external_link: string | null;
   content_html: string;
   preview_html: string | null;
-  images: string[];
+  images: PostImage[];
 }
 
 export function slug(item: Post): string {
@@ -36,10 +41,10 @@ export function preview(item: Post): string {
 }
 
 export function image(item: Post): string {
-  return item.images[0] || "";
+  return item.images[0]?.src || "";
 }
 
-export function images(item: Post): string[] {
+export function images(item: Post): PostImage[] {
   return item.images.slice(0, 6);
 }
 
