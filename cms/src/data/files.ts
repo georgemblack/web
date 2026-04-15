@@ -2,7 +2,11 @@ import { createServerFn } from "@tanstack/react-start";
 import { env } from "cloudflare:workers";
 
 import * as queries from "./queries";
-import type { FileType, WebFile } from "./types";
+import type {
+  UploadFileInput,
+  UploadOptimizedFileInput,
+  WebFile,
+} from "./types";
 
 const OPTIMIZED_IMAGE_FORMAT = "image/avif";
 const OPTIMIZED_IMAGE_WIDTH = 1200;
@@ -15,41 +19,46 @@ export const listFiles = createServerFn({ method: "GET" })
   });
 
 export const uploadFile = createServerFn({ method: "POST" })
-  .inputValidator((d: FormData) => d)
-  .handler(async ({ data: formData }) => {
-    const year = Number(formData.get("year") as string);
-    const title = formData.get("title") as string;
-    const file = formData.get("file") as File;
-    const type = formData.get("type") as FileType;
-    const optimize = formData.get("optimize") === "on";
+  .inputValidator((input: UploadFileInput) => input)
+  .handler(
+    async ({
+      data: { year, title, type, fileName, contentType, bytes, optimize },
+    }) => {
+      const formattedTitle = title.toLowerCase().split(/\s+/).join("-");
+      const extension = fileName.split(".").pop()?.toLowerCase() ?? "";
+      const key = `${formattedTitle}.${extension}`;
 
-    const formattedTitle = title.toLowerCase().split(/\s+/).join("-");
-    const extension = file.name.split(".").pop()?.toLowerCase() ?? "";
-    const key = `${formattedTitle}.${extension}`;
+      if (optimize) {
+        const stream = new ReadableStream<Uint8Array>({
+          start(controller) {
+            controller.enqueue(bytes);
+            controller.close();
+          },
+        });
+        const optimized = await env.IMAGES.input(stream)
+          .transform({ width: OPTIMIZED_IMAGE_WIDTH })
+          .output({ format: OPTIMIZED_IMAGE_FORMAT });
 
-    if (optimize) {
-      const optimized = await env.IMAGES.input(file.stream())
-        .transform({ width: OPTIMIZED_IMAGE_WIDTH })
-        .output({ format: OPTIMIZED_IMAGE_FORMAT });
+        await env.WEB_FILES_CACHE.put(key, optimized.image(), {
+          httpMetadata: {
+            contentType: optimized.contentType(),
+            cacheControl: CACHE_CONTROL,
+          },
+        });
+      }
 
-      await env.WEB_FILES_CACHE.put(key, optimized.image(), {
+      await env.WEB_FILES.put(key, bytes, {
         httpMetadata: {
-          contentType: optimized.contentType(),
+          contentType,
           cacheControl: CACHE_CONTROL,
         },
       });
-    }
 
-    await env.WEB_FILES.put(key, file, {
-      httpMetadata: {
-        cacheControl: CACHE_CONTROL,
-      },
-    });
+      await queries.createFile(env.WEB_DB, key, type, year, optimize);
 
-    await queries.createFile(env.WEB_DB, key, type, year, optimize);
-
-    return { key };
-  });
+      return { key };
+    },
+  );
 
 export const toggleOptimize = createServerFn({ method: "POST" })
   .inputValidator((key: string) => key)
@@ -83,19 +92,16 @@ export const toggleOptimize = createServerFn({ method: "POST" })
   });
 
 export const uploadOptimizedFile = createServerFn({ method: "POST" })
-  .inputValidator((d: FormData) => d)
-  .handler(async ({ data: formData }) => {
-    const key = formData.get("key") as string;
-    const file = formData.get("file") as File;
-
+  .inputValidator((input: UploadOptimizedFileInput) => input)
+  .handler(async ({ data: { key, contentType, bytes } }) => {
     const exists = await env.WEB_FILES_CACHE.head(key);
     if (exists) {
       throw new Error("An optimized version already exists for this file");
     }
 
-    await env.WEB_FILES_CACHE.put(key, file, {
+    await env.WEB_FILES_CACHE.put(key, bytes, {
       httpMetadata: {
-        contentType: file.type,
+        contentType,
         cacheControl: CACHE_CONTROL,
       },
     });

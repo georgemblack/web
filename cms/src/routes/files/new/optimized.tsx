@@ -54,10 +54,10 @@ function NewOptimizedFilePage() {
     setUploading(true);
     setError(null);
     try {
-      const formData = new FormData();
-      formData.append("key", selectedKey);
-      formData.append("file", file);
-      await uploadOptimizedFile({ data: formData });
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      await uploadOptimizedFile({
+        data: { key: selectedKey, contentType: file.type, bytes },
+      });
       await router.navigate({ to: "/files", search: { year } });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed");

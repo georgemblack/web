@@ -28,13 +28,18 @@ function NewFilePage() {
     if (!file || !title) return;
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("year", year);
-      formData.append("title", title);
-      formData.append("type", fileType);
-      formData.append("file", file);
-      if (optimize) formData.append("optimize", "on");
-      await uploadFile({ data: formData });
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      await uploadFile({
+        data: {
+          year: Number(year),
+          title,
+          type: fileType,
+          fileName: file.name,
+          contentType: file.type,
+          bytes,
+          optimize,
+        },
+      });
       await router.navigate({ to: "/files", search: { year } });
     } finally {
       setUploading(false);
