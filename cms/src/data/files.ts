@@ -3,6 +3,7 @@ import { env } from "cloudflare:workers";
 
 import * as queries from "./queries";
 import type {
+  ListFilesFilters,
   UploadFileInput,
   UploadOptimizedFileInput,
   WebFile,
@@ -13,9 +14,9 @@ const OPTIMIZED_IMAGE_WIDTH = 1200;
 const CACHE_CONTROL = "public, max-age=31536000";
 
 export const listFiles = createServerFn({ method: "GET" })
-  .inputValidator((year: number) => year)
-  .handler(async ({ data: year }): Promise<WebFile[]> => {
-    return queries.listFiles(env.WEB_DB, year);
+  .inputValidator((filters: ListFilesFilters) => filters)
+  .handler(async ({ data: filters }): Promise<WebFile[]> => {
+    return queries.listFiles(env.WEB_DB, filters);
   });
 
 export const uploadFile = createServerFn({ method: "POST" })

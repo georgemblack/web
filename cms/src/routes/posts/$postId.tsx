@@ -33,7 +33,7 @@ export const Route = createFileRoute("/posts/$postId")({
     const post = await getPost({ data: params.postId });
     if (!post) throw new Error("Post not found");
     const postYear = new Date(post.published).getFullYear();
-    const files = await listFiles({ data: postYear });
+    const files = await listFiles({ data: { year: postYear } });
     const fileNames = files.map((f) => f.key);
     return { post, fileNames };
   },

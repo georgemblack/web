@@ -1,20 +1,10 @@
-import {
-  Breadcrumbs,
-  Button,
-  Input,
-  Dialog,
-  Select,
-  Switch,
-  Text,
-} from "@cloudflare/kumo";
+import { Breadcrumbs, Button, Text } from "@cloudflare/kumo";
 import {
   defineSchema,
   EditorProvider,
   PortableTextEditable,
-  useEditor,
 } from "@portabletext/editor";
 import type {
-  BlockPath,
   PortableTextBlock,
   RenderAnnotationFunction,
   RenderBlockFunction,
@@ -23,26 +13,19 @@ import type {
   RenderStyleFunction,
 } from "@portabletext/editor";
 import { EventListenerPlugin } from "@portabletext/editor/plugins";
-import {
-  useAnnotationButton,
-  useDecoratorButton,
-  useListButton,
-  useStyleSelector,
-  useToolbarSchema,
-} from "@portabletext/toolbar";
-import type {
-  ToolbarAnnotationSchemaType,
-  ToolbarDecoratorSchemaType,
-  ToolbarListSchemaType,
-  ToolbarStyleSchemaType,
-} from "@portabletext/toolbar";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { createContext, useCallback, useContext, useState } from "react";
+import { useCallback, useState } from "react";
 
 import PaddedSurface from "@/components/PaddedSurface";
+import { CodeBlockObjectEditor } from "@/components/editor/CodeBlockObjectEditor";
+import { FilesContext } from "@/components/editor/FilesContext";
+import { ImageBlockObjectEditor } from "@/components/editor/ImageBlockObjectEditor";
+import { MetadataSection } from "@/components/editor/MetadataSection";
+import { Toolbar } from "@/components/editor/Toolbar";
+import { VideoBlockObjectEditor } from "@/components/editor/VideoBlockObjectEditor";
 import { getPost, updatePost } from "@/data/db";
 import { listFiles } from "@/data/files";
-import type { Post, PostStatus } from "@/data/types";
+import type { Post, PostStatus, WebFile } from "@/data/types";
 
 export const Route = createFileRoute("/posts/pt/$postId")({
   ssr: "data-only",
@@ -51,20 +34,10 @@ export const Route = createFileRoute("/posts/pt/$postId")({
     const post = await getPost({ data: params.postId });
     if (!post) throw new Error("Post not found");
     const postYear = new Date(post.published).getFullYear();
-    const files = await listFiles({ data: postYear });
-    const fileNames = files.map((f) => f.key);
-    return { post, fileNames };
+    const files = await listFiles({ data: { year: postYear } });
+    return { post, files };
   },
 });
-
-// Emoji constants
-const EMOJI = {
-  draft: "\uD83D\uDCDD", // Memo
-  published: "\uD83D\uDE80", // Rocket
-  hidden: "\uD83E\uDEE3", // Face with peeking eye
-  visible: "\uD83D\uDC40", // Eyes
-  gallery: "\uD83D\uDDBC\uFE0F", // Framed picture
-};
 
 const schemaDefinition = defineSchema({
   decorators: [{ name: "strong" }, { name: "em" }, { name: "underline" }],
@@ -78,10 +51,31 @@ const schemaDefinition = defineSchema({
   lists: [{ name: "bullet" }, { name: "number" }],
   inlineObjects: [],
   blockObjects: [
-    { name: "image" },
+    {
+      name: "image",
+      fields: [
+        { name: "key", type: "string" },
+        { name: "alt", type: "string" },
+        { name: "caption", type: "string" },
+      ],
+    },
+    {
+      name: "video",
+      fields: [
+        { name: "key", type: "string" },
+        { name: "caption", type: "string" },
+        { name: "controls", type: "boolean" },
+        { name: "autoplay", type: "boolean" },
+        { name: "muted", type: "boolean" },
+        { name: "loop", type: "boolean" },
+      ],
+    },
     { name: "line" },
     { name: "break" },
-    { name: "code" },
+    {
+      name: "code",
+      fields: [{ name: "text", type: "string" }],
+    },
   ],
 });
 
@@ -127,121 +121,12 @@ const renderListItem: RenderListItemFunction = (props) => {
   return <li className="ml-6">{props.children}</li>;
 };
 
-const FileNamesContext = createContext<string[]>([]);
-
-function ImageBlockObjectEditor({
-  value,
-  path,
-}: {
-  value: PortableTextBlock;
-  path: BlockPath;
-}) {
-  const editor = useEditor();
-  const fileNames = useContext(FileNamesContext);
-  const key = (value as Record<string, unknown>).key as string | undefined;
-  const alt = (value as Record<string, unknown>).alt as string | undefined;
-  const caption = (value as Record<string, unknown>).caption as
-    | string
-    | undefined;
-
-  const update = (props: Record<string, unknown>) => {
-    editor.send({ type: "block.set", at: path, props });
-  };
-
-  return (
-    <div
-      contentEditable={false}
-      className="my-2 flex flex-col gap-2 rounded border border-gray-200 p-3"
-    >
-      <div className="flex items-center gap-2">
-        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded border border-gray-300 bg-gray-100">
-          {key && (
-            <img
-              src={`https://george.black/files/${key}`}
-              alt={alt || "Preview"}
-              className="h-full w-full object-cover"
-            />
-          )}
-        </div>
-        <div className="flex flex-1 gap-2">
-          <Input
-            className="flex-1"
-            value={key ?? ""}
-            onChange={(e) => update({ key: e.target.value })}
-            placeholder="picture.jpg"
-            aria-label="Image key"
-          />
-          {fileNames.length > 0 && (
-            <Select
-              className="w-48"
-              value=""
-              onValueChange={(fileName) => {
-                if (fileName) update({ key: fileName });
-              }}
-              placeholder="Select file..."
-            >
-              {fileNames.map((fileName) => (
-                <Select.Option key={fileName} value={fileName}>
-                  {fileName}
-                </Select.Option>
-              ))}
-            </Select>
-          )}
-        </div>
-      </div>
-      <div className="flex gap-2">
-        <Input
-          className="flex-1"
-          value={alt ?? ""}
-          onChange={(e) => update({ alt: e.target.value })}
-          placeholder="Alt text"
-          aria-label="Alt text"
-        />
-        <Input
-          className="flex-1"
-          value={caption ?? ""}
-          onChange={(e) => update({ caption: e.target.value || undefined })}
-          placeholder="Caption"
-          aria-label="Caption"
-        />
-      </div>
-    </div>
-  );
-}
-
-function CodeBlockObjectEditor({
-  value,
-  path,
-}: {
-  value: PortableTextBlock;
-  path: BlockPath;
-}) {
-  const editor = useEditor();
-  const text = (value as Record<string, unknown>).text as string | undefined;
-
-  return (
-    <div contentEditable={false} className="my-2">
-      <textarea
-        className="w-full rounded border border-gray-200 bg-gray-50 p-3 font-mono text-sm"
-        value={text ?? ""}
-        onChange={(e) =>
-          editor.send({
-            type: "block.set",
-            at: path,
-            props: { text: e.target.value },
-          })
-        }
-        rows={6}
-        placeholder="Code..."
-      />
-    </div>
-  );
-}
-
 const renderBlock: RenderBlockFunction = (props) => {
   switch (props.schemaType.name) {
     case "image":
       return <ImageBlockObjectEditor value={props.value} path={props.path} />;
+    case "video":
+      return <VideoBlockObjectEditor value={props.value} path={props.path} />;
     case "line":
       return <hr className="my-4 border-gray-300" />;
     case "break":
@@ -257,371 +142,24 @@ const renderBlock: RenderBlockFunction = (props) => {
   }
 };
 
-const DECORATOR_LABELS: Record<string, string> = {
-  strong: "B",
-  em: "I",
-  underline: "U",
-};
-
-const LIST_LABELS: Record<string, string> = {
-  bullet: "UL",
-  number: "OL",
-};
-
-function DecoratorButton({
-  schemaType,
-}: {
-  schemaType: ToolbarDecoratorSchemaType;
-}) {
-  const button = useDecoratorButton({ schemaType });
-  const isActive = button.snapshot.matches({ enabled: "active" });
-  return (
-    <Button
-      variant={isActive ? "primary" : "ghost"}
-      onClick={() => button.send({ type: "toggle" })}
-    >
-      {DECORATOR_LABELS[schemaType.name] ?? schemaType.name}
-    </Button>
-  );
-}
-
-function ListToggleButton({
-  schemaType,
-}: {
-  schemaType: ToolbarListSchemaType;
-}) {
-  const button = useListButton({ schemaType });
-  const isActive = button.snapshot.matches({ enabled: "active" });
-  return (
-    <Button
-      variant={isActive ? "primary" : "ghost"}
-      onClick={() => button.send({ type: "toggle" })}
-    >
-      {LIST_LABELS[schemaType.name] ?? schemaType.name}
-    </Button>
-  );
-}
-
-function LinkButton({
-  schemaType,
-}: {
-  schemaType: ToolbarAnnotationSchemaType;
-}) {
-  const button = useAnnotationButton({ schemaType });
-  const isActive = button.snapshot.matches({ enabled: "active" });
-  const isShowingDialog = button.snapshot.matches({
-    enabled: { inactive: "showing dialog" },
-  });
-  const [href, setHref] = useState("");
-
-  return (
-    <>
-      <Button
-        variant={isActive ? "primary" : "ghost"}
-        onClick={() => {
-          if (isActive) {
-            button.send({ type: "remove" });
-          } else {
-            button.send({ type: "open dialog" });
-          }
-        }}
-      >
-        🔗
-      </Button>
-      <Dialog.Root
-        open={isShowingDialog}
-        onOpenChange={(open) => {
-          if (!open) {
-            button.send({ type: "close dialog" });
-            setHref("");
-          }
-        }}
-      >
-        <Dialog className="p-8" size="sm">
-          <div className="mb-4 flex items-start justify-between gap-4">
-            <Dialog.Title className="text-2xl font-semibold">
-              Add Link
-            </Dialog.Title>
-            <Dialog.Close
-              aria-label="Close"
-              render={(props) => (
-                <Button {...props} variant="secondary" aria-label="Close">
-                  ✕
-                </Button>
-              )}
-            />
-          </div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (href) {
-                button.send({
-                  type: "add",
-                  annotation: { value: { href } },
-                });
-                setHref("");
-              }
-            }}
-          >
-            <Input
-              aria-label="URL"
-              placeholder="https://..."
-              value={href}
-              onChange={(e) => setHref(e.target.value)}
-              autoFocus
-            />
-            <div className="mt-8 flex justify-end gap-2">
-              <Dialog.Close
-                render={(props) => (
-                  <Button {...props} variant="secondary">
-                    Cancel
-                  </Button>
-                )}
-              />
-              <Button variant="primary" type="submit">
-                Add
-              </Button>
-            </div>
-          </form>
-        </Dialog>
-      </Dialog.Root>
-    </>
-  );
-}
-
-function StyleSelect({
-  schemaTypes,
-}: {
-  schemaTypes: ReadonlyArray<ToolbarStyleSchemaType>;
-}) {
-  const selector = useStyleSelector({ schemaTypes });
-  return (
-    <Select
-      aria-label="Block style"
-      value={selector.snapshot.context.activeStyle ?? "normal"}
-      onValueChange={(value) =>
-        selector.send({ type: "toggle", style: value as string })
-      }
-    >
-      {schemaTypes.map((style) => (
-        <Select.Option key={style.name} value={style.name}>
-          {style.name}
-        </Select.Option>
-      ))}
-    </Select>
-  );
-}
-
-function BlockObjectInsertButton({
-  name,
-  label,
-  defaultValue,
-}: {
-  name: string;
-  label: string;
-  defaultValue?: Record<string, unknown>;
-}) {
-  const editor = useEditor();
-  return (
-    <Button
-      variant="ghost"
-      onClick={() =>
-        editor.send({
-          type: "insert.block object",
-          blockObject: {
-            name,
-            value: defaultValue ?? {},
-          },
-          placement: "auto",
-        })
-      }
-    >
-      {label}
-    </Button>
-  );
-}
-
-function Toolbar() {
-  const schema = useToolbarSchema({});
-  return (
-    <div className="mb-3 flex flex-col gap-2">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {schema.annotations?.map((ann) => (
-            <LinkButton key={ann.name} schemaType={ann} />
-          ))}
-          <BlockObjectInsertButton
-            name="image"
-            label="🖼️"
-            defaultValue={{ key: "", alt: "" }}
-          />
-          <BlockObjectInsertButton
-            name="code"
-            label="💻"
-            defaultValue={{ text: "" }}
-          />
-          <BlockObjectInsertButton name="line" label="➖" />
-          <BlockObjectInsertButton name="break" label="✂️" />
-        </div>
-        <div>
-          {schema.styles && <StyleSelect schemaTypes={schema.styles} />}
-        </div>
-      </div>
-      <div className="flex items-center gap-2">
-        {schema.decorators?.map((dec) => (
-          <DecoratorButton key={dec.name} schemaType={dec} />
-        ))}
-        {schema.lists?.map((list) => (
-          <ListToggleButton key={list.name} schemaType={list} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-interface MetadataSectionProps {
-  title: string;
-  published: string;
-  slug: string;
-  status: PostStatus;
-  hidden: boolean;
-  gallery: boolean;
-  externalLink: string | null;
-  onChange: (field: string, value: string | null) => void;
-  onHiddenChange: (hidden: boolean) => void;
-  onGalleryChange: (gallery: boolean) => void;
-}
-
-function MetadataSection({
-  title,
-  published,
-  slug,
-  status,
-  hidden,
-  gallery,
-  externalLink,
-  onChange,
-  onHiddenChange,
-  onGalleryChange,
-}: MetadataSectionProps) {
-  // Convert ISO string to datetime-local format
-  const toDatetimeLocal = (isoString: string): string => {
-    const date = new Date(isoString);
-    const offset = date.getTimezoneOffset();
-    const localDate = new Date(date.getTime() - offset * 60 * 1000);
-    return localDate.toISOString().slice(0, 16);
-  };
-
-  // Convert datetime-local to ISO string
-  const toISOString = (datetimeLocal: string): string => {
-    return new Date(datetimeLocal).toISOString();
-  };
-
-  return (
-    <PaddedSurface>
-      <div className="flex flex-col gap-4">
-        <div>
-          <div className="flex gap-3">
-            <Input
-              className="w-full"
-              value={title}
-              onChange={(e) => onChange("title", e.target.value)}
-              placeholder="Title"
-              aria-label="Title"
-            />
-            <Button
-              variant="secondary"
-              aria-label="Generate slug from title"
-              onClick={() => {
-                const generated = title
-                  .toLowerCase()
-                  .replace(/[^a-z0-9-]/g, "-")
-                  .replace(/-+/g, "-")
-                  .replace(/^-|-$/g, "");
-                onChange("slug", generated);
-              }}
-            >
-              Slug
-            </Button>
-          </div>
-          <div className="mt-1 ml-1">
-            <Text variant="secondary">{slug}</Text>
-          </div>
-        </div>
-        <div className="flex gap-3">
-          <Input
-            className="w-full"
-            type="datetime-local"
-            value={toDatetimeLocal(published)}
-            onChange={(e) => onChange("published", toISOString(e.target.value))}
-            aria-label="Published date"
-          />
-          <Button
-            variant="secondary"
-            aria-label="Set published date to now"
-            onClick={() => {
-              onChange("published", new Date().toISOString());
-            }}
-          >
-            Now
-          </Button>
-        </div>
-        <Input
-          type="url"
-          value={externalLink ?? ""}
-          onChange={(e) => onChange("externalLink", e.target.value || null)}
-          placeholder="https://example.com"
-          aria-label="External link"
-        />
-        <div className="flex gap-3">
-          <Switch
-            label={status === "published" ? EMOJI.published : EMOJI.draft}
-            checked={status === "published"}
-            onCheckedChange={(checked) =>
-              onChange("status", checked ? "published" : "draft")
-            }
-          />
-          <Switch
-            label={hidden ? EMOJI.hidden : EMOJI.visible}
-            checked={hidden}
-            onCheckedChange={onHiddenChange}
-          />
-          <Switch
-            label={EMOJI.gallery}
-            checked={gallery}
-            onCheckedChange={onGalleryChange}
-          />
-        </div>
-      </div>
-    </PaddedSurface>
-  );
-}
-
 function RouteComponent() {
-  const { post, fileNames } = Route.useLoaderData();
+  const { post, files } = Route.useLoaderData();
 
   if (!post) {
     return <span>Post not found</span>;
   }
 
   return (
-    <PortableTextPostEditor
-      key={post.published}
-      post={post}
-      fileNames={fileNames}
-    />
+    <PortableTextPostEditor key={post.published} post={post} files={files} />
   );
 }
 
 interface PortableTextPostEditorProps {
   post: Post;
-  fileNames: string[];
+  files: WebFile[];
 }
 
-function PortableTextPostEditor({
-  post,
-  fileNames,
-}: PortableTextPostEditorProps) {
+function PortableTextPostEditor({ post, files }: PortableTextPostEditorProps) {
   const router = useRouter();
 
   const [title, setTitle] = useState(
@@ -762,7 +300,7 @@ function PortableTextPostEditor({
 
       <div className="mt-6">
         <PaddedSurface>
-          <FileNamesContext.Provider value={fileNames}>
+          <FilesContext.Provider value={files}>
             <EditorProvider
               initialConfig={{
                 schemaDefinition,
@@ -780,7 +318,7 @@ function PortableTextPostEditor({
                 renderListItem={renderListItem}
               />
             </EditorProvider>
-          </FileNamesContext.Provider>
+          </FilesContext.Provider>
         </PaddedSurface>
       </div>
     </>

@@ -34,7 +34,9 @@ function NewOptimizedFilePage() {
     setSelectedKey("");
     setError(null);
     try {
-      const result = await listFiles({ data: Number(selectedYear) });
+      const result = await listFiles({
+        data: { year: Number(selectedYear) },
+      });
       setFiles(result);
     } finally {
       setLoadingFiles(false);

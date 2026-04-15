@@ -8,6 +8,7 @@ import {
   ContentBlock,
   CreatePostInput,
   FileType,
+  ListFilesFilters,
   ListPostsFilters,
   Post,
   PostListItem,
@@ -254,13 +255,21 @@ export async function deletePost(db: D1Database, id: string): Promise<boolean> {
 
 export async function listFiles(
   db: D1Database,
-  year: number,
+  filters: ListFilesFilters,
 ): Promise<WebFile[]> {
+  let query = "SELECT key, type, year, optimized FROM files WHERE year = ?";
+  const bindings: (string | number)[] = [filters.year];
+
+  if (filters.type !== undefined) {
+    query += " AND type = ?";
+    bindings.push(filters.type);
+  }
+
+  query += " ORDER BY key";
+
   const result = await db
-    .prepare(
-      "SELECT key, type, year, optimized FROM files WHERE year = ? ORDER BY key",
-    )
-    .bind(year)
+    .prepare(query)
+    .bind(...bindings)
     .all<{ key: string; type: FileType; year: number; optimized: number }>();
   return result.results.map((row) => ({
     ...row,

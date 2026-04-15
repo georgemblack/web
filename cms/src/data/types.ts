@@ -120,6 +120,11 @@ export interface ListPostsFilters {
 
 export type FileType = "IMAGE" | "VIDEO" | "DOCUMENT";
 
+export interface ListFilesFilters {
+  year: number;
+  type?: FileType;
+}
+
 export interface WebFile {
   key: string;
   type: FileType;

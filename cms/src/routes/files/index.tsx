@@ -25,7 +25,8 @@ export const Route = createFileRoute("/files/")({
     year: String(search.year ?? new Date().getFullYear()),
   }),
   loaderDeps: ({ search }) => ({ year: search.year }),
-  loader: async ({ deps }) => await listFiles({ data: Number(deps.year) }),
+  loader: async ({ deps }) =>
+    await listFiles({ data: { year: Number(deps.year) } }),
 });
 
 function FilesPage() {
