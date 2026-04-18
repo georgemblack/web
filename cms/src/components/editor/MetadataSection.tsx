@@ -84,6 +84,7 @@ export function MetadataSection({
             type="datetime-local"
             value={toDatetimeLocal(published)}
             onChange={(e) => onChange("published", toISOString(e.target.value))}
+            placeholder="Published date"
             aria-label="Published date"
           />
           <Button

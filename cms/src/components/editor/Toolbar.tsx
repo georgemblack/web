@@ -208,30 +208,30 @@ export function Toolbar() {
     <div className="mb-3 flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          {schema.annotations?.map((ann) => (
-            <LinkButton key={ann.name} schemaType={ann} />
+          {schema.decorators?.map((dec) => (
+            <DecoratorButton key={dec.name} schemaType={dec} />
           ))}
-          <ImageInsertButton />
-          <VideoInsertButton />
-          <BlockObjectInsertButton
-            name="code"
-            label="💻"
-            defaultValue={{ text: "" }}
-          />
-          <BlockObjectInsertButton name="line" label="➖" />
-          <BlockObjectInsertButton name="break" label="✂️" />
+          {schema.lists?.map((list) => (
+            <ListToggleButton key={list.name} schemaType={list} />
+          ))}
         </div>
         <div>
           {schema.styles && <StyleSelect schemaTypes={schema.styles} />}
         </div>
       </div>
       <div className="flex items-center gap-2">
-        {schema.decorators?.map((dec) => (
-          <DecoratorButton key={dec.name} schemaType={dec} />
+        {schema.annotations?.map((ann) => (
+          <LinkButton key={ann.name} schemaType={ann} />
         ))}
-        {schema.lists?.map((list) => (
-          <ListToggleButton key={list.name} schemaType={list} />
-        ))}
+        <ImageInsertButton />
+        <VideoInsertButton />
+        <BlockObjectInsertButton
+          name="code"
+          label="💻"
+          defaultValue={{ text: "" }}
+        />
+        <BlockObjectInsertButton name="line" label="➖" />
+        <BlockObjectInsertButton name="break" label="✂️" />
       </div>
     </div>
   );

@@ -128,7 +128,11 @@ const renderBlock: RenderBlockFunction = (props) => {
     case "video":
       return <VideoBlockObjectEditor value={props.value} path={props.path} />;
     case "line":
-      return <hr className="my-4 border-gray-300" />;
+      return (
+        <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">
+          Line
+        </div>
+      );
     case "break":
       return (
         <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">
