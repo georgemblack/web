@@ -27,12 +27,13 @@ export async function getPost(
 ): Promise<Post | null> {
   const row = await db
     .prepare(
-      "SELECT id, title, published, slug, status, hidden, gallery, external_link, portable_text, content FROM posts WHERE id = ? AND deleted = 0",
+      "SELECT id, title, published, slug, status, hidden, gallery, external_link, portable_text, content, content_pt FROM posts WHERE id = ? AND deleted = 0",
     )
     .bind(id)
     .first<
       Omit<Post, "content" | "hidden" | "gallery" | "portable_text"> & {
-        content: string;
+        content: string | null;
+        content_pt: string | null;
         hidden: number;
         gallery: number;
         portable_text: number;
@@ -43,12 +44,22 @@ export async function getPost(
     return null;
   }
 
+  const isPortableText = row.portable_text === 1;
+  const rawContent = isPortableText
+    ? (row.content_pt ?? "[]")
+    : (row.content ?? "[]");
+
   return {
-    ...row,
+    id: row.id,
+    title: row.title,
+    published: row.published,
+    slug: row.slug,
+    status: row.status,
     hidden: row.hidden === 1,
     gallery: row.gallery === 1,
-    portable_text: row.portable_text === 1,
-    content: JSON.parse(row.content),
+    external_link: row.external_link,
+    portable_text: isPortableText,
+    content: JSON.parse(rawContent),
   };
 }
 
@@ -58,7 +69,7 @@ export async function getRenderedPost(
 ): Promise<RenderedPost | null> {
   const row = await db
     .prepare(
-      "SELECT id, title, published, slug, status, hidden, gallery, external_link, portable_text, content, content_html, preview_html FROM posts WHERE id = ? AND deleted = 0",
+      "SELECT id, title, published, slug, status, hidden, gallery, external_link, portable_text, content, content_pt, content_html, preview_html FROM posts WHERE id = ? AND deleted = 0",
     )
     .bind(id)
     .first<{
@@ -71,7 +82,8 @@ export async function getRenderedPost(
       gallery: number;
       external_link: string | null;
       portable_text: number;
-      content: string;
+      content: string | null;
+      content_pt: string | null;
       content_html: string;
       preview_html: string | null;
     }>();
@@ -84,7 +96,7 @@ export async function getRenderedPost(
   let images: RenderedPostImage[] = [];
 
   if (!isPortableText) {
-    const blocks = JSON.parse(row.content) as ContentBlock[];
+    const blocks = JSON.parse(row.content ?? "[]") as ContentBlock[];
     images = blocks
       .filter(
         (block): block is ContentBlock & { type: "image" } =>
@@ -161,9 +173,10 @@ export async function createPost(
     ? renderPortableTextPreview(validated.content)
     : renderPreview(validated.content as ContentBlock[]);
 
+  const serializedContent = JSON.stringify(validated.content);
   await db
     .prepare(
-      "INSERT INTO posts (id, title, published, slug, status, hidden, gallery, external_link, portable_text, content, content_html, preview_html) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO posts (id, title, published, slug, status, hidden, gallery, external_link, portable_text, content, content_pt, content_html, preview_html) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     )
     .bind(
       id,
@@ -175,7 +188,8 @@ export async function createPost(
       validated.gallery ? 1 : 0,
       validated.external_link,
       validated.portable_text ? 1 : 0,
-      JSON.stringify(validated.content),
+      validated.portable_text ? null : serializedContent,
+      validated.portable_text ? serializedContent : null,
       contentHtml,
       previewHtml,
     )
@@ -226,9 +240,10 @@ export async function updatePost(
     content: validated.content,
   };
 
+  const serializedContent = JSON.stringify(newPost.content);
   await db
     .prepare(
-      "UPDATE posts SET title = ?, published = ?, slug = ?, status = ?, hidden = ?, gallery = ?, external_link = ?, portable_text = ?, content = ?, content_html = ?, preview_html = ? WHERE id = ?",
+      "UPDATE posts SET title = ?, published = ?, slug = ?, status = ?, hidden = ?, gallery = ?, external_link = ?, portable_text = ?, content = ?, content_pt = ?, content_html = ?, preview_html = ? WHERE id = ?",
     )
     .bind(
       newPost.title,
@@ -239,7 +254,8 @@ export async function updatePost(
       newPost.gallery ? 1 : 0,
       newPost.external_link,
       newPost.portable_text ? 1 : 0,
-      JSON.stringify(newPost.content),
+      newPost.portable_text ? null : serializedContent,
+      newPost.portable_text ? serializedContent : null,
       contentHtml,
       previewHtml,
       validated.id,

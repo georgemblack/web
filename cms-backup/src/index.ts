@@ -4,28 +4,22 @@ interface Post {
   published: string;
   slug: string;
   status: string;
-  hidden: boolean;
-  gallery: boolean;
+  hidden: number;
+  gallery: number;
   external_link: string | null;
-  portable_text: boolean;
-  content: unknown;
-}
-
-interface PostListItem {
-  id: string;
-  title: string;
-  published: string;
-  status: string;
-  hidden: boolean;
-  gallery: boolean;
-  portable_text: boolean;
+  content: string | null;
+  content_pt: string | null;
+  content_html: string;
+  preview_html: string | null;
+  deleted: number;
+  portable_text: number;
 }
 
 interface WebDbFile {
   key: string;
   type: string;
   year: number;
-  optimized: boolean;
+  optimized: number;
 }
 
 export default {
@@ -70,57 +64,10 @@ export default {
 async function queryPosts(db: D1Database): Promise<Post[]> {
   const result = await db
     .prepare(
-      "SELECT id, title, published, status, hidden, gallery, portable_text FROM posts WHERE deleted = 0 ORDER BY published DESC",
+      "SELECT id, title, published, slug, status, hidden, gallery, external_link, content, content_pt, content_html, preview_html, deleted, portable_text FROM posts WHERE deleted = 0 ORDER BY published DESC",
     )
-    .all<
-      Omit<PostListItem, "hidden" | "gallery" | "portable_text"> & {
-        hidden: number;
-        gallery: number;
-        portable_text: number;
-      }
-    >();
-
-  const list: PostListItem[] = result.results.map((row) => ({
-    ...row,
-    hidden: row.hidden === 1,
-    gallery: row.gallery === 1,
-    portable_text: row.portable_text === 1,
-  }));
-
-  const posts = await Promise.all(list.map((item) => getPost(db, item.id)));
-  return posts.filter((post) => post !== null);
-}
-
-async function getPost(db: D1Database, id: string): Promise<Post | null> {
-  const row = await db
-    .prepare(
-      "SELECT id, title, published, slug, status, hidden, gallery, external_link, portable_text, content FROM posts WHERE id = ? AND deleted = 0",
-    )
-    .bind(id)
-    .first<{
-      id: string;
-      title: string;
-      published: string;
-      slug: string;
-      status: string;
-      hidden: number;
-      gallery: number;
-      external_link: string | null;
-      portable_text: number;
-      content: string;
-    }>();
-
-  if (!row) {
-    return null;
-  }
-
-  return {
-    ...row,
-    hidden: row.hidden === 1,
-    gallery: row.gallery === 1,
-    portable_text: row.portable_text === 1,
-    content: JSON.parse(row.content),
-  };
+    .all<Post>();
+  return result.results;
 }
 
 async function listAllFiles(db: D1Database): Promise<WebDbFile[]> {
@@ -128,11 +75,8 @@ async function listAllFiles(db: D1Database): Promise<WebDbFile[]> {
     .prepare(
       "SELECT key, type, year, optimized FROM files ORDER BY year DESC, key",
     )
-    .all<{ key: string; type: string; year: number; optimized: number }>();
-  return result.results.map((row) => ({
-    ...row,
-    optimized: row.optimized === 1,
-  }));
+    .all<WebDbFile>();
+  return result.results;
 }
 
 async function sha256(data: string): Promise<string> {
