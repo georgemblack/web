@@ -10,7 +10,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
 import PaddedSurface from "@/components/PaddedSurface";
-import { createPost, deletePost, listPosts } from "@/data/db";
+import { createPost, deletePost, listPosts, setPortableText } from "@/data/db";
 import { PostStatus } from "@/data/types";
 
 const STATUS_OPTIONS: Array<PostStatus | "all"> = ["all", "draft", "published"];
@@ -86,6 +86,11 @@ function App() {
       return;
     }
     await deletePost({ data: postId });
+    await router.invalidate();
+  };
+
+  const handleTogglePortableText = async (postId: string, enabled: boolean) => {
+    await setPortableText({ data: { id: postId, portable_text: enabled } });
     await router.invalidate();
   };
 
@@ -173,14 +178,23 @@ function App() {
                   )}
                 </div>
               </Link>
-              <Button
-                variant="secondary"
-                shape="square"
-                aria-label="Delete post"
-                onClick={() => handleDelete(post.id, post.title)}
-              >
-                🗑️
-              </Button>
+              <div className="flex items-center gap-3">
+                <Switch
+                  label="PT"
+                  checked={post.portable_text}
+                  onCheckedChange={(checked) =>
+                    handleTogglePortableText(post.id, checked)
+                  }
+                />
+                <Button
+                  variant="secondary"
+                  shape="square"
+                  aria-label="Delete post"
+                  onClick={() => handleDelete(post.id, post.title)}
+                >
+                  🗑️
+                </Button>
+              </div>
             </div>
           ))}
         </div>

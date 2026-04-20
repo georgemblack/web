@@ -31,7 +31,9 @@ export const Route = createFileRoute("/posts/pt/$postId")({
   ssr: "data-only",
   component: RouteComponent,
   loader: async ({ params }) => {
-    const post = await getPost({ data: params.postId });
+    const post = await getPost({
+      data: { id: params.postId, format: "pt" },
+    });
     if (!post) throw new Error("Post not found");
     const postYear = new Date(post.published).getFullYear();
     const files = await listFiles({ data: { year: postYear } });
@@ -40,7 +42,12 @@ export const Route = createFileRoute("/posts/pt/$postId")({
 });
 
 const schemaDefinition = defineSchema({
-  decorators: [{ name: "strong" }, { name: "em" }, { name: "underline" }],
+  decorators: [
+    { name: "strong" },
+    { name: "em" },
+    { name: "underline" },
+    { name: "code" },
+  ],
   styles: [
     { name: "normal" },
     { name: "h2" },
@@ -105,6 +112,8 @@ const renderDecorator: RenderDecoratorFunction = (props) => {
       return <em>{props.children}</em>;
     case "underline":
       return <u>{props.children}</u>;
+    case "code":
+      return <code>{props.children}</code>;
     default:
       return <>{props.children}</>;
   }

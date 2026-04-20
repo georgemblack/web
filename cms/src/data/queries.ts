@@ -24,6 +24,7 @@ import {
 export async function getPost(
   db: D1Database,
   id: string,
+  format?: "legacy" | "pt",
 ): Promise<Post | null> {
   const row = await db
     .prepare(
@@ -45,7 +46,9 @@ export async function getPost(
   }
 
   const isPortableText = row.portable_text === 1;
-  const rawContent = isPortableText
+  const useContentPt =
+    format === "pt" || (format === undefined && isPortableText);
+  const rawContent = useContentPt
     ? (row.content_pt ?? "[]")
     : (row.content ?? "[]");
 
@@ -215,19 +218,58 @@ export async function updatePost(
 ): Promise<Post | null> {
   const validated = updatePostInputSchema.parse(input);
 
-  const existing = await getPost(db, validated.id);
+  const existing = await db
+    .prepare(
+      "SELECT portable_text, content_html, preview_html FROM posts WHERE id = ? AND deleted = 0",
+    )
+    .bind(validated.id)
+    .first<{
+      portable_text: number;
+      content_html: string;
+      preview_html: string | null;
+    }>();
   if (!existing) {
     return null;
   }
 
-  const contentHtml = validated.portable_text
-    ? renderPortableText(validated.content)
-    : render(validated.content as ContentBlock[]);
-  const previewHtml = validated.portable_text
-    ? renderPortableTextPreview(validated.content)
-    : renderPreview(validated.content as ContentBlock[]);
+  const existingFlag = existing.portable_text === 1;
+  const savingPt = validated.portable_text;
+  const writingToActiveColumn = savingPt === existingFlag;
 
-  const newPost: Post = {
+  const serializedContent = JSON.stringify(validated.content);
+
+  const contentHtml = writingToActiveColumn
+    ? savingPt
+      ? renderPortableText(validated.content)
+      : render(validated.content as ContentBlock[])
+    : existing.content_html;
+  const previewHtml = writingToActiveColumn
+    ? savingPt
+      ? renderPortableTextPreview(validated.content)
+      : renderPreview(validated.content as ContentBlock[])
+    : existing.preview_html;
+
+  const contentColumn = savingPt ? "content_pt" : "content";
+  await db
+    .prepare(
+      `UPDATE posts SET title = ?, published = ?, slug = ?, status = ?, hidden = ?, gallery = ?, external_link = ?, ${contentColumn} = ?, content_html = ?, preview_html = ? WHERE id = ?`,
+    )
+    .bind(
+      validated.title,
+      validated.published,
+      validated.slug,
+      validated.status,
+      validated.hidden ? 1 : 0,
+      validated.gallery ? 1 : 0,
+      validated.external_link,
+      serializedContent,
+      contentHtml,
+      previewHtml,
+      validated.id,
+    )
+    .run();
+
+  return {
     id: validated.id,
     title: validated.title,
     published: validated.published,
@@ -236,33 +278,49 @@ export async function updatePost(
     hidden: validated.hidden,
     gallery: validated.gallery,
     external_link: validated.external_link,
-    portable_text: validated.portable_text,
+    portable_text: existingFlag,
     content: validated.content,
   };
+}
 
-  const serializedContent = JSON.stringify(newPost.content);
+export async function setPortableText(
+  db: D1Database,
+  id: string,
+  portableText: boolean,
+): Promise<{ status: PostStatus } | null> {
+  const row = await db
+    .prepare(
+      "SELECT status, content, content_pt FROM posts WHERE id = ? AND deleted = 0",
+    )
+    .bind(id)
+    .first<{
+      status: PostStatus;
+      content: string | null;
+      content_pt: string | null;
+    }>();
+  if (!row) {
+    return null;
+  }
+
+  const rawContent = portableText
+    ? (row.content_pt ?? "[]")
+    : (row.content ?? "[]");
+  const parsed = JSON.parse(rawContent);
+  const contentHtml = portableText
+    ? renderPortableText(parsed)
+    : render(parsed as ContentBlock[]);
+  const previewHtml = portableText
+    ? renderPortableTextPreview(parsed)
+    : renderPreview(parsed as ContentBlock[]);
+
   await db
     .prepare(
-      "UPDATE posts SET title = ?, published = ?, slug = ?, status = ?, hidden = ?, gallery = ?, external_link = ?, portable_text = ?, content = ?, content_pt = ?, content_html = ?, preview_html = ? WHERE id = ?",
+      "UPDATE posts SET portable_text = ?, content_html = ?, preview_html = ? WHERE id = ?",
     )
-    .bind(
-      newPost.title,
-      newPost.published,
-      newPost.slug,
-      newPost.status,
-      newPost.hidden ? 1 : 0,
-      newPost.gallery ? 1 : 0,
-      newPost.external_link,
-      newPost.portable_text ? 1 : 0,
-      newPost.portable_text ? null : serializedContent,
-      newPost.portable_text ? serializedContent : null,
-      contentHtml,
-      previewHtml,
-      validated.id,
-    )
+    .bind(portableText ? 1 : 0, contentHtml, previewHtml, id)
     .run();
 
-  return newPost;
+  return { status: row.status };
 }
 
 export async function deletePost(db: D1Database, id: string): Promise<boolean> {

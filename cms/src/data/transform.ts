@@ -97,10 +97,18 @@ export function renderPreview(content: ContentBlock[]): string | null {
   return content.slice(0, breakIndex).map(renderBlock).join("");
 }
 
+const portableTextOptions = {
+  components: {
+    marks: {
+      code: ({ children }: { children: string }) => `<code>${children}</code>`,
+    },
+  },
+};
+
 export function renderPortableText(
   blocks: Array<Record<string, unknown>>,
 ): string {
-  return toHTML(blocks as unknown as PortableTextBlock[]);
+  return toHTML(blocks as unknown as PortableTextBlock[], portableTextOptions);
 }
 
 export function renderPortableTextPreview(
@@ -109,5 +117,8 @@ export function renderPortableTextPreview(
   if (blocks.length === 0) {
     return null;
   }
-  return toHTML([blocks[0]] as unknown as PortableTextBlock[]);
+  return toHTML(
+    [blocks[0]] as unknown as PortableTextBlock[],
+    portableTextOptions,
+  );
 }
