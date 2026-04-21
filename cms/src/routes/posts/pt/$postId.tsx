@@ -323,7 +323,7 @@ function PortableTextPostEditor({ post, files }: PortableTextPostEditorProps) {
               <EventListenerPlugin on={handleMutation} />
               <Toolbar />
               <PortableTextEditable
-                className="min-h-64 [&>*+*]:mt-4 [&_ol]:list-decimal [&_ul]:list-disc"
+                className="min-h-64 [&_ol]:list-decimal [&_ul]:list-disc [&>*+*]:mt-4"
                 renderStyle={renderStyle}
                 renderBlock={renderBlock}
                 renderDecorator={renderDecorator}
