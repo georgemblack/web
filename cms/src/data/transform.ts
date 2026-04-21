@@ -99,6 +99,10 @@ export function renderPreview(content: ContentBlock[]): string | null {
 
 const portableTextOptions = {
   components: {
+    block: {
+      blockquote: ({ children }: { children: string }) =>
+        `<blockquote><p>${children}</p></blockquote>`,
+    },
     marks: {
       code: ({ children }: { children: string }) => `<code>${children}</code>`,
     },
