@@ -102,6 +102,15 @@ const portableTextOptions = {
     marks: {
       code: ({ children }: { children: string }) => `<code>${children}</code>`,
     },
+    types: {
+      image: ({ value }: { value: unknown }) =>
+        renderImage(value as ImageBlock),
+      video: ({ value }: { value: unknown }) =>
+        renderVideo(value as VideoBlock),
+      code: ({ value }: { value: unknown }) => renderCode(value as CodeBlock),
+      line: () => renderLine(),
+      break: () => renderBreak(),
+    },
   },
 };
 
