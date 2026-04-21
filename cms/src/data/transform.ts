@@ -117,8 +117,13 @@ export function renderPortableTextPreview(
   if (blocks.length === 0) {
     return null;
   }
+  const breakIndex = blocks.findIndex((block) => block._type === "break");
+  const previewBlocks = breakIndex === -1 ? blocks : blocks.slice(0, breakIndex);
+  if (previewBlocks.length === 0) {
+    return null;
+  }
   return toHTML(
-    [blocks[0]] as unknown as PortableTextBlock[],
+    previewBlocks as unknown as PortableTextBlock[],
     portableTextOptions,
   );
 }
