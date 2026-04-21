@@ -100,8 +100,8 @@ export function renderPreview(content: ContentBlock[]): string | null {
 const portableTextOptions = {
   components: {
     block: {
-      blockquote: ({ children }: { children: string }) =>
-        `<blockquote><p>${children}</p></blockquote>`,
+      blockquote: ({ children }: { children?: string }) =>
+        `<blockquote><p>${children ?? ""}</p></blockquote>`,
     },
     marks: {
       code: ({ children }: { children: string }) => `<code>${children}</code>`,
@@ -131,7 +131,8 @@ export function renderPortableTextPreview(
     return null;
   }
   const breakIndex = blocks.findIndex((block) => block._type === "break");
-  const previewBlocks = breakIndex === -1 ? blocks : blocks.slice(0, breakIndex);
+  const previewBlocks =
+    breakIndex === -1 ? blocks : blocks.slice(0, breakIndex);
   if (previewBlocks.length === 0) {
     return null;
   }
