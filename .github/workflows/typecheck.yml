@@ -1,0 +1,16 @@
+name: Typecheck
+on: pull_request
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.27.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.14.0
+      - run: pnpm -r install --frozen-lockfile
+      - run: pnpm -r run typecheck

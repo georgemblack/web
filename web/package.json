@@ -5,7 +5,8 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "deploy": "wrangler deploy",
-    "format": "prettier . --write"
+    "format": "prettier . --write",
+    "typecheck": "astro check"
   },
   "dependencies": {
     "@astrojs/check": "0.9.8",
