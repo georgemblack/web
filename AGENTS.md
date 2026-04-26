@@ -17,4 +17,15 @@ When making code changes, follow these rules:
 2. Validate code changes by running `pnpm run dryrun` and `pnpm run typecheck`.
 3. Format code with `pnpm run format`.
 
+## Running Commands Across All Projects
+
+This repo uses pnpm workspaces. Use `-r` (recursive) to run a script in every package:
+
+```sh
+pnpm -r run typecheck
+pnpm -r run format
+pnpm -r run dryrun
+pnpm -r run deploy
+```
+
 When asking questions, use the question format.
