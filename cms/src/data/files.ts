@@ -2,12 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { env } from "cloudflare:workers";
 
 import * as queries from "./queries";
-import type {
-  ListFilesFilters,
-  UploadFileInput,
-  UploadOptimizedFileInput,
-  WebFile,
-} from "./types";
+import type { FileType, ListFilesFilters, WebFile } from "./types";
 
 const OPTIMIZED_IMAGE_FORMAT = "image/avif";
 const OPTIMIZED_IMAGE_WIDTH = 1200;
@@ -20,46 +15,53 @@ export const listFiles = createServerFn({ method: "GET" })
   });
 
 export const uploadFile = createServerFn({ method: "POST" })
-  .inputValidator((input: UploadFileInput) => input)
-  .handler(
-    async ({
-      data: { year, title, type, fileName, contentType, bytes, optimize },
-    }) => {
-      const formattedTitle = title.toLowerCase().split(/\s+/).join("-");
-      const extension = fileName.split(".").pop()?.toLowerCase() ?? "";
-      const key = `${formattedTitle}.${extension}`;
+  .inputValidator((data: FormData) => {
+    const file = data.get("file");
+    const title = data.get("title");
+    const type = data.get("type");
+    const yearRaw = data.get("year");
+    const optimizeRaw = data.get("optimize");
+    if (!(file instanceof File)) throw new Error("file is required");
+    if (typeof title !== "string") throw new Error("title is required");
+    if (typeof type !== "string") throw new Error("type is required");
+    if (typeof yearRaw !== "string") throw new Error("year is required");
+    return {
+      file,
+      title,
+      type: type as FileType,
+      year: Number(yearRaw),
+      optimize: optimizeRaw === "true",
+    };
+  })
+  .handler(async ({ data: { file, title, type, year, optimize } }) => {
+    const formattedTitle = title.toLowerCase().split(/\s+/).join("-");
+    const extension = file.name.split(".").pop()?.toLowerCase() ?? "";
+    const key = `${formattedTitle}.${extension}`;
 
-      if (optimize) {
-        const stream = new ReadableStream<Uint8Array>({
-          start(controller) {
-            controller.enqueue(bytes);
-            controller.close();
-          },
-        });
-        const optimized = await env.IMAGES.input(stream)
-          .transform({ width: OPTIMIZED_IMAGE_WIDTH })
-          .output({ format: OPTIMIZED_IMAGE_FORMAT });
+    if (optimize) {
+      const optimized = await env.IMAGES.input(file.stream())
+        .transform({ width: OPTIMIZED_IMAGE_WIDTH })
+        .output({ format: OPTIMIZED_IMAGE_FORMAT });
 
-        await env.WEB_FILES_CACHE.put(key, optimized.image(), {
-          httpMetadata: {
-            contentType: optimized.contentType(),
-            cacheControl: CACHE_CONTROL,
-          },
-        });
-      }
-
-      await env.WEB_FILES.put(key, bytes, {
+      await env.WEB_FILES_CACHE.put(key, optimized.image(), {
         httpMetadata: {
-          contentType,
+          contentType: optimized.contentType(),
           cacheControl: CACHE_CONTROL,
         },
       });
+    }
 
-      await queries.createFile(env.WEB_DB, key, type, year, optimize);
+    await env.WEB_FILES.put(key, file.stream(), {
+      httpMetadata: {
+        contentType: file.type,
+        cacheControl: CACHE_CONTROL,
+      },
+    });
 
-      return { key };
-    },
-  );
+    await queries.createFile(env.WEB_DB, key, type, year, optimize);
+
+    return { key };
+  });
 
 export const toggleOptimize = createServerFn({ method: "POST" })
   .inputValidator((key: string) => key)
@@ -93,16 +95,22 @@ export const toggleOptimize = createServerFn({ method: "POST" })
   });
 
 export const uploadOptimizedFile = createServerFn({ method: "POST" })
-  .inputValidator((input: UploadOptimizedFileInput) => input)
-  .handler(async ({ data: { key, contentType, bytes } }) => {
+  .inputValidator((data: FormData) => {
+    const file = data.get("file");
+    const key = data.get("key");
+    if (!(file instanceof File)) throw new Error("file is required");
+    if (typeof key !== "string") throw new Error("key is required");
+    return { file, key };
+  })
+  .handler(async ({ data: { file, key } }) => {
     const exists = await env.WEB_FILES_CACHE.head(key);
     if (exists) {
       throw new Error("An optimized version already exists for this file");
     }
 
-    await env.WEB_FILES_CACHE.put(key, bytes, {
+    await env.WEB_FILES_CACHE.put(key, file.stream(), {
       httpMetadata: {
-        contentType,
+        contentType: file.type,
         cacheControl: CACHE_CONTROL,
       },
     });

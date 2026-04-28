@@ -137,22 +137,6 @@ export interface WebFile {
   optimized: boolean;
 }
 
-export interface UploadFileInput {
-  year: number;
-  title: string;
-  type: FileType;
-  fileName: string;
-  contentType: string;
-  bytes: Uint8Array;
-  optimize: boolean;
-}
-
-export interface UploadOptimizedFileInput {
-  key: string;
-  contentType: string;
-  bytes: Uint8Array;
-}
-
 // Zod schemas for DB inputs
 const postStatusSchema = z.enum(["draft", "published"]);
 const iso8601String = z.iso.datetime();
