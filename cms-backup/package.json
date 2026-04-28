@@ -14,7 +14,7 @@
     "@types/node": "^25.6.0",
     "@typescript/native-preview": "beta",
     "prettier": "^3.8.3",
-    "wrangler": "^4.84.0"
+    "wrangler": "^4.85.0"
   },
   "volta": {
     "node": "24.14.0"
