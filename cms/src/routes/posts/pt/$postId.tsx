@@ -54,7 +54,9 @@ const schemaDefinition = defineSchema({
     { name: "h3" },
     { name: "blockquote" },
   ],
-  annotations: [{ name: "link" }],
+  annotations: [
+    { name: "link", fields: [{ name: "href", type: "string" }] },
+  ],
   lists: [{ name: "bullet" }, { name: "number" }],
   inlineObjects: [],
   blockObjects: [
