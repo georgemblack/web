@@ -4,6 +4,7 @@ import {
   EditorProvider,
   PortableTextEditable,
 } from "@portabletext/editor";
+import { defineBehavior } from "@portabletext/editor/behaviors";
 import type {
   PortableTextBlock,
   RenderAnnotationFunction,
@@ -12,7 +13,10 @@ import type {
   RenderListItemFunction,
   RenderStyleFunction,
 } from "@portabletext/editor";
-import { EventListenerPlugin } from "@portabletext/editor/plugins";
+import {
+  BehaviorPlugin,
+  EventListenerPlugin,
+} from "@portabletext/editor/plugins";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
 
@@ -86,6 +90,11 @@ const schemaDefinition = defineSchema({
       fields: [{ name: "text", type: "string" }],
     },
   ],
+});
+
+const convertSoftBreakToBreak = defineBehavior({
+  on: "insert.soft break",
+  actions: [() => [{ type: "execute", event: { type: "insert.break" } }]],
 });
 
 const renderStyle: RenderStyleFunction = (props) => {
@@ -323,6 +332,7 @@ function PortableTextPostEditor({ post, files }: PortableTextPostEditorProps) {
               }}
             >
               <EventListenerPlugin on={handleMutation} />
+              <BehaviorPlugin behaviors={[convertSoftBreakToBreak]} />
               <Toolbar />
               <PortableTextEditable
                 className="min-h-64 [&_ol]:list-decimal [&_ul]:list-disc [&>*+*]:mt-4"
