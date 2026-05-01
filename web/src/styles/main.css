@@ -213,6 +213,10 @@ main li p {
   margin: 0;
 }
 
+main li + li {
+  margin-top: 0.5rem;
+}
+
 main :is(img, video) {
   width: 100%;
   border-radius: 0.5em;

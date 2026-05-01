@@ -131,8 +131,10 @@ export function renderPortableTextPreview(
     return null;
   }
   const breakIndex = blocks.findIndex((block) => block._type === "break");
-  const previewBlocks =
-    breakIndex === -1 ? blocks : blocks.slice(0, breakIndex);
+  if (breakIndex === -1) {
+    return null;
+  }
+  const previewBlocks = blocks.slice(0, breakIndex);
   if (previewBlocks.length === 0) {
     return null;
   }
