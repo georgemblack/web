@@ -3,3 +3,7 @@ packages:
   - 'cms-backup'
   - 'files'
   - 'web'
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true

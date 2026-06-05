@@ -1,7 +1,17 @@
+# Dependencies
 node_modules
+
+# Build output
+dist
 .astro
 .tanstack
 .wrangler
-dist
+
+# Environment
 .env
+
+# Tooling
+.codegraph
+
+# OS
 .DS_Store

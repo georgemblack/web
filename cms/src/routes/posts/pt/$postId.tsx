@@ -4,7 +4,6 @@ import {
   EditorProvider,
   PortableTextEditable,
 } from "@portabletext/editor";
-import { defineBehavior } from "@portabletext/editor/behaviors";
 import type {
   PortableTextBlock,
   RenderAnnotationFunction,
@@ -13,6 +12,7 @@ import type {
   RenderListItemFunction,
   RenderStyleFunction,
 } from "@portabletext/editor";
+import { defineBehavior } from "@portabletext/editor/behaviors";
 import {
   BehaviorPlugin,
   EventListenerPlugin,
@@ -58,9 +58,7 @@ const schemaDefinition = defineSchema({
     { name: "h3" },
     { name: "blockquote" },
   ],
-  annotations: [
-    { name: "link", fields: [{ name: "href", type: "string" }] },
-  ],
+  annotations: [{ name: "link", fields: [{ name: "href", type: "string" }] }],
   lists: [{ name: "bullet" }, { name: "number" }],
   inlineObjects: [],
   blockObjects: [
