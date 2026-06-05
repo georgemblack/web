@@ -240,12 +240,23 @@ main figcaption {
 }
 
 main blockquote {
-  border-left: 6px solid var(--blockquote-border-color);
-  margin: var(--content-block-spacing) 0 0 1em;
-  padding: 0.5em 1em;
+  position: relative;
+  margin: var(--content-block-spacing) 0 0 0.5em;
+  padding: 0.5em 1em 0.65em 1.5em;
   font-style: italic;
   line-height: 160%;
   text-rendering: optimizeLegibility;
+}
+
+main blockquote::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background-color: var(--blockquote-border-color);
+  border-radius: 5px;
 }
 
 main blockquote p {
