@@ -1,5 +1,26 @@
 ---
+interface Props {
+  badge?: boolean;
+}
 
+const { badge = false } = Astro.props;
 ---
 
-<footer></footer>
+<footer>
+  {
+    badge && (
+      <a
+        href="https://notbyai.fyi"
+        rel="noopener noreferrer"
+        aria-label="Written by a human, not by AI"
+      >
+        <img
+          src="/icons/written-by-human.svg"
+          alt="Written by a human, not by AI"
+          width="131"
+          height="42"
+        />
+      </a>
+    )
+  }
+</footer>
