@@ -106,6 +106,12 @@ h3 {
   color: var(--link-color);
 }
 
+:is(h1, h2, h3) a:has(> .link-icon) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+}
+
 :is(h1, h2, h3) a:hover {
   color: var(--link-hover-color);
 }

@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import { subtitle, url, preview, images, readMore } from "../util/Format";
 import Page from "../layouts/Page.astro";
+import LinkIcon from "../components/LinkIcon.astro";
 
 const entries = await getCollection("posts");
 const posts = entries.map((e) => e.data);
@@ -16,7 +17,10 @@ const selected = visible.slice(0, 20);
       selected.map((item) => (
         <article>
           <h1>
-            <a href={url(item)}>{item.title}</a>
+            <a href={url(item)}>
+              {item.external_link && <LinkIcon />}
+              {item.title}
+            </a>
           </h1>
           <p class="subtitle">{subtitle(item)}</p>
           <Fragment set:html={preview(item)} />
