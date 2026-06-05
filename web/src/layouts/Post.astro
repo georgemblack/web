@@ -24,16 +24,16 @@ const ogImage = post.images.length > 0 ? post.images[0].src : undefined;
         <h1>
           {
             post.external_link ? (
-              <a href={post.external_link}>
-                <LinkIcon />
-                {post.title}
-              </a>
+              <a href={post.external_link}>{post.title}</a>
             ) : (
               post.title
             )
           }
         </h1>
-        <p class="subtitle">{subtitle(post)}</p>
+        <p class="subtitle">
+          {post.external_link && <LinkIcon />}
+          {subtitle(post)}
+        </p>
         <slot />
       </article>
     </main>
