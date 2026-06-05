@@ -98,7 +98,19 @@ export async function getRenderedPost(
   const isPortableText = row.portable_text === 1;
   let images: RenderedPostImage[] = [];
 
-  if (!isPortableText) {
+  if (isPortableText) {
+    const blocks = JSON.parse(row.content_pt ?? "[]") as Array<{
+      _type?: string;
+      key?: string;
+      alt?: string;
+    }>;
+    images = blocks
+      .filter((block) => block._type === "image" && block.key)
+      .map((block) => ({
+        src: `/files/${block.key}`,
+        alt: block.alt ?? "",
+      }));
+  } else {
     const blocks = JSON.parse(row.content ?? "[]") as ContentBlock[];
     images = blocks
       .filter(
