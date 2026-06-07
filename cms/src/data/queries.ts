@@ -1,11 +1,5 @@
+import { render, renderPreview } from "./transform";
 import {
-  render,
-  renderPreview,
-  renderPortableText,
-  renderPortableTextPreview,
-} from "./transform";
-import {
-  ContentBlock,
   CreatePostInput,
   FileType,
   ListFilesFilters,
@@ -24,33 +18,23 @@ import {
 export async function getPost(
   db: D1Database,
   id: string,
-  format?: "legacy" | "pt",
 ): Promise<Post | null> {
   const row = await db
     .prepare(
-      "SELECT id, title, published, slug, status, hidden, gallery, external_link, portable_text, content, content_pt FROM posts WHERE id = ? AND deleted = 0",
+      "SELECT id, title, published, slug, status, hidden, gallery, external_link, content_pt FROM posts WHERE id = ? AND deleted = 0",
     )
     .bind(id)
     .first<
-      Omit<Post, "content" | "hidden" | "gallery" | "portable_text"> & {
-        content: string | null;
+      Omit<Post, "content" | "hidden" | "gallery"> & {
         content_pt: string | null;
         hidden: number;
         gallery: number;
-        portable_text: number;
       }
     >();
 
   if (!row) {
     return null;
   }
-
-  const isPortableText = row.portable_text === 1;
-  const useContentPt =
-    format === "pt" || (format === undefined && isPortableText);
-  const rawContent = useContentPt
-    ? (row.content_pt ?? "[]")
-    : (row.content ?? "[]");
 
   return {
     id: row.id,
@@ -61,8 +45,7 @@ export async function getPost(
     hidden: row.hidden === 1,
     gallery: row.gallery === 1,
     external_link: row.external_link,
-    portable_text: isPortableText,
-    content: JSON.parse(rawContent),
+    content: JSON.parse(row.content_pt ?? "[]"),
   };
 }
 
@@ -72,7 +55,7 @@ export async function getRenderedPost(
 ): Promise<RenderedPost | null> {
   const row = await db
     .prepare(
-      "SELECT id, title, published, slug, status, hidden, gallery, external_link, portable_text, content, content_pt, content_html, preview_html FROM posts WHERE id = ? AND deleted = 0",
+      "SELECT id, title, published, slug, status, hidden, gallery, external_link, content_pt, content_html, preview_html FROM posts WHERE id = ? AND deleted = 0",
     )
     .bind(id)
     .first<{
@@ -84,8 +67,6 @@ export async function getRenderedPost(
       hidden: number;
       gallery: number;
       external_link: string | null;
-      portable_text: number;
-      content: string | null;
       content_pt: string | null;
       content_html: string;
       preview_html: string | null;
@@ -95,30 +76,17 @@ export async function getRenderedPost(
     return null;
   }
 
-  const isPortableText = row.portable_text === 1;
-  let images: RenderedPostImage[] = [];
-
-  if (isPortableText) {
-    const blocks = JSON.parse(row.content_pt ?? "[]") as Array<{
-      _type?: string;
-      key?: string;
-      alt?: string;
-    }>;
-    images = blocks
-      .filter((block) => block._type === "image" && block.key)
-      .map((block) => ({
-        src: `/files/${block.key}`,
-        alt: block.alt ?? "",
-      }));
-  } else {
-    const blocks = JSON.parse(row.content ?? "[]") as ContentBlock[];
-    images = blocks
-      .filter(
-        (block): block is ContentBlock & { type: "image" } =>
-          block.type === "image",
-      )
-      .map((block) => ({ src: `/files/${block.key}`, alt: block.alt }));
-  }
+  const blocks = JSON.parse(row.content_pt ?? "[]") as Array<{
+    _type?: string;
+    key?: string;
+    alt?: string;
+  }>;
+  const images: RenderedPostImage[] = blocks
+    .filter((block) => block._type === "image" && block.key)
+    .map((block) => ({
+      src: `/files/${block.key}`,
+      alt: block.alt ?? "",
+    }));
 
   return {
     id: row.id,
@@ -129,7 +97,6 @@ export async function getRenderedPost(
     hidden: row.hidden === 1,
     gallery: row.gallery === 1,
     external_link: row.external_link,
-    portable_text: isPortableText,
     content_html: row.content_html,
     preview_html: row.preview_html,
     images,
@@ -141,7 +108,7 @@ export async function listPosts(
   filters?: ListPostsFilters,
 ): Promise<PostListItem[]> {
   let query =
-    "SELECT id, title, published, status, hidden, gallery, portable_text FROM posts WHERE deleted = 0";
+    "SELECT id, title, published, status, hidden, gallery FROM posts WHERE deleted = 0";
   const bindings: (string | number)[] = [];
 
   if (filters?.hidden !== undefined) {
@@ -160,17 +127,15 @@ export async function listPosts(
     .prepare(query)
     .bind(...bindings)
     .all<
-      Omit<PostListItem, "hidden" | "gallery" | "portable_text"> & {
+      Omit<PostListItem, "hidden" | "gallery"> & {
         hidden: number;
         gallery: number;
-        portable_text: number;
       }
     >();
   return result.results.map((row) => ({
     ...row,
     hidden: row.hidden === 1,
     gallery: row.gallery === 1,
-    portable_text: row.portable_text === 1,
   }));
 }
 
@@ -181,17 +146,13 @@ export async function createPost(
   const validated = createPostInputSchema.parse(input);
 
   const id = crypto.randomUUID();
-  const contentHtml = validated.portable_text
-    ? renderPortableText(validated.content)
-    : render(validated.content as ContentBlock[]);
-  const previewHtml = validated.portable_text
-    ? renderPortableTextPreview(validated.content)
-    : renderPreview(validated.content as ContentBlock[]);
+  const contentHtml = render(validated.content);
+  const previewHtml = renderPreview(validated.content);
 
   const serializedContent = JSON.stringify(validated.content);
   await db
     .prepare(
-      "INSERT INTO posts (id, title, published, slug, status, hidden, gallery, external_link, portable_text, content, content_pt, content_html, preview_html) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO posts (id, title, published, slug, status, hidden, gallery, external_link, content_pt, content_html, preview_html) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     )
     .bind(
       id,
@@ -202,9 +163,7 @@ export async function createPost(
       validated.hidden ? 1 : 0,
       validated.gallery ? 1 : 0,
       validated.external_link,
-      validated.portable_text ? 1 : 0,
-      validated.portable_text ? null : serializedContent,
-      validated.portable_text ? serializedContent : null,
+      serializedContent,
       contentHtml,
       previewHtml,
     )
@@ -219,7 +178,6 @@ export async function createPost(
     hidden: validated.hidden,
     gallery: validated.gallery,
     external_link: validated.external_link,
-    portable_text: validated.portable_text,
     content: validated.content,
   };
 }
@@ -231,40 +189,20 @@ export async function updatePost(
   const validated = updatePostInputSchema.parse(input);
 
   const existing = await db
-    .prepare(
-      "SELECT portable_text, content_html, preview_html FROM posts WHERE id = ? AND deleted = 0",
-    )
+    .prepare("SELECT id FROM posts WHERE id = ? AND deleted = 0")
     .bind(validated.id)
-    .first<{
-      portable_text: number;
-      content_html: string;
-      preview_html: string | null;
-    }>();
+    .first<{ id: string }>();
   if (!existing) {
     return null;
   }
 
-  const existingFlag = existing.portable_text === 1;
-  const savingPt = validated.portable_text;
-  const writingToActiveColumn = savingPt === existingFlag;
-
   const serializedContent = JSON.stringify(validated.content);
+  const contentHtml = render(validated.content);
+  const previewHtml = renderPreview(validated.content);
 
-  const contentHtml = writingToActiveColumn
-    ? savingPt
-      ? renderPortableText(validated.content)
-      : render(validated.content as ContentBlock[])
-    : existing.content_html;
-  const previewHtml = writingToActiveColumn
-    ? savingPt
-      ? renderPortableTextPreview(validated.content)
-      : renderPreview(validated.content as ContentBlock[])
-    : existing.preview_html;
-
-  const contentColumn = savingPt ? "content_pt" : "content";
   await db
     .prepare(
-      `UPDATE posts SET title = ?, published = ?, slug = ?, status = ?, hidden = ?, gallery = ?, external_link = ?, ${contentColumn} = ?, content_html = ?, preview_html = ? WHERE id = ?`,
+      "UPDATE posts SET title = ?, published = ?, slug = ?, status = ?, hidden = ?, gallery = ?, external_link = ?, content_pt = ?, content_html = ?, preview_html = ? WHERE id = ?",
     )
     .bind(
       validated.title,
@@ -290,49 +228,8 @@ export async function updatePost(
     hidden: validated.hidden,
     gallery: validated.gallery,
     external_link: validated.external_link,
-    portable_text: existingFlag,
     content: validated.content,
   };
-}
-
-export async function setPortableText(
-  db: D1Database,
-  id: string,
-  portableText: boolean,
-): Promise<{ status: PostStatus } | null> {
-  const row = await db
-    .prepare(
-      "SELECT status, content, content_pt FROM posts WHERE id = ? AND deleted = 0",
-    )
-    .bind(id)
-    .first<{
-      status: PostStatus;
-      content: string | null;
-      content_pt: string | null;
-    }>();
-  if (!row) {
-    return null;
-  }
-
-  const rawContent = portableText
-    ? (row.content_pt ?? "[]")
-    : (row.content ?? "[]");
-  const parsed = JSON.parse(rawContent);
-  const contentHtml = portableText
-    ? renderPortableText(parsed)
-    : render(parsed as ContentBlock[]);
-  const previewHtml = portableText
-    ? renderPortableTextPreview(parsed)
-    : renderPreview(parsed as ContentBlock[]);
-
-  await db
-    .prepare(
-      "UPDATE posts SET portable_text = ?, content_html = ?, preview_html = ? WHERE id = ?",
-    )
-    .bind(portableText ? 1 : 0, contentHtml, previewHtml, id)
-    .run();
-
-  return { status: row.status };
 }
 
 export async function deletePost(db: D1Database, id: string): Promise<boolean> {

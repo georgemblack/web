@@ -10,7 +10,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
 import PaddedSurface from "@/components/PaddedSurface";
-import { createPost, deletePost, listPosts, setPortableText } from "@/data/db";
+import { createPost, deletePost, listPosts } from "@/data/db";
 import { PostStatus } from "@/data/types";
 
 const STATUS_OPTIONS: Array<PostStatus | "all"> = ["all", "draft", "published"];
@@ -49,7 +49,6 @@ function App() {
         status: "draft",
         hidden: false,
         gallery: false,
-        portable_text: false,
         external_link: null,
         content: [],
       },
@@ -60,37 +59,11 @@ function App() {
     });
   };
 
-  const handleCreatePTPost = async () => {
-    const now = new Date().toISOString();
-    const post = await createPost({
-      data: {
-        title: "Untitled",
-        slug: `untitled-${Date.now()}`,
-        published: now,
-        status: "draft",
-        hidden: false,
-        gallery: false,
-        portable_text: true,
-        external_link: null,
-        content: [],
-      },
-    });
-    await router.navigate({
-      to: "/posts/pt/$postId",
-      params: { postId: post.id },
-    });
-  };
-
   const handleDelete = async (postId: string, postTitle: string) => {
     if (!window.confirm(`Are you sure you want to delete "${postTitle}"?`)) {
       return;
     }
     await deletePost({ data: postId });
-    await router.invalidate();
-  };
-
-  const handleTogglePortableText = async (postId: string, enabled: boolean) => {
-    await setPortableText({ data: { id: postId, portable_text: enabled } });
     await router.invalidate();
   };
 
@@ -108,9 +81,6 @@ function App() {
           </Link>
           <Button variant="primary" onClick={handleCreatePost}>
             New Post
-          </Button>
-          <Button variant="secondary" onClick={handleCreatePTPost}>
-            New PT Post
           </Button>
         </div>
       </div>
@@ -149,10 +119,7 @@ function App() {
         <div className="mt-4 flex flex-col gap-6">
           {filteredPosts.map((post) => (
             <div className="flex items-center justify-between" key={post.id}>
-              <Link
-                to={post.portable_text ? "/posts/pt/$postId" : "/posts/$postId"}
-                params={{ postId: post.id }}
-              >
+              <Link to="/posts/$postId" params={{ postId: post.id }}>
                 <h2 className="font-bold">{post.title}</h2>
                 <div className="flex gap-4">
                   <span>
@@ -171,21 +138,9 @@ function App() {
                       {post.status}
                     </Badge>
                   </span>
-                  {post.portable_text && (
-                    <span>
-                      <Badge variant="outline">PT</Badge>
-                    </span>
-                  )}
                 </div>
               </Link>
               <div className="flex items-center gap-3">
-                <Switch
-                  label="PT"
-                  checked={post.portable_text}
-                  onCheckedChange={(checked) =>
-                    handleTogglePortableText(post.id, checked)
-                  }
-                />
                 <Button
                   variant="secondary"
                   shape="square"

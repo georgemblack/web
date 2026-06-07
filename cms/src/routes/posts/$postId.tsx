@@ -1,289 +1,183 @@
-import { Breadcrumbs, Button, Input, Switch, Text } from "@cloudflare/kumo";
+import { Breadcrumbs, Button, Text } from "@cloudflare/kumo";
 import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
+  defineSchema,
+  EditorProvider,
+  PortableTextEditable,
+} from "@portabletext/editor";
+import type {
+  PortableTextBlock,
+  RenderAnnotationFunction,
+  RenderBlockFunction,
+  RenderDecoratorFunction,
+  RenderListItemFunction,
+  RenderStyleFunction,
+} from "@portabletext/editor";
+import { defineBehavior } from "@portabletext/editor/behaviors";
 import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+  BehaviorPlugin,
+  EventListenerPlugin,
+} from "@portabletext/editor/plugins";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import PaddedSurface from "@/components/PaddedSurface";
-import {
-  SortableBlockItem,
-  type BlockWithId,
-} from "@/components/SortableBlockItem";
+import { CodeBlockObjectEditor } from "@/components/editor/CodeBlockObjectEditor";
+import { FilesContext } from "@/components/editor/FilesContext";
+import { ImageBlockObjectEditor } from "@/components/editor/ImageBlockObjectEditor";
+import { MetadataSection } from "@/components/editor/MetadataSection";
+import { Toolbar } from "@/components/editor/Toolbar";
+import { VideoBlockObjectEditor } from "@/components/editor/VideoBlockObjectEditor";
 import { getPost, updatePost } from "@/data/db";
 import { listFiles } from "@/data/files";
-import type { Post, ContentBlock, PostStatus } from "@/data/types";
+import type { Post, PostStatus, WebFile } from "@/data/types";
 
 export const Route = createFileRoute("/posts/$postId")({
   ssr: "data-only",
   component: RouteComponent,
   loader: async ({ params }) => {
-    const post = await getPost({
-      data: { id: params.postId, format: "legacy" },
-    });
+    const post = await getPost({ data: params.postId });
     if (!post) throw new Error("Post not found");
     const postYear = new Date(post.published).getFullYear();
     const files = await listFiles({ data: { year: postYear } });
-    const fileNames = files.map((f) => f.key);
-    return { post, fileNames };
+    return { post, files };
   },
 });
 
-function generateBlockId(): string {
-  return crypto.randomUUID();
-}
+const schemaDefinition = defineSchema({
+  decorators: [
+    { name: "strong" },
+    { name: "em" },
+    { name: "underline" },
+    { name: "code" },
+  ],
+  styles: [
+    { name: "normal" },
+    { name: "h2" },
+    { name: "h3" },
+    { name: "blockquote" },
+  ],
+  annotations: [{ name: "link", fields: [{ name: "href", type: "string" }] }],
+  lists: [{ name: "bullet" }, { name: "number" }],
+  inlineObjects: [],
+  blockObjects: [
+    {
+      name: "image",
+      fields: [
+        { name: "key", type: "string" },
+        { name: "alt", type: "string" },
+        { name: "caption", type: "string" },
+      ],
+    },
+    {
+      name: "video",
+      fields: [
+        { name: "key", type: "string" },
+        { name: "caption", type: "string" },
+        { name: "controls", type: "boolean" },
+        { name: "autoplay", type: "boolean" },
+        { name: "muted", type: "boolean" },
+        { name: "loop", type: "boolean" },
+      ],
+    },
+    { name: "line" },
+    { name: "break" },
+    {
+      name: "code",
+      fields: [{ name: "text", type: "string" }],
+    },
+  ],
+});
 
-function addIdsToBlocks(blocks: ContentBlock[]): BlockWithId[] {
-  return blocks.map((block) => ({
-    ...block,
-    _id: generateBlockId(),
-  }));
-}
+const convertSoftBreakToBreak = defineBehavior({
+  on: "insert.soft break",
+  actions: [() => [{ type: "execute", event: { type: "insert.break" } }]],
+});
 
-function removeIdsFromBlocks(blocks: BlockWithId[]): ContentBlock[] {
-  return blocks.map(({ _id, ...block }) => block as ContentBlock);
-}
-
-// Emoji constants
-const EMOJI = {
-  markdown: "\uD83D\uDCDD", // Memo
-  image: "\uD83D\uDDBC\uFE0F", // Framed picture
-  video: "\uD83C\uDFA5", // Movie camera
-  text: "\u270D\uFE0F", // Writing hand
-  heading: "\uD83D\uDD24", // Input Latin letters (abc with arrow)
-  quote: "\u275D", // Heavy double turned comma quotation mark
-  code: "\uD83D\uDCBB", // Laptop
-  line: "\u2500", // Box drawings light horizontal
-  break: "\u2702\uFE0F", // Scissors
-  draft: "\uD83D\uDCDD", // Memo
-  published: "\uD83D\uDE80", // Rocket
-  hidden: "\uD83E\uDEE3", // Face with peeking eye
-  visible: "\uD83D\uDC40", // Eyes
-  gallery: "\uD83D\uDDBC\uFE0F", // Framed picture
+const renderStyle: RenderStyleFunction = (props) => {
+  const tag = props.schemaType.value;
+  switch (tag) {
+    case "h2":
+      return <h2 className="text-xl font-bold">{props.children}</h2>;
+    case "h3":
+      return <h3 className="text-lg font-semibold">{props.children}</h3>;
+    case "blockquote":
+      return (
+        <blockquote className="border-l-4 border-gray-300 pl-4 text-gray-600 italic">
+          {props.children}
+        </blockquote>
+      );
+    default:
+      return <p>{props.children}</p>;
+  }
 };
 
-// Add Block Row
-interface AddBlockRowProps {
-  onAdd: (type: ContentBlock["type"]) => void;
-}
+const renderDecorator: RenderDecoratorFunction = (props) => {
+  switch (props.value) {
+    case "strong":
+      return <strong>{props.children}</strong>;
+    case "em":
+      return <em>{props.children}</em>;
+    case "underline":
+      return <u>{props.children}</u>;
+    case "code":
+      return <code>{props.children}</code>;
+    default:
+      return <>{props.children}</>;
+  }
+};
 
-function AddBlockRow({ onAdd }: AddBlockRowProps) {
-  return (
-    <div className="flex flex-wrap items-center gap-2 pt-2">
-      <Button
-        variant="secondary"
-        onClick={() => onAdd("text")}
-        aria-label="Add Text"
-      >
-        {EMOJI.text} Text
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => onAdd("markdown")}
-        aria-label="Add Markdown"
-      >
-        {EMOJI.markdown} Markdown
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => onAdd("image")}
-        aria-label="Add Image"
-      >
-        {EMOJI.image} Image
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => onAdd("video")}
-        aria-label="Add Video"
-      >
-        {EMOJI.video} Video
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => onAdd("heading")}
-        aria-label="Add Heading"
-      >
-        {EMOJI.heading} Heading
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => onAdd("quote")}
-        aria-label="Add Quote"
-      >
-        {EMOJI.quote} Quote
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => onAdd("code")}
-        aria-label="Add Code"
-      >
-        {EMOJI.code} Code
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => onAdd("line")}
-        aria-label="Add Line"
-      >
-        {EMOJI.line} Line
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => onAdd("break")}
-        aria-label="Add Break"
-      >
-        {EMOJI.break} Break
-      </Button>
-    </div>
-  );
-}
+const renderAnnotation: RenderAnnotationFunction = (props) => {
+  if (props.schemaType.name === "link") {
+    return <span className="text-blue-600 underline">{props.children}</span>;
+  }
+  return <>{props.children}</>;
+};
 
-interface MetadataSectionProps {
-  title: string;
-  published: string;
-  slug: string;
-  status: PostStatus;
-  hidden: boolean;
-  gallery: boolean;
-  externalLink: string | null;
-  onChange: (field: string, value: string | null) => void;
-  onHiddenChange: (hidden: boolean) => void;
-  onGalleryChange: (gallery: boolean) => void;
-}
+const renderListItem: RenderListItemFunction = (props) => {
+  return <li className="ml-6">{props.children}</li>;
+};
 
-function MetadataSection({
-  title,
-  published,
-  slug,
-  status,
-  hidden,
-  gallery,
-  externalLink,
-  onChange,
-  onHiddenChange,
-  onGalleryChange,
-}: MetadataSectionProps) {
-  // Convert ISO string to datetime-local format
-  const toDatetimeLocal = (isoString: string): string => {
-    const date = new Date(isoString);
-    const offset = date.getTimezoneOffset();
-    const localDate = new Date(date.getTime() - offset * 60 * 1000);
-    return localDate.toISOString().slice(0, 16);
-  };
-
-  // Convert datetime-local to ISO string
-  const toISOString = (datetimeLocal: string): string => {
-    return new Date(datetimeLocal).toISOString();
-  };
-
-  return (
-    <PaddedSurface>
-      <div className="flex flex-col gap-4">
-        <div>
-          <div className="flex gap-3">
-            <Input
-              className="w-full"
-              value={title}
-              onChange={(e) => onChange("title", e.target.value)}
-              placeholder="Title"
-              aria-label="Title"
-            />
-            <Button
-              variant="secondary"
-              aria-label="Generate slug from title"
-              onClick={() => {
-                const generated = title
-                  .toLowerCase()
-                  .replace(/[^a-z0-9-]/g, "-")
-                  .replace(/-+/g, "-")
-                  .replace(/^-|-$/g, "");
-                onChange("slug", generated);
-              }}
-            >
-              Slug
-            </Button>
-          </div>
-          <div className="mt-1 ml-1">
-            <Text variant="secondary">{slug}</Text>
-          </div>
+const renderBlock: RenderBlockFunction = (props) => {
+  switch (props.schemaType.name) {
+    case "image":
+      return <ImageBlockObjectEditor value={props.value} path={props.path} />;
+    case "video":
+      return <VideoBlockObjectEditor value={props.value} path={props.path} />;
+    case "line":
+      return (
+        <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">
+          Line
         </div>
-        <div className="flex gap-3">
-          <Input
-            className="w-full"
-            type="datetime-local"
-            value={toDatetimeLocal(published)}
-            onChange={(e) => onChange("published", toISOString(e.target.value))}
-            placeholder="Published date"
-            aria-label="Published date"
-          />
-          <Button
-            variant="secondary"
-            aria-label="Set published date to now"
-            onClick={() => {
-              onChange("published", new Date().toISOString());
-            }}
-          >
-            Now
-          </Button>
+      );
+    case "break":
+      return (
+        <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">
+          Preview break
         </div>
-        <Input
-          type="url"
-          value={externalLink ?? ""}
-          onChange={(e) => onChange("externalLink", e.target.value || null)}
-          placeholder="https://example.com"
-          aria-label="External link"
-        />
-        <div className="flex gap-3">
-          <Switch
-            label={status === "published" ? EMOJI.published : EMOJI.draft}
-            checked={status === "published"}
-            onCheckedChange={(checked) =>
-              onChange("status", checked ? "published" : "draft")
-            }
-          />
-          <Switch
-            label={hidden ? EMOJI.hidden : EMOJI.visible}
-            checked={hidden}
-            onCheckedChange={onHiddenChange}
-          />
-          <Switch
-            label={EMOJI.gallery}
-            checked={gallery}
-            onCheckedChange={onGalleryChange}
-          />
-        </div>
-      </div>
-    </PaddedSurface>
-  );
-}
+      );
+    case "code":
+      return <CodeBlockObjectEditor value={props.value} path={props.path} />;
+    default:
+      return <div>{props.children}</div>;
+  }
+};
 
 function RouteComponent() {
-  const { post, fileNames } = Route.useLoaderData();
+  const { post, files } = Route.useLoaderData();
 
   if (!post) {
     return <span>Post not found</span>;
   }
 
-  return <PostEditor key={post.published} post={post} fileNames={fileNames} />;
+  return <PostEditor key={post.published} post={post} files={files} />;
 }
 
 interface PostEditorProps {
   post: Post;
-  fileNames: string[];
+  files: WebFile[];
 }
 
-function PostEditor({ post, fileNames }: PostEditorProps) {
+function PostEditor({ post, files }: PostEditorProps) {
   const router = useRouter();
 
   const [title, setTitle] = useState(
@@ -297,8 +191,8 @@ function PostEditor({ post, fileNames }: PostEditorProps) {
   const [externalLink, setExternalLink] = useState<string | null>(
     post.external_link,
   );
-  const [blocks, setBlocks] = useState<BlockWithId[]>(() =>
-    addIdsToBlocks(post.content as ContentBlock[]),
+  const [ptValue, setPtValue] = useState<PortableTextBlock[]>(
+    () => (post.content as PortableTextBlock[]) ?? [],
   );
 
   const [isSaving, setIsSaving] = useState(false);
@@ -312,15 +206,7 @@ function PostEditor({ post, fileNames }: PostEditorProps) {
     hidden !== post.hidden ||
     gallery !== post.gallery ||
     externalLink !== post.external_link ||
-    JSON.stringify(removeIdsFromBlocks(blocks)) !==
-      JSON.stringify(post.content);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  );
+    JSON.stringify(ptValue) !== JSON.stringify(post.content);
 
   const handleMetadataChange = (field: string, value: string | null) => {
     switch (field) {
@@ -342,125 +228,14 @@ function PostEditor({ post, fileNames }: PostEditorProps) {
     }
   };
 
-  const handleBlockChange = (index: number, updatedBlock: BlockWithId) => {
-    setBlocks((prev) => {
-      const newBlocks = [...prev];
-      newBlocks[index] = updatedBlock;
-      return newBlocks;
-    });
-  };
-
-  const handleBlockDelete = (index: number) => {
-    setBlocks((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleBlockMoveUp = (index: number) => {
-    if (index <= 0) return;
-    setBlocks((prev) => {
-      const newBlocks = [...prev];
-      [newBlocks[index - 1], newBlocks[index]] = [
-        newBlocks[index],
-        newBlocks[index - 1],
-      ];
-      return newBlocks;
-    });
-  };
-
-  const handleBlockMoveDown = (index: number) => {
-    setBlocks((prev) => {
-      if (index >= prev.length - 1) return prev;
-      const newBlocks = [...prev];
-      [newBlocks[index], newBlocks[index + 1]] = [
-        newBlocks[index + 1],
-        newBlocks[index],
-      ];
-      return newBlocks;
-    });
-  };
-
-  const handleAddBlock = (type: ContentBlock["type"]) => {
-    let newBlock: BlockWithId;
-
-    switch (type) {
-      case "markdown":
-        newBlock = {
-          _id: generateBlockId(),
-          type: "markdown",
-          text: "",
-        };
-        break;
-      case "image":
-        newBlock = {
-          _id: generateBlockId(),
-          type: "image",
-          key: "",
-          alt: "",
-        };
-        break;
-      case "video":
-        newBlock = {
-          _id: generateBlockId(),
-          type: "video",
-          key: "",
-        };
-        break;
-      case "text":
-        newBlock = {
-          _id: generateBlockId(),
-          type: "text",
-          text: "",
-        };
-        break;
-      case "heading":
-        newBlock = {
-          _id: generateBlockId(),
-          type: "heading",
-          text: "",
-          level: 2,
-        };
-        break;
-      case "quote":
-        newBlock = {
-          _id: generateBlockId(),
-          type: "quote",
-          text: "",
-        };
-        break;
-      case "code":
-        newBlock = {
-          _id: generateBlockId(),
-          type: "code",
-          text: "",
-        };
-        break;
-      case "line":
-        newBlock = {
-          _id: generateBlockId(),
-          type: "line",
-        };
-        break;
-      case "break":
-        newBlock = {
-          _id: generateBlockId(),
-          type: "break",
-        };
-        break;
-    }
-
-    setBlocks((prev) => [...prev, newBlock]);
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (over && active.id !== over.id) {
-      setBlocks((prev) => {
-        const oldIndex = prev.findIndex((block) => block._id === active.id);
-        const newIndex = prev.findIndex((block) => block._id === over.id);
-        return arrayMove(prev, oldIndex, newIndex);
-      });
-    }
-  };
+  const handleMutation = useCallback(
+    (event: { type: string; value?: PortableTextBlock[] }) => {
+      if (event.type === "mutation" && event.value) {
+        setPtValue(event.value);
+      }
+    },
+    [],
+  );
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -477,8 +252,7 @@ function PostEditor({ post, fileNames }: PostEditorProps) {
           hidden,
           gallery,
           external_link: externalLink,
-          portable_text: false,
-          content: removeIdsFromBlocks(blocks),
+          content: ptValue,
         },
       });
 
@@ -539,39 +313,29 @@ function PostEditor({ post, fileNames }: PostEditorProps) {
         />
       </div>
 
-      <div className="mt-6 flex flex-col gap-4">
-        {blocks.length === 0 ? (
-          <Text variant="secondary">No content blocks yet. Add one below.</Text>
-        ) : (
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={blocks.map((b) => b._id)}
-              strategy={verticalListSortingStrategy}
+      <div className="mt-6">
+        <PaddedSurface>
+          <FilesContext.Provider value={files}>
+            <EditorProvider
+              initialConfig={{
+                schemaDefinition,
+                initialValue: ptValue.length > 0 ? ptValue : undefined,
+              }}
             >
-              {blocks.map((block, index) => (
-                <SortableBlockItem
-                  key={block._id}
-                  block={block}
-                  fileNames={fileNames}
-                  onChange={(updatedBlock) =>
-                    handleBlockChange(index, updatedBlock)
-                  }
-                  onDelete={() => handleBlockDelete(index)}
-                  onMoveUp={() => handleBlockMoveUp(index)}
-                  onMoveDown={() => handleBlockMoveDown(index)}
-                  isFirst={index === 0}
-                  isLast={index === blocks.length - 1}
-                />
-              ))}
-            </SortableContext>
-          </DndContext>
-        )}
-
-        <AddBlockRow onAdd={handleAddBlock} />
+              <EventListenerPlugin on={handleMutation} />
+              <BehaviorPlugin behaviors={[convertSoftBreakToBreak]} />
+              <Toolbar />
+              <PortableTextEditable
+                className="min-h-64 [&_ol]:list-decimal [&_ul]:list-disc [&>*+*]:mt-4"
+                renderStyle={renderStyle}
+                renderBlock={renderBlock}
+                renderDecorator={renderDecorator}
+                renderAnnotation={renderAnnotation}
+                renderListItem={renderListItem}
+              />
+            </EditorProvider>
+          </FilesContext.Provider>
+        </PaddedSurface>
       </div>
     </>
   );

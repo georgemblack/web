@@ -1,57 +1,31 @@
 import { toHTML } from "@portabletext/to-html";
 import type { PortableTextBlock } from "@portabletext/types";
-import { marked } from "marked";
 
-import {
-  ContentBlock,
-  MarkdownBlock,
-  ImageBlock,
-  VideoBlock,
-  TextBlock,
-  HeadingBlock,
-  QuoteBlock,
-  CodeBlock,
-} from "./types";
+import { CodeValue, ImageValue, VideoValue } from "./types";
 
-function renderMarkdown(block: MarkdownBlock): string {
-  return marked.parse(block.text, { async: false });
-}
-
-function renderText(block: TextBlock): string {
-  return block.text;
-}
-
-function renderImage(block: ImageBlock): string {
-  const img = `<img src="/files/${block.key}" alt="${block.alt}">`;
-  if (block.caption) {
-    return `<figure>${img}<figcaption>${block.caption}</figcaption></figure>`;
+function renderImage(value: ImageValue): string {
+  const img = `<img src="/files/${value.key}" alt="${value.alt}">`;
+  if (value.caption) {
+    return `<figure>${img}<figcaption>${value.caption}</figcaption></figure>`;
   }
   return `<figure>${img}</figure>`;
 }
 
-function renderVideo(block: VideoBlock): string {
-  const attrs = [`src="/files/${block.key}"`, 'loading="lazy"', "playsinline"];
-  if (block.controls) attrs.push("controls");
-  if (block.autoplay) attrs.push("autoplay");
-  if (block.muted) attrs.push("muted");
-  if (block.loop) attrs.push("loop");
+function renderVideo(value: VideoValue): string {
+  const attrs = [`src="/files/${value.key}"`, 'loading="lazy"', "playsinline"];
+  if (value.controls) attrs.push("controls");
+  if (value.autoplay) attrs.push("autoplay");
+  if (value.muted) attrs.push("muted");
+  if (value.loop) attrs.push("loop");
   const video = `<video ${attrs.join(" ")}></video>`;
-  if (block.caption) {
-    return `<figure>${video}<figcaption>${block.caption}</figcaption></figure>`;
+  if (value.caption) {
+    return `<figure>${video}<figcaption>${value.caption}</figcaption></figure>`;
   }
   return `<figure>${video}</figure>`;
 }
 
-function renderHeading(block: HeadingBlock): string {
-  return `<h${block.level}>${block.text}</h${block.level}>`;
-}
-
-function renderQuote(block: QuoteBlock): string {
-  return `<blockquote><p>${block.text}</p></blockquote>`;
-}
-
-function renderCode(block: CodeBlock): string {
-  return `<pre><code>${block.text}</code></pre>`;
+function renderCode(value: CodeValue): string {
+  return `<pre><code>${value.text}</code></pre>`;
 }
 
 function renderLine(): string {
@@ -60,41 +34,6 @@ function renderLine(): string {
 
 function renderBreak(): string {
   return '<div class="break"></div>';
-}
-
-export function renderBlock(block: ContentBlock): string {
-  switch (block.type) {
-    case "markdown":
-      return renderMarkdown(block);
-    case "text":
-      return renderText(block);
-    case "image":
-      return renderImage(block);
-    case "video":
-      return renderVideo(block);
-    case "heading":
-      return renderHeading(block);
-    case "quote":
-      return renderQuote(block);
-    case "code":
-      return renderCode(block);
-    case "line":
-      return renderLine();
-    case "break":
-      return renderBreak();
-  }
-}
-
-export function render(content: ContentBlock[]): string {
-  return content.map(renderBlock).join("");
-}
-
-export function renderPreview(content: ContentBlock[]): string | null {
-  const breakIndex = content.findIndex((block) => block.type === "break");
-  if (breakIndex === -1) {
-    return null;
-  }
-  return content.slice(0, breakIndex).map(renderBlock).join("");
 }
 
 const portableTextOptions = {
@@ -108,25 +47,21 @@ const portableTextOptions = {
     },
     types: {
       image: ({ value }: { value: unknown }) =>
-        renderImage(value as ImageBlock),
+        renderImage(value as ImageValue),
       video: ({ value }: { value: unknown }) =>
-        renderVideo(value as VideoBlock),
-      code: ({ value }: { value: unknown }) => renderCode(value as CodeBlock),
+        renderVideo(value as VideoValue),
+      code: ({ value }: { value: unknown }) => renderCode(value as CodeValue),
       line: () => renderLine(),
       break: () => renderBreak(),
     },
   },
 };
 
-export function renderPortableText(
-  blocks: Array<Record<string, unknown>>,
-): string {
-  return toHTML(blocks as unknown as PortableTextBlock[], portableTextOptions);
+export function render(blocks: PortableTextBlock[]): string {
+  return toHTML(blocks, portableTextOptions);
 }
 
-export function renderPortableTextPreview(
-  blocks: Array<Record<string, unknown>>,
-): string | null {
+export function renderPreview(blocks: PortableTextBlock[]): string | null {
   if (blocks.length === 0) {
     return null;
   }
@@ -138,8 +73,5 @@ export function renderPortableTextPreview(
   if (previewBlocks.length === 0) {
     return null;
   }
-  return toHTML(
-    previewBlocks as unknown as PortableTextBlock[],
-    portableTextOptions,
-  );
+  return toHTML(previewBlocks, portableTextOptions);
 }

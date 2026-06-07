@@ -12,7 +12,6 @@ interface Post {
   content_html: string;
   preview_html: string | null;
   deleted: number;
-  portable_text: number;
 }
 
 interface WebDbFile {
@@ -64,7 +63,7 @@ export default {
 async function queryPosts(db: D1Database): Promise<Post[]> {
   const result = await db
     .prepare(
-      "SELECT id, title, published, slug, status, hidden, gallery, external_link, content, content_pt, content_html, preview_html, deleted, portable_text FROM posts WHERE deleted = 0 ORDER BY published DESC",
+      "SELECT id, title, published, slug, status, hidden, gallery, external_link, content, content_pt, content_html, preview_html, deleted FROM posts WHERE deleted = 0 ORDER BY published DESC",
     )
     .all<Post>();
   return result.results;

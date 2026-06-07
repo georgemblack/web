@@ -2,20 +2,13 @@ import { z } from "zod";
 
 export type PostStatus = "draft" | "published";
 
-export interface MarkdownBlock {
-  type: "markdown";
-  text: string; // Markdown content
-}
-
-export interface ImageBlock {
-  type: "image";
+export interface ImageValue {
   key: string;
   alt: string;
   caption?: string;
 }
 
-export interface VideoBlock {
-  type: "video";
+export interface VideoValue {
   key: string;
   caption?: string;
   controls?: boolean;
@@ -24,48 +17,12 @@ export interface VideoBlock {
   loop?: boolean;
 }
 
-export interface TextBlock {
-  type: "text";
-  text: string; // HTML
-}
-
-export interface HeadingBlock {
-  type: "heading";
-  text: string;
-  level: 1 | 2 | 3 | 4 | 5 | 6;
-}
-
-export interface QuoteBlock {
-  type: "quote";
+export interface CodeValue {
   text: string;
 }
-
-export interface CodeBlock {
-  type: "code";
-  text: string;
-}
-
-export interface LineBlock {
-  type: "line";
-}
-
-export interface BreakBlock {
-  type: "break";
-}
-
-export type ContentBlock =
-  | MarkdownBlock
-  | ImageBlock
-  | VideoBlock
-  | TextBlock
-  | HeadingBlock
-  | QuoteBlock
-  | CodeBlock
-  | LineBlock
-  | BreakBlock;
 
 /**
- * A post represents represents a post in the database, and is returned by
+ * A post represents a post in the database, and is returned by
  * the `/api/posts/$id` endpoint.
  */
 export interface Post {
@@ -77,9 +34,8 @@ export interface Post {
   hidden: boolean;
   gallery: boolean;
   external_link: string | null;
-  portable_text: boolean;
-  // Content is ContentBlock[] for regular posts, or Portable Text blocks for PT posts.
-  // Typed loosely here to avoid deep type instantiation in TanStack's inference.
+  // Portable Text blocks. Typed loosely here to avoid deep type instantiation
+  // in TanStack's inference.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: any;
 }
@@ -97,7 +53,6 @@ export interface RenderedPost {
   hidden: boolean;
   gallery: boolean;
   external_link: string | null;
-  portable_text: boolean;
   content_html: string;
   preview_html: string | null;
   images: RenderedPostImage[];
@@ -115,7 +70,6 @@ export interface PostListItem {
   status: PostStatus;
   hidden: boolean;
   gallery: boolean;
-  portable_text: boolean;
 }
 
 export interface ListPostsFilters {
@@ -150,7 +104,6 @@ export const createPostInputSchema = z.object({
   status: postStatusSchema,
   hidden: z.boolean(),
   gallery: z.boolean(),
-  portable_text: z.boolean(),
   content: z.array(z.any()),
   external_link: urlString,
 });
@@ -163,7 +116,6 @@ export const updatePostInputSchema = z.object({
   status: postStatusSchema,
   hidden: z.boolean(),
   gallery: z.boolean(),
-  portable_text: z.boolean(),
   content: z.array(z.any()),
   external_link: urlString,
 });

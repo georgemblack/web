@@ -12,11 +12,9 @@ import {
 } from "./types";
 
 export const getPost = createServerFn({ method: "GET" })
-  .inputValidator((input: { id: string; format?: "legacy" | "pt" } | string) =>
-    typeof input === "string" ? { id: input } : input,
-  )
-  .handler(async ({ data }): Promise<Post | null> => {
-    return queries.getPost(env.WEB_DB, data.id, data.format);
+  .inputValidator((id: string) => id)
+  .handler(async ({ data: id }): Promise<Post | null> => {
+    return queries.getPost(env.WEB_DB, id);
   });
 
 export const getRenderedPost = createServerFn({ method: "GET" })
@@ -45,20 +43,6 @@ export const updatePost = createServerFn({ method: "POST" })
       await fetch(env.DEPLOY_HOOK_URL, { method: "POST" });
     }
     return post;
-  });
-
-export const setPortableText = createServerFn({ method: "POST" })
-  .inputValidator((input: { id: string; portable_text: boolean }) => input)
-  .handler(async ({ data }): Promise<boolean> => {
-    const result = await queries.setPortableText(
-      env.WEB_DB,
-      data.id,
-      data.portable_text,
-    );
-    if (result && result.status === "published") {
-      await fetch(env.DEPLOY_HOOK_URL, { method: "POST" });
-    }
-    return result !== null;
   });
 
 export const deletePost = createServerFn({ method: "POST" })
