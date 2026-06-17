@@ -10,11 +10,11 @@
     "format": "prettier . --write"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.15.0",
+    "@cloudflare/vitest-pool-workers": "^0.16.7",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@typescript/native-preview": "beta",
-    "vitest": "~4.1.5",
-    "wrangler": "^4.85.0"
+    "vitest": "~4.1.6",
+    "wrangler": "^4.93.0"
   },
   "volta": {
     "node": "24.14.0"
