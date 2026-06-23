@@ -21,6 +21,7 @@ const selected = visible.slice(0, 20);
           </h1>
           <p class="subtitle">
             {item.external_link && <LinkIcon />}
+            {item.external_link && " "}
             {subtitle(item)}
           </p>
           <Fragment set:html={preview(item)} />

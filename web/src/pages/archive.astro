@@ -38,6 +38,7 @@ posts.forEach((post) => {
                   <li>
                     <a href={`/${slug(item)}`}>
                       {item.external_link && <LinkIcon />}
+                      {item.external_link && " "}
                       {item.title}
                     </a>
                   </li>
