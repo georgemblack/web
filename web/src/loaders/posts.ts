@@ -29,20 +29,16 @@ type PostEntryFilter = { slug: string } | { id: string };
 
 const CMS_BASE = "https://cms.georgeblack.workers.dev";
 
-// CF Access credentials are Worker secrets, read from the runtime environment.
-interface CmsEnv {
-  CF_ACCESS_CLIENT_ID?: string;
-  CF_ACCESS_CLIENT_SECRET?: string;
-}
-
-function requestHeaders(): Record<string, string> {
+// CF Access service-token credentials, read from the Secrets Store at request time.
+async function requestHeaders(): Promise<Record<string, string>> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
-  const { CF_ACCESS_CLIENT_ID, CF_ACCESS_CLIENT_SECRET } = env as CmsEnv;
-  if (CF_ACCESS_CLIENT_ID && CF_ACCESS_CLIENT_SECRET) {
-    headers["CF-Access-Client-Id"] = CF_ACCESS_CLIENT_ID;
-    headers["CF-Access-Client-Secret"] = CF_ACCESS_CLIENT_SECRET;
+  const clientId = await env.CF_ACCESS_CLIENT_ID.get();
+  const clientSecret = await env.CF_ACCESS_CLIENT_SECRET.get();
+  if (clientId && clientSecret) {
+    headers["CF-Access-Client-Id"] = clientId;
+    headers["CF-Access-Client-Secret"] = clientSecret;
   }
   return headers;
 }
@@ -51,7 +47,7 @@ function requestHeaders(): Record<string, string> {
 async function fetchPublishedPosts(): Promise<
   { id: string; data: PostData }[]
 > {
-  const headers = requestHeaders();
+  const headers = await requestHeaders();
 
   const listResponse = await fetch(`${CMS_BASE}/api/posts`, { headers });
   if (!listResponse.ok) {
@@ -84,7 +80,7 @@ async function fetchRenderedPost(
   path: string,
 ): Promise<{ id: string; data: PostData } | null> {
   const response = await fetch(`${CMS_BASE}${path}`, {
-    headers: requestHeaders(),
+    headers: await requestHeaders(),
   });
   if (response.status === 404) return null;
   if (!response.ok) {

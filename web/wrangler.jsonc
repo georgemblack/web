@@ -17,4 +17,16 @@
   "cache": {
     "enabled": true,
   },
+  "secrets_store_secrets": [
+    {
+      "binding": "CF_ACCESS_CLIENT_ID",
+      "store_id": "7a396974a7624558b2be43191bbd9fe6",
+      "secret_name": "web-client-id",
+    },
+    {
+      "binding": "CF_ACCESS_CLIENT_SECRET",
+      "store_id": "7a396974a7624558b2be43191bbd9fe6",
+      "secret_name": "web-client-secret",
+    },
+  ],
 }
