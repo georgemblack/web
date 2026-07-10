@@ -44,20 +44,11 @@ export const createPost = createServerFn({ method: "POST" })
 export const updatePost = createServerFn({ method: "POST" })
   .inputValidator(updatePostInputSchema)
   .handler(async ({ data: input }): Promise<Post | null> => {
-    const post = await queries.updatePost(env.WEB_DB, input);
-    if (post && post.status === "published") {
-      await fetch(env.DEPLOY_HOOK_URL, { method: "POST" });
-    }
-    return post;
+    return queries.updatePost(env.WEB_DB, input);
   });
 
 export const deletePost = createServerFn({ method: "POST" })
   .inputValidator((id: string) => id)
   .handler(async ({ data: id }): Promise<boolean> => {
-    const post = await queries.getPost(env.WEB_DB, id);
-    const deleted = await queries.deletePost(env.WEB_DB, id);
-    if (deleted && post?.status === "published") {
-      await fetch(env.DEPLOY_HOOK_URL, { method: "POST" });
-    }
-    return deleted;
+    return queries.deletePost(env.WEB_DB, id);
   });

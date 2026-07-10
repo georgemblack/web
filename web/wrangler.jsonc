@@ -14,11 +14,6 @@
   ],
   "preview_urls": false,
   "workers_dev": false,
-  // The Cloudflare adapter fills in `main` and the static `assets` binding at build
-  // time, writing the final config to dist/server/wrangler.json.
-  //
-  // Put Cloudflare's cache in front of the worker; responses are cached per their
-  // Cache-Control headers, and cache hits skip the worker entirely.
   "cache": {
     "enabled": true,
   },
