@@ -1,21 +1,19 @@
 ---
-import { getCollection } from "astro:content";
+import { getLiveEntry } from "astro:content";
 import Post from "../layouts/Post.astro";
-import { slug } from "../util/Format";
 
-export async function getStaticPaths() {
-  const entries = await getCollection("posts");
-  return entries.map((entry) => ({
-    params: {
-      slug: slug(entry.data),
-    },
-    props: {
-      post: entry.data,
-    },
-  }));
-}
+const { slug } = Astro.params;
+const { entry, error } = await getLiveEntry("posts", { slug: slug ?? "" });
 
-const { post } = Astro.props;
+if (error) return new Response("Failed to load post", { status: 502 });
+if (!entry) return new Response("Not found", { status: 404 });
+
+const post = entry.data;
+
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, s-maxage=3600, stale-while-revalidate=86400",
+);
 ---
 
 <Post post={post}>

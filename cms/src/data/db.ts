@@ -23,6 +23,12 @@ export const getRenderedPost = createServerFn({ method: "GET" })
     return queries.getRenderedPost(env.WEB_DB, id);
   });
 
+export const getRenderedPostBySlug = createServerFn({ method: "GET" })
+  .inputValidator((slug: string) => slug)
+  .handler(async ({ data: slug }): Promise<RenderedPost | null> => {
+    return queries.getRenderedPostBySlug(env.WEB_DB, slug);
+  });
+
 export const listPosts = createServerFn({ method: "GET" })
   .inputValidator((input: ListPostsFilters | undefined) => input)
   .handler(async ({ data: filters }): Promise<PostListItem[]> => {

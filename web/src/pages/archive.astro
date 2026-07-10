@@ -1,13 +1,20 @@
 ---
-import { getCollection } from "astro:content";
+import { getLiveCollection } from "astro:content";
 import type { Post } from "../util/Format";
 import { slug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 import LinkIcon from "../components/LinkIcon.astro";
 
-const entries = await getCollection("posts");
+const { entries, error } = await getLiveCollection("posts");
+if (error || !entries)
+  return new Response("Failed to load posts", { status: 502 });
+
 const posts = entries.map((e) => e.data);
-posts.sort((a, b) => (a.published < b.published ? 1 : -1));
+
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, s-maxage=3600, stale-while-revalidate=86400",
+);
 
 // Group posts by year
 const years: { [key: string]: Post[] } = {};

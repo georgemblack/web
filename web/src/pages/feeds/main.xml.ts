@@ -1,14 +1,16 @@
 import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
-import { getCollection } from "astro:content";
+import { getLiveCollection } from "astro:content";
 
 import { url } from "../../util/Format";
 
 export async function GET(context: APIContext) {
-  const entries = await getCollection("posts");
+  const { entries, error } = await getLiveCollection("posts");
+  if (error || !entries)
+    return new Response("Failed to load posts", { status: 502 });
+
   const posts = entries.map((e) => e.data);
-  posts.sort((a, b) => (a.published < b.published ? 1 : -1));
-  return rss({
+  const response = await rss({
     title: "George Black",
     description:
       "George is a software engineer working in Austin, with a small home on the internet.",
@@ -21,4 +23,9 @@ export async function GET(context: APIContext) {
       content: item.content_html,
     })),
   });
+  response.headers.set(
+    "Cache-Control",
+    "public, s-maxage=3600, stale-while-revalidate=86400",
+  );
+  return response;
 }

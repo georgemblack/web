@@ -2,6 +2,7 @@
   "name": "web",
   "account_id": "bc4564dd499c0a9b8a7bb79c9bd5ea6d",
   "compatibility_date": "2026-01-15",
+  "compatibility_flags": ["nodejs_compat"],
   "observability": {
     "enabled": true,
   },
@@ -13,7 +14,12 @@
   ],
   "preview_urls": false,
   "workers_dev": false,
-  "assets": {
-    "directory": "./dist",
+  // The Cloudflare adapter fills in `main` and the static `assets` binding at build
+  // time, writing the final config to dist/server/wrangler.json.
+  //
+  // Put Cloudflare's cache in front of the worker; responses are cached per their
+  // Cache-Control headers, and cache hits skip the worker entirely.
+  "cache": {
+    "enabled": true,
   },
 }

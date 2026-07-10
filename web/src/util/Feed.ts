@@ -1,4 +1,4 @@
-import { getCollection } from "astro:content";
+import { getLiveCollection } from "astro:content";
 
 import { absoluteUrl, image } from "./Format";
 
@@ -32,9 +32,10 @@ type FeedItem = {
 };
 
 export async function generateFeed(): Promise<Feed> {
-  const entries = await getCollection("posts");
+  const { entries, error } = await getLiveCollection("posts");
+  if (error) throw error;
+  if (!entries) throw new Error("Failed to load posts");
   const posts = entries.map((e) => e.data);
-  posts.sort((a, b) => (a.published < b.published ? 1 : -1));
 
   // Generate feed items
   const feedItems: FeedItem[] = posts.map((item) => {
