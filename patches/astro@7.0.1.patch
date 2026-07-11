@@ -1,0 +1,13 @@
+diff --git a/dist/runtime/server/render/util.js b/dist/runtime/server/render/util.js
+index 7d869e8e47cfd3988dc369eb65073c4579b0c027..2fe3214f4972e25418ea3f596a0465576a26dc92 100644
+--- a/dist/runtime/server/render/util.js
++++ b/dist/runtime/server/render/util.js
+@@ -153,7 +153,7 @@ class BufferedRenderer {
+ function createBufferedRenderer(destination, renderFunction) {
+   return new BufferedRenderer(destination, renderFunction);
+ }
+-const isNode = typeof process !== "undefined" && Object.prototype.toString.call(process) === "[object process]";
++const isNode = typeof process !== "undefined" && Object.prototype.toString.call(process) === "[object process]" && !(typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers");
+ const isDeno = typeof Deno !== "undefined";
+ function promiseWithResolvers() {
+   let resolve, reject;

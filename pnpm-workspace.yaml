@@ -7,3 +7,5 @@ allowBuilds:
   esbuild: true
   sharp: true
   workerd: true
+patchedDependencies:
+  astro@7.0.1: patches/astro@7.0.1.patch
