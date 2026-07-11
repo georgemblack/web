@@ -157,24 +157,6 @@ importers:
         specifier: ^4.85.0
         version: 4.85.0
 
-  files:
-    devDependencies:
-      '@cloudflare/vitest-pool-workers':
-        specifier: ^0.15.0
-        version: 0.15.0(@vitest/runner@4.1.5)(@vitest/snapshot@4.1.5)(vitest@4.1.5(@types/node@25.6.0)(jsdom@29.1.0)(vite@8.0.16(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3)))
-      '@trivago/prettier-plugin-sort-imports':
-        specifier: ^6.0.2
-        version: 6.0.2(prettier@3.8.3)
-      '@typescript/native-preview':
-        specifier: beta
-        version: 7.0.0-dev.20260421.2
-      vitest:
-        specifier: ~4.1.5
-        version: 4.1.5(@types/node@25.6.0)(jsdom@29.1.0)(vite@8.0.16(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3))
-      wrangler:
-        specifier: ^4.85.0
-        version: 4.85.0
-
   web:
     dependencies:
       '@astrojs/check':
@@ -545,13 +527,6 @@ packages:
     peerDependencies:
       vite: ^6.1.0 || ^7.0.0 || ^8.0.0
       wrangler: ^4.107.1
-
-  '@cloudflare/vitest-pool-workers@0.15.0':
-    resolution: {integrity: sha512-RldzOt2az3mxICTxT7GTSBpm6f61lx4LWSilRHm4pJlYAGmfGu1pyinqJw3UmPZS9N/mrN7XwdZAqFV6hhmWaQ==}
-    peerDependencies:
-      '@vitest/runner': ^4.1.0
-      '@vitest/snapshot': ^4.1.0
-      vitest: ^4.1.0
 
   '@cloudflare/workerd-darwin-64@1.20260424.1':
     resolution: {integrity: sha512-yFR1XaJbSDLg/qbwtrYaU2xwFXatIPKR5nrMQCN1q/m6+Qe/j6r+kCnFEvOJjMZOm9iCKsE6Qly5clgl4u32qw==}
@@ -2466,9 +2441,6 @@ packages:
   ci-info@4.4.0:
     resolution: {integrity: sha512-77PSwercCZU2Fc4sX94eF8k8Pxte6JAwL4/ICZLFjJLqegs7kCuAsqqj/70NQF6TvDpgFjkubQB2FW2ZZddvQg==}
     engines: {node: '>=8'}
-
-  cjs-module-lexer@1.4.3:
-    resolution: {integrity: sha512-9z8TZaGM1pfswYeXrUpzPrkx8UnWYdhJclsiYMm6x/w5+nN+8Tf/LnAgfLGQCm59qAOxU8WwHEq2vNwF6i4j+Q==}
 
   cliui@8.0.1:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
@@ -4658,21 +4630,6 @@ snapshots:
       - utf-8-validate
       - workerd
 
-  '@cloudflare/vitest-pool-workers@0.15.0(@vitest/runner@4.1.5)(@vitest/snapshot@4.1.5)(vitest@4.1.5(@types/node@25.6.0)(jsdom@29.1.0)(vite@8.0.16(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3)))':
-    dependencies:
-      '@vitest/runner': 4.1.5
-      '@vitest/snapshot': 4.1.5
-      cjs-module-lexer: 1.4.3
-      esbuild: 0.27.3
-      miniflare: 4.20260424.0
-      vitest: 4.1.5(@types/node@25.6.0)(jsdom@29.1.0)(vite@8.0.16(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3))
-      wrangler: 4.85.0
-      zod: 3.25.76
-    transitivePeerDependencies:
-      - '@cloudflare/workers-types'
-      - bufferutil
-      - utf-8-validate
-
   '@cloudflare/workerd-darwin-64@1.20260424.1':
     optional: true
 
@@ -6143,14 +6100,6 @@ snapshots:
     optionalDependencies:
       vite: 8.0.10(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3)
 
-  '@vitest/mocker@4.1.5(vite@8.0.16(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3))':
-    dependencies:
-      '@vitest/spy': 4.1.5
-      estree-walker: 3.0.3
-      magic-string: 0.30.21
-    optionalDependencies:
-      vite: 8.0.16(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3)
-
   '@vitest/pretty-format@4.1.5':
     dependencies:
       tinyrainbow: 3.1.0
@@ -6471,8 +6420,6 @@ snapshots:
       readdirp: 5.0.0
 
   ci-info@4.4.0: {}
-
-  cjs-module-lexer@1.4.3: {}
 
   cliui@8.0.1:
     dependencies:
@@ -7823,34 +7770,6 @@ snapshots:
       tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
       vite: 8.0.10(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 25.6.0
-      jsdom: 29.1.0
-    transitivePeerDependencies:
-      - msw
-
-  vitest@4.1.5(@types/node@25.6.0)(jsdom@29.1.0)(vite@8.0.16(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3)):
-    dependencies:
-      '@vitest/expect': 4.1.5
-      '@vitest/mocker': 4.1.5(vite@8.0.16(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3))
-      '@vitest/pretty-format': 4.1.5
-      '@vitest/runner': 4.1.5
-      '@vitest/snapshot': 4.1.5
-      '@vitest/spy': 4.1.5
-      '@vitest/utils': 4.1.5
-      es-module-lexer: 2.1.0
-      expect-type: 1.3.0
-      magic-string: 0.30.21
-      obug: 2.1.1
-      pathe: 2.0.3
-      picomatch: 4.0.4
-      std-env: 4.1.0
-      tinybench: 2.9.0
-      tinyexec: 1.1.1
-      tinyglobby: 0.2.16
-      tinyrainbow: 3.1.0
-      vite: 8.0.16(@types/node@25.6.0)(esbuild@0.28.1)(jiti@2.6.1)(yaml@2.8.3)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 25.6.0

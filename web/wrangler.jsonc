@@ -17,6 +17,16 @@
   "cache": {
     "enabled": true,
   },
+  "r2_buckets": [
+    {
+      "binding": "WEB_FILES",
+      "bucket_name": "web-files",
+    },
+    {
+      "binding": "WEB_FILES_CACHE",
+      "bucket_name": "web-files-cache",
+    },
+  ],
   "secrets_store_secrets": [
     {
       "binding": "CF_ACCESS_CLIENT_ID",

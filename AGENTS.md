@@ -2,10 +2,9 @@
 
 This is a monorepo of services used to power my personal website. Each top-level directory represents a Cloudflare Worker:
 
-* `web`: The front-end of the website
+* `web`: The front-end of the website (also serves files from R2 at `/files/*`)
 * `cms`: The content management system
 * `cms-backup`: Data backup
-* `files`: File serving and caching
 
 For project-specific context, see `AGENTS.md` within each directory.
 

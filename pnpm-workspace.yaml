@@ -1,7 +1,6 @@
 packages:
   - 'cms'
   - 'cms-backup'
-  - 'files'
   - 'web'
 allowBuilds:
   esbuild: true
