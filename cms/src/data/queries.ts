@@ -6,9 +6,6 @@ import {
   ListPostsFilters,
   Post,
   PostListItem,
-  PostStatus,
-  RenderedPost,
-  RenderedPostImage,
   UpdatePostInput,
   WebFile,
   createPostInputSchema,
@@ -47,82 +44,6 @@ export async function getPost(
     external_link: row.external_link,
     content: JSON.parse(row.content_pt ?? "[]"),
   };
-}
-
-// Columns needed to render a post on the front-end.
-const RENDERED_COLUMNS =
-  "id, title, published, slug, status, hidden, gallery, external_link, content_pt, content_html, preview_html";
-
-interface RenderedPostRow {
-  id: string;
-  title: string;
-  published: string;
-  slug: string;
-  status: PostStatus;
-  hidden: number;
-  gallery: number;
-  external_link: string | null;
-  content_pt: string | null;
-  content_html: string;
-  preview_html: string | null;
-}
-
-function toRenderedPost(row: RenderedPostRow): RenderedPost {
-  const blocks = JSON.parse(row.content_pt ?? "[]") as Array<{
-    _type?: string;
-    key?: string;
-    alt?: string;
-  }>;
-  const images: RenderedPostImage[] = blocks
-    .filter((block) => block._type === "image" && block.key)
-    .map((block) => ({
-      src: `/files/${block.key}`,
-      alt: block.alt ?? "",
-    }));
-
-  return {
-    id: row.id,
-    title: row.title,
-    published: row.published,
-    slug: row.slug,
-    status: row.status,
-    hidden: row.hidden === 1,
-    gallery: row.gallery === 1,
-    external_link: row.external_link,
-    content_html: row.content_html,
-    preview_html: row.preview_html,
-    images,
-  };
-}
-
-export async function getRenderedPost(
-  db: D1Database,
-  id: string,
-): Promise<RenderedPost | null> {
-  const row = await db
-    .prepare(
-      `SELECT ${RENDERED_COLUMNS} FROM posts WHERE id = ? AND deleted = 0`,
-    )
-    .bind(id)
-    .first<RenderedPostRow>();
-
-  return row ? toRenderedPost(row) : null;
-}
-
-// Look up a published post by its unique slug. Used by the front-end to render
-// an individual post page without needing the post's ID.
-export async function getRenderedPostBySlug(
-  db: D1Database,
-  slug: string,
-): Promise<RenderedPost | null> {
-  const row = await db
-    .prepare(
-      `SELECT ${RENDERED_COLUMNS} FROM posts WHERE slug = ? AND status = 'published' AND deleted = 0`,
-    )
-    .bind(slug)
-    .first<RenderedPostRow>();
-
-  return row ? toRenderedPost(row) : null;
 }
 
 export async function listPosts(

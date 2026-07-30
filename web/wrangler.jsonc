@@ -17,6 +17,14 @@
   "cache": {
     "enabled": true,
   },
+  "d1_databases": [
+    {
+      "binding": "WEB_DB",
+      "database_name": "web",
+      "database_id": "9b0b56cc-daed-4e61-b4d2-a8ba33da1286",
+      "remote": true,
+    },
+  ],
   "r2_buckets": [
     {
       "binding": "WEB_FILES",
@@ -25,18 +33,6 @@
     {
       "binding": "WEB_FILES_CACHE",
       "bucket_name": "web-files-cache",
-    },
-  ],
-  "secrets_store_secrets": [
-    {
-      "binding": "CF_ACCESS_CLIENT_ID",
-      "store_id": "7a396974a7624558b2be43191bbd9fe6",
-      "secret_name": "web-client-id",
-    },
-    {
-      "binding": "CF_ACCESS_CLIENT_SECRET",
-      "store_id": "7a396974a7624558b2be43191bbd9fe6",
-      "secret_name": "web-client-secret",
     },
   ],
 }

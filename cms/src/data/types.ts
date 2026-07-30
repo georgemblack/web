@@ -21,10 +21,7 @@ export interface CodeValue {
   text: string;
 }
 
-/**
- * A post represents a post in the database, and is returned by
- * the `/api/posts/$id` endpoint.
- */
+/** A post as stored in the database and edited by the CMS. */
 export interface Post {
   id: string;
   title: string;
@@ -38,29 +35,6 @@ export interface Post {
   // in TanStack's inference.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: any;
-}
-
-/**
- * A rendered post is returned by the `/api/posts/$id/rendered` endpoint,
- * and includes only what is needed to render the front-end.
- */
-export interface RenderedPost {
-  id: string;
-  title: string;
-  published: string;
-  slug: string;
-  status: PostStatus;
-  hidden: boolean;
-  gallery: boolean;
-  external_link: string | null;
-  content_html: string;
-  preview_html: string | null;
-  images: RenderedPostImage[];
-}
-
-export interface RenderedPostImage {
-  src: string;
-  alt: string;
 }
 
 export interface PostListItem {

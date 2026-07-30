@@ -7,7 +7,6 @@ import {
   ListPostsFilters,
   Post,
   PostListItem,
-  RenderedPost,
   updatePostInputSchema,
 } from "./types";
 
@@ -15,18 +14,6 @@ export const getPost = createServerFn({ method: "GET" })
   .inputValidator((id: string) => id)
   .handler(async ({ data: id }): Promise<Post | null> => {
     return queries.getPost(env.WEB_DB, id);
-  });
-
-export const getRenderedPost = createServerFn({ method: "GET" })
-  .inputValidator((id: string) => id)
-  .handler(async ({ data: id }): Promise<RenderedPost | null> => {
-    return queries.getRenderedPost(env.WEB_DB, id);
-  });
-
-export const getRenderedPostBySlug = createServerFn({ method: "GET" })
-  .inputValidator((slug: string) => slug)
-  .handler(async ({ data: slug }): Promise<RenderedPost | null> => {
-    return queries.getRenderedPostBySlug(env.WEB_DB, slug);
   });
 
 export const listPosts = createServerFn({ method: "GET" })

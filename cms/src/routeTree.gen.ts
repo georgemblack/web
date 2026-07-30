@@ -13,11 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as FilesIndexRouteImport } from './routes/files/index'
 import { Route as PostsPostIdRouteImport } from './routes/posts/$postId'
 import { Route as FilesNewIndexRouteImport } from './routes/files/new/index'
-import { Route as ApiPostsIndexRouteImport } from './routes/api/posts/index'
 import { Route as FilesNewOptimizedRouteImport } from './routes/files/new/optimized'
-import { Route as ApiPostsPostIdIndexRouteImport } from './routes/api/posts/$postId/index'
-import { Route as ApiPostsBySlugSlugIndexRouteImport } from './routes/api/posts/by-slug/$slug/index'
-import { Route as ApiPostsPostIdRenderedIndexRouteImport } from './routes/api/posts/$postId/rendered/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -39,54 +35,25 @@ const FilesNewIndexRoute = FilesNewIndexRouteImport.update({
   path: '/files/new/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPostsIndexRoute = ApiPostsIndexRouteImport.update({
-  id: '/api/posts/',
-  path: '/api/posts/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FilesNewOptimizedRoute = FilesNewOptimizedRouteImport.update({
   id: '/files/new/optimized',
   path: '/files/new/optimized',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPostsPostIdIndexRoute = ApiPostsPostIdIndexRouteImport.update({
-  id: '/api/posts/$postId/',
-  path: '/api/posts/$postId/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPostsBySlugSlugIndexRoute = ApiPostsBySlugSlugIndexRouteImport.update({
-  id: '/api/posts/by-slug/$slug/',
-  path: '/api/posts/by-slug/$slug/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPostsPostIdRenderedIndexRoute =
-  ApiPostsPostIdRenderedIndexRouteImport.update({
-    id: '/api/posts/$postId/rendered/',
-    path: '/api/posts/$postId/rendered/',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/files/': typeof FilesIndexRoute
   '/files/new/optimized': typeof FilesNewOptimizedRoute
-  '/api/posts/': typeof ApiPostsIndexRoute
   '/files/new/': typeof FilesNewIndexRoute
-  '/api/posts/$postId/': typeof ApiPostsPostIdIndexRoute
-  '/api/posts/$postId/rendered/': typeof ApiPostsPostIdRenderedIndexRoute
-  '/api/posts/by-slug/$slug/': typeof ApiPostsBySlugSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/files': typeof FilesIndexRoute
   '/files/new/optimized': typeof FilesNewOptimizedRoute
-  '/api/posts': typeof ApiPostsIndexRoute
   '/files/new': typeof FilesNewIndexRoute
-  '/api/posts/$postId': typeof ApiPostsPostIdIndexRoute
-  '/api/posts/$postId/rendered': typeof ApiPostsPostIdRenderedIndexRoute
-  '/api/posts/by-slug/$slug': typeof ApiPostsBySlugSlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -94,11 +61,7 @@ export interface FileRoutesById {
   '/posts/$postId': typeof PostsPostIdRoute
   '/files/': typeof FilesIndexRoute
   '/files/new/optimized': typeof FilesNewOptimizedRoute
-  '/api/posts/': typeof ApiPostsIndexRoute
   '/files/new/': typeof FilesNewIndexRoute
-  '/api/posts/$postId/': typeof ApiPostsPostIdIndexRoute
-  '/api/posts/$postId/rendered/': typeof ApiPostsPostIdRenderedIndexRoute
-  '/api/posts/by-slug/$slug/': typeof ApiPostsBySlugSlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -107,33 +70,16 @@ export interface FileRouteTypes {
     | '/posts/$postId'
     | '/files/'
     | '/files/new/optimized'
-    | '/api/posts/'
     | '/files/new/'
-    | '/api/posts/$postId/'
-    | '/api/posts/$postId/rendered/'
-    | '/api/posts/by-slug/$slug/'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/posts/$postId'
-    | '/files'
-    | '/files/new/optimized'
-    | '/api/posts'
-    | '/files/new'
-    | '/api/posts/$postId'
-    | '/api/posts/$postId/rendered'
-    | '/api/posts/by-slug/$slug'
+  to: '/' | '/posts/$postId' | '/files' | '/files/new/optimized' | '/files/new'
   id:
     | '__root__'
     | '/'
     | '/posts/$postId'
     | '/files/'
     | '/files/new/optimized'
-    | '/api/posts/'
     | '/files/new/'
-    | '/api/posts/$postId/'
-    | '/api/posts/$postId/rendered/'
-    | '/api/posts/by-slug/$slug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -141,11 +87,7 @@ export interface RootRouteChildren {
   PostsPostIdRoute: typeof PostsPostIdRoute
   FilesIndexRoute: typeof FilesIndexRoute
   FilesNewOptimizedRoute: typeof FilesNewOptimizedRoute
-  ApiPostsIndexRoute: typeof ApiPostsIndexRoute
   FilesNewIndexRoute: typeof FilesNewIndexRoute
-  ApiPostsPostIdIndexRoute: typeof ApiPostsPostIdIndexRoute
-  ApiPostsPostIdRenderedIndexRoute: typeof ApiPostsPostIdRenderedIndexRoute
-  ApiPostsBySlugSlugIndexRoute: typeof ApiPostsBySlugSlugIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -178,39 +120,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FilesNewIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/posts/': {
-      id: '/api/posts/'
-      path: '/api/posts'
-      fullPath: '/api/posts/'
-      preLoaderRoute: typeof ApiPostsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/files/new/optimized': {
       id: '/files/new/optimized'
       path: '/files/new/optimized'
       fullPath: '/files/new/optimized'
       preLoaderRoute: typeof FilesNewOptimizedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/posts/$postId/': {
-      id: '/api/posts/$postId/'
-      path: '/api/posts/$postId'
-      fullPath: '/api/posts/$postId/'
-      preLoaderRoute: typeof ApiPostsPostIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/posts/by-slug/$slug/': {
-      id: '/api/posts/by-slug/$slug/'
-      path: '/api/posts/by-slug/$slug'
-      fullPath: '/api/posts/by-slug/$slug/'
-      preLoaderRoute: typeof ApiPostsBySlugSlugIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/posts/$postId/rendered/': {
-      id: '/api/posts/$postId/rendered/'
-      path: '/api/posts/$postId/rendered'
-      fullPath: '/api/posts/$postId/rendered/'
-      preLoaderRoute: typeof ApiPostsPostIdRenderedIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -221,11 +135,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostsPostIdRoute: PostsPostIdRoute,
   FilesIndexRoute: FilesIndexRoute,
   FilesNewOptimizedRoute: FilesNewOptimizedRoute,
-  ApiPostsIndexRoute: ApiPostsIndexRoute,
   FilesNewIndexRoute: FilesNewIndexRoute,
-  ApiPostsPostIdIndexRoute: ApiPostsPostIdIndexRoute,
-  ApiPostsPostIdRenderedIndexRoute: ApiPostsPostIdRenderedIndexRoute,
-  ApiPostsBySlugSlugIndexRoute: ApiPostsBySlugSlugIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
