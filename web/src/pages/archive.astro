@@ -4,6 +4,7 @@ import type { Post } from "../util/Format";
 import { slug } from "../util/Format";
 import Page from "../layouts/Page.astro";
 import LinkIcon from "../components/LinkIcon.astro";
+import { STANDARD_CONTENT_CACHE_CONTROL } from "../util/Cache";
 
 const { entries, error } = await getLiveCollection("posts");
 if (error || !entries)
@@ -13,7 +14,7 @@ const posts = entries.map((e) => e.data);
 
 Astro.response.headers.set(
   "Cache-Control",
-  "public, s-maxage=3600, stale-while-revalidate=86400",
+  STANDARD_CONTENT_CACHE_CONTROL,
 );
 
 // Group posts by year

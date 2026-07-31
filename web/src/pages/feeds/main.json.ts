@@ -1,10 +1,11 @@
 import { generateFeed } from "../../util/Feed";
+import { STANDARD_CONTENT_CACHE_CONTROL } from "../../util/Cache";
 
 export async function GET() {
   return new Response(JSON.stringify(await generateFeed()), {
     headers: {
       "Content-Type": "application/feed+json",
-      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+      "Cache-Control": STANDARD_CONTENT_CACHE_CONTROL,
     },
   });
 }
