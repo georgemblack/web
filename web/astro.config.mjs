@@ -7,6 +7,7 @@ export default defineConfig({
   site: "https://george.black",
   // Render pages on-demand in the Cloudflare Worker instead of building static files.
   output: "server",
+  session: false,
   adapter: cloudflare(),
   integrations: [
     sitemap({
