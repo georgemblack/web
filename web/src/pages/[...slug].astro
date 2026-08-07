@@ -6,6 +6,11 @@ import { cacheControlForPost } from "../util/Cache";
 const { slug } = Astro.params;
 const { entry, error } = await getLiveEntry("posts", { slug: slug ?? "" });
 
+// Astro reports a missing live-loader entry as an error rather than an absent
+// entry, so distinguish it from an actual failure talking to the data source.
+if (error?.name === "LiveEntryNotFoundError") {
+  return new Response("Not found", { status: 404 });
+}
 if (error) return new Response("Failed to load post", { status: 502 });
 if (!entry) return new Response("Not found", { status: 404 });
 
