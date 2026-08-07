@@ -11,6 +11,9 @@ export default defineConfig({
   adapter: cloudflare(),
   integrations: [
     sitemap({
+      // Post pages are resolved from D1 at request time, so Astro cannot
+      // discover their dynamic SSR URLs during the build.
+      customSitemaps: ["https://george.black/sitemap-posts.xml"],
       serialize(item) {
         // Trim trailing slashes
         if (item.url.endsWith("/")) item.url = item.url.slice(0, -1);
