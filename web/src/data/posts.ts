@@ -77,6 +77,21 @@ export async function listPublishedPosts(
   return result.results.map(toPostRecord);
 }
 
+export async function listVisiblePublishedPosts(
+  db: D1Database,
+  limit: number,
+  offset: number,
+): Promise<PostRecord[]> {
+  const result = await db
+    .prepare(
+      `SELECT ${POST_COLUMNS} FROM posts WHERE status = 'published' AND deleted = 0 AND hidden = 0 ORDER BY published DESC LIMIT ? OFFSET ?`,
+    )
+    .bind(limit, offset)
+    .all<PostRow>();
+
+  return result.results.map(toPostRecord);
+}
+
 export async function getPublishedPostBySlug(
   db: D1Database,
   slug: string,

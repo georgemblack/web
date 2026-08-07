@@ -1,0 +1,15 @@
+---
+interface Props {
+  page: number;
+  hasOlderPosts: boolean;
+}
+
+const { page, hasOlderPosts } = Astro.props;
+const newerHref = page === 2 ? "/home" : `/home/${page - 1}`;
+const olderHref = `/home/${page + 1}`;
+---
+
+<nav class="post-pagination" aria-label="Post pagination">
+  {page > 1 && <a href={newerHref}>⬅️ Newer posts</a>}
+  {hasOlderPosts && <a href={olderHref}>Older posts ➡️</a>}
+</nav>

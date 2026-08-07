@@ -1,0 +1,33 @@
+---
+import { env } from "cloudflare:workers";
+import PostList from "../../components/PostList.astro";
+import PostPagination from "../../components/PostPagination.astro";
+import { listVisiblePublishedPosts } from "../../data/posts";
+import Page from "../../layouts/Page.astro";
+import { cacheControlForPost } from "../../util/Cache";
+
+const PAGE_SIZE = 20;
+const page = Number(Astro.params.page);
+
+if (!Number.isSafeInteger(page) || page < 1)
+  return new Response("Not found", { status: 404 });
+
+const results = await listVisiblePublishedPosts(
+  env.WEB_DB,
+  PAGE_SIZE + 1,
+  (page - 1) * PAGE_SIZE,
+);
+const selected = results.slice(0, PAGE_SIZE).map((post) => post.data);
+
+if (selected.length === 0) return new Response("Not found", { status: 404 });
+
+Astro.response.headers.set(
+  "Cache-Control",
+  cacheControlForPost(selected[0].published),
+);
+---
+
+<Page title={`Home - Page ${page}`}>
+  <PostList posts={selected} />
+  <PostPagination page={page} hasOlderPosts={results.length > PAGE_SIZE} />
+</Page>

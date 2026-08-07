@@ -330,3 +330,9 @@ footer {
   color: Canvas;
   background-color: var(--link-hover-color);
 }
+
+.post-pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4em;
+}
