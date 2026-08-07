@@ -335,4 +335,8 @@ footer {
   display: flex;
   justify-content: space-between;
   margin-top: 4em;
+  padding-top: 0.75em;
+  border-top: 2px solid var(--line-separator-color);
+  font-family: var(--font-family-text);
+  font-size: 1em;
 }
