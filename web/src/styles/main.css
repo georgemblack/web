@@ -176,7 +176,7 @@ header h1 a:hover {
   color: var(--header-color);
 }
 
-nav {
+header nav {
   font-size: 1.5em;
   font-family: var(--font-family-rounded);
   font-weight: var(--font-weight-extreme);
@@ -339,4 +339,9 @@ footer {
   border-top: 2px solid var(--line-separator-color);
   font-family: var(--font-family-text);
   font-size: 1em;
+  font-weight: normal;
+}
+
+.post-pagination a:last-child {
+  margin-left: auto;
 }
