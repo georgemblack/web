@@ -9,13 +9,13 @@ const OPTIMIZED_IMAGE_WIDTH = 1200;
 const CACHE_CONTROL = "public, max-age=31536000";
 
 export const listFiles = createServerFn({ method: "GET" })
-  .inputValidator((filters: ListFilesFilters) => filters)
+  .validator((filters: ListFilesFilters) => filters)
   .handler(async ({ data: filters }): Promise<WebFile[]> => {
     return queries.listFiles(env.WEB_DB, filters);
   });
 
 export const uploadFile = createServerFn({ method: "POST" })
-  .inputValidator((data: FormData) => {
+  .validator((data: FormData) => {
     const file = data.get("file");
     const title = data.get("title");
     const type = data.get("type");
@@ -64,7 +64,7 @@ export const uploadFile = createServerFn({ method: "POST" })
   });
 
 export const toggleOptimize = createServerFn({ method: "POST" })
-  .inputValidator((key: string) => key)
+  .validator((key: string) => key)
   .handler(async ({ data: key }) => {
     const exists = await env.WEB_FILES_CACHE.head(key);
     if (exists) {
@@ -95,7 +95,7 @@ export const toggleOptimize = createServerFn({ method: "POST" })
   });
 
 export const uploadOptimizedFile = createServerFn({ method: "POST" })
-  .inputValidator((data: FormData) => {
+  .validator((data: FormData) => {
     const file = data.get("file");
     const key = data.get("key");
     if (!(file instanceof File)) throw new Error("file is required");
@@ -121,7 +121,7 @@ export const uploadOptimizedFile = createServerFn({ method: "POST" })
   });
 
 export const deleteFile = createServerFn({ method: "POST" })
-  .inputValidator((key: string) => key)
+  .validator((key: string) => key)
   .handler(async ({ data: key }) => {
     await env.WEB_FILES.delete(key);
     await env.WEB_FILES_CACHE.delete(key);

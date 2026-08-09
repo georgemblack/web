@@ -17,6 +17,17 @@ main {
   margin-top: 1rem;
 }
 
+/*
+ * Mobile Safari zooms the viewport when an editable form control has a
+ * computed font size below 16px. Keep all CMS form fields at that threshold
+ * so the behavior stays consistent for both Kumo and native controls.
+ */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
 /* Tiptap rich text editor */
 .tiptap {
   border: 1px solid var(--color-gray-7, #d1d5db);
