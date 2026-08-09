@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This is a monorepo of services used to power my personal website. Each top-level directory represents a Cloudflare Worker:
+This repository contains standalone services used to power my personal website. Each top-level directory can be moved into its own repository and represents a Cloudflare Worker:
 
 * `web`: The front-end of the website (also serves files from R2 at `/files/*`)
 * `cms`: The content management system
@@ -13,18 +13,12 @@ For project-specific context, see `AGENTS.md` within each directory.
 When making code changes, follow these rules:
 
 1. Use `volta` to manage node versions, `pnpm` for package management.
-2. Validate code changes by running `pnpm run dryrun` and `pnpm run typecheck`.
-3. Format code with `pnpm run format`.
+2. Validate code changes by running `pnpm run dryrun` and `pnpm run check`.
+3. Use `pnpm run check -- --fix` to apply formatting and safe lint fixes.
 
-## Running Commands Across All Projects
+## Running Commands
 
-This repo uses pnpm workspaces. Use `-r` (recursive) to run a script in every package:
-
-```sh
-pnpm -r run typecheck
-pnpm -r run format
-pnpm -r run dryrun
-pnpm -r run deploy
-```
+Run pnpm commands from the individual project directory. Each project has its own
+`package.json` and `pnpm-lock.yaml`.
 
 When asking questions, use the question format.

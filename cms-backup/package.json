@@ -6,17 +6,22 @@
     "deploy": "wrangler deploy",
     "dryrun": "wrangler deploy --dry-run",
     "typegen": "wrangler types",
-    "typecheck": "tsgo --noEmit",
-    "format": "prettier . --write"
+    "check": "vp check"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/node": "^25.6.0",
-    "@typescript/native-preview": "beta",
-    "prettier": "^3.8.3",
-    "wrangler": "^4.85.0"
+    "vite": "catalog:",
+    "wrangler": "^4.85.0",
+    "vite-plus": "catalog:"
   },
   "volta": {
     "node": "24.14.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.21.0",
+      "onFail": "download"
+    }
   }
 }

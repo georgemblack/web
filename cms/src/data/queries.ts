@@ -12,10 +12,7 @@ import {
   updatePostInputSchema,
 } from "./types";
 
-export async function getPost(
-  db: D1Database,
-  id: string,
-): Promise<Post | null> {
+export async function getPost(db: D1Database, id: string): Promise<Post | null> {
   const row = await db
     .prepare(
       "SELECT id, title, published, slug, status, hidden, gallery, external_link, content_pt FROM posts WHERE id = ? AND deleted = 0",
@@ -50,8 +47,7 @@ export async function listPosts(
   db: D1Database,
   filters?: ListPostsFilters,
 ): Promise<PostListItem[]> {
-  let query =
-    "SELECT id, title, published, status, hidden, gallery FROM posts WHERE deleted = 0";
+  let query = "SELECT id, title, published, status, hidden, gallery FROM posts WHERE deleted = 0";
   const bindings: (string | number)[] = [];
 
   if (filters?.hidden !== undefined) {
@@ -82,10 +78,7 @@ export async function listPosts(
   }));
 }
 
-export async function createPost(
-  db: D1Database,
-  input: CreatePostInput,
-): Promise<Post> {
+export async function createPost(db: D1Database, input: CreatePostInput): Promise<Post> {
   const validated = createPostInputSchema.parse(input);
 
   const id = crypto.randomUUID();
@@ -125,10 +118,7 @@ export async function createPost(
   };
 }
 
-export async function updatePost(
-  db: D1Database,
-  input: UpdatePostInput,
-): Promise<Post | null> {
+export async function updatePost(db: D1Database, input: UpdatePostInput): Promise<Post | null> {
   const validated = updatePostInputSchema.parse(input);
 
   const existing = await db
@@ -180,10 +170,7 @@ export async function deletePost(db: D1Database, id: string): Promise<boolean> {
   return true;
 }
 
-export async function listFiles(
-  db: D1Database,
-  filters: ListFilesFilters,
-): Promise<WebFile[]> {
+export async function listFiles(db: D1Database, filters: ListFilesFilters): Promise<WebFile[]> {
   let query = "SELECT key, type, year, optimized FROM files WHERE year = ?";
   const bindings: (string | number)[] = [filters.year];
 
@@ -212,9 +199,7 @@ export async function createFile(
   optimized: boolean,
 ): Promise<WebFile> {
   await db
-    .prepare(
-      "INSERT INTO files (key, type, year, optimized) VALUES (?, ?, ?, ?)",
-    )
+    .prepare("INSERT INTO files (key, type, year, optimized) VALUES (?, ?, ?, ?)")
     .bind(key, type, year, optimized ? 1 : 0)
     .run();
   return { key, type, year, optimized };
@@ -232,10 +217,7 @@ export async function updateFileOptimized(
   return true;
 }
 
-export async function deleteFile(
-  db: D1Database,
-  key: string,
-): Promise<boolean> {
+export async function deleteFile(db: D1Database, key: string): Promise<boolean> {
   await db.prepare("DELETE FROM files WHERE key = ?").bind(key).run();
   return true;
 }

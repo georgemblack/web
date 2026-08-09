@@ -3,16 +3,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev --port 3000",
-    "build": "vite build",
-    "serve": "vite preview",
-    "test": "vitest run",
-    "deploy": "pnpm run build && wrangler deploy",
-    "dryrun": "pnpm run build && wrangler deploy --dry-run",
-    "preview": "pnpm run build && vite preview",
+    "dev": "vp dev --port 3000",
+    "build": "vp build",
+    "serve": "vp preview",
+    "test": "vp test run",
+    "deploy": "vp build && wrangler deploy",
+    "dryrun": "vp build && wrangler deploy --dry-run",
+    "preview": "vp build && vp preview",
     "typegen": "wrangler types",
-    "typecheck": "tsgo --noEmit",
-    "format": "prettier . --write"
+    "check": "vp check"
   },
   "dependencies": {
     "@cloudflare/kumo": "^2.9.2",
@@ -45,21 +44,25 @@
     "@tanstack/devtools-vite": "^0.8.3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
-    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.0",
-    "@typescript/native-preview": "beta",
     "@vitejs/plugin-react": "^6.0.1",
     "jsdom": "^29.1.0",
-    "prettier": "^3.8.3",
-    "prettier-plugin-tailwindcss": "^0.8.0",
-    "vite": "^8.0.10",
-    "vitest": "^4.1.5",
+    "vite": "catalog:",
+    "vitest": "catalog:",
     "web-vitals": "^5.2.0",
-    "wrangler": "^4.85.0"
+    "wrangler": "^4.85.0",
+    "vite-plus": "catalog:"
   },
   "volta": {
     "node": "24.14.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.21.0",
+      "onFail": "download"
+    }
   }
 }

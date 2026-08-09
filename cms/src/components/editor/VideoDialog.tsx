@@ -60,9 +60,7 @@ export function VideoDialog({
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog className="p-8" size="base">
         <div className="mb-4 flex items-start justify-between gap-4">
-          <Dialog.Title className="text-2xl font-semibold">
-            {title}
-          </Dialog.Title>
+          <Dialog.Title className="text-2xl font-semibold">{title}</Dialog.Title>
           <Dialog.Close
             aria-label="Close"
             render={(props) => (
@@ -102,16 +100,8 @@ export function VideoDialog({
             aria-label="Caption"
           />
           <div className="flex flex-wrap gap-3">
-            <Switch
-              label="Controls"
-              checked={controls}
-              onCheckedChange={setControls}
-            />
-            <Switch
-              label="Autoplay"
-              checked={autoplay}
-              onCheckedChange={setAutoplay}
-            />
+            <Switch label="Controls" checked={controls} onCheckedChange={setControls} />
+            <Switch label="Autoplay" checked={autoplay} onCheckedChange={setAutoplay} />
             <Switch label="Muted" checked={muted} onCheckedChange={setMuted} />
             <Switch label="Loop" checked={loop} onCheckedChange={setLoop} />
           </div>

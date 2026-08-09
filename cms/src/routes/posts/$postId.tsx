@@ -1,9 +1,5 @@
 import { Breadcrumbs, Button, Text } from "@cloudflare/kumo";
-import {
-  defineSchema,
-  EditorProvider,
-  PortableTextEditable,
-} from "@portabletext/editor";
+import { defineSchema, EditorProvider, PortableTextEditable } from "@portabletext/editor";
 import type {
   PortableTextBlock,
   RenderAnnotationFunction,
@@ -13,10 +9,7 @@ import type {
   RenderStyleFunction,
 } from "@portabletext/editor";
 import { defineBehavior } from "@portabletext/editor/behaviors";
-import {
-  BehaviorPlugin,
-  EventListenerPlugin,
-} from "@portabletext/editor/plugins";
+import { BehaviorPlugin, EventListenerPlugin } from "@portabletext/editor/plugins";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
 
@@ -44,18 +37,8 @@ export const Route = createFileRoute("/posts/$postId")({
 });
 
 const schemaDefinition = defineSchema({
-  decorators: [
-    { name: "strong" },
-    { name: "em" },
-    { name: "underline" },
-    { name: "code" },
-  ],
-  styles: [
-    { name: "normal" },
-    { name: "h2" },
-    { name: "h3" },
-    { name: "blockquote" },
-  ],
+  decorators: [{ name: "strong" }, { name: "em" }, { name: "underline" }, { name: "code" }],
+  styles: [{ name: "normal" }, { name: "h2" }, { name: "h3" }, { name: "blockquote" }],
   annotations: [{ name: "link", fields: [{ name: "href", type: "string" }] }],
   lists: [{ name: "bullet" }, { name: "number" }],
   inlineObjects: [],
@@ -145,9 +128,7 @@ const renderBlock: RenderBlockFunction = (props) => {
       return <VideoBlockObjectEditor value={props.value} path={props.path} />;
     case "line":
       return (
-        <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">
-          Line
-        </div>
+        <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">Line</div>
       );
     case "break":
       return (
@@ -180,17 +161,13 @@ interface PostEditorProps {
 function PostEditor({ post, files }: PostEditorProps) {
   const router = useRouter();
 
-  const [title, setTitle] = useState(
-    post.title === "Untitled" ? "" : post.title,
-  );
+  const [title, setTitle] = useState(post.title === "Untitled" ? "" : post.title);
   const [published, setPublished] = useState(post.published);
   const [slug, setSlug] = useState(post.slug);
   const [status, setStatus] = useState<PostStatus>(post.status as PostStatus);
   const [hidden, setHidden] = useState(post.hidden);
   const [gallery, setGallery] = useState(post.gallery);
-  const [externalLink, setExternalLink] = useState<string | null>(
-    post.external_link,
-  );
+  const [externalLink, setExternalLink] = useState<string | null>(post.external_link);
   const [ptValue, setPtValue] = useState<PortableTextBlock[]>(
     () => (post.content as PortableTextBlock[]) ?? [],
   );
@@ -228,14 +205,11 @@ function PostEditor({ post, files }: PostEditorProps) {
     }
   };
 
-  const handleMutation = useCallback(
-    (event: { type: string; value?: PortableTextBlock[] }) => {
-      if (event.type === "mutation" && event.value) {
-        setPtValue(event.value);
-      }
-    },
-    [],
-  );
+  const handleMutation = useCallback((event: { type: string; value?: PortableTextBlock[] }) => {
+    if (event.type === "mutation" && event.value) {
+      setPtValue(event.value);
+    }
+  }, []);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -281,18 +255,9 @@ function PostEditor({ post, files }: PostEditorProps) {
           </Breadcrumbs>
         </div>
         <div className="flex items-center gap-4">
-          {statusMessage === "error" && (
-            <Text variant="secondary">Error saving post</Text>
-          )}
-          {!statusMessage && isDirty && (
-            <Text variant="secondary">Unsaved changes</Text>
-          )}
-          <Button
-            variant="primary"
-            onClick={handleSave}
-            loading={isSaving}
-            disabled={!isDirty}
-          >
+          {statusMessage === "error" && <Text variant="secondary">Error saving post</Text>}
+          {!statusMessage && isDirty && <Text variant="secondary">Unsaved changes</Text>}
+          <Button variant="primary" onClick={handleSave} loading={isSaving} disabled={!isDirty}>
             Save
           </Button>
         </div>

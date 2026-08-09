@@ -46,10 +46,8 @@ const portableTextOptions = {
       code: ({ children }: { children: string }) => `<code>${children}</code>`,
     },
     types: {
-      image: ({ value }: { value: unknown }) =>
-        renderImage(value as ImageValue),
-      video: ({ value }: { value: unknown }) =>
-        renderVideo(value as VideoValue),
+      image: ({ value }: { value: unknown }) => renderImage(value as ImageValue),
+      video: ({ value }: { value: unknown }) => renderVideo(value as VideoValue),
       code: ({ value }: { value: unknown }) => renderCode(value as CodeValue),
       line: () => renderLine(),
       break: () => renderBreak(),

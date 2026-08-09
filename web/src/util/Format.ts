@@ -21,8 +21,7 @@ export function slug(item: Post): string {
 }
 
 export function subtitle(item: Post): string {
-  if (item.external_link)
-    return `${hostname(item.external_link)} • ${timestamp(item.published)}`;
+  if (item.external_link) return `${hostname(item.external_link)} • ${timestamp(item.published)}`;
   return timestamp(item.published);
 }
 

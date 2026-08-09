@@ -51,9 +51,7 @@ export function ImageDialog({
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog className="p-8" size="base">
         <div className="mb-4 flex items-start justify-between gap-4">
-          <Dialog.Title className="text-2xl font-semibold">
-            {title}
-          </Dialog.Title>
+          <Dialog.Title className="text-2xl font-semibold">{title}</Dialog.Title>
           <Dialog.Close
             aria-label="Close"
             render={(props) => (

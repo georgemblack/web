@@ -108,20 +108,14 @@ export function MetadataSection({
           <Switch
             label={status === "published" ? EMOJI.published : EMOJI.draft}
             checked={status === "published"}
-            onCheckedChange={(checked) =>
-              onChange("status", checked ? "published" : "draft")
-            }
+            onCheckedChange={(checked) => onChange("status", checked ? "published" : "draft")}
           />
           <Switch
             label={hidden ? EMOJI.hidden : EMOJI.visible}
             checked={hidden}
             onCheckedChange={onHiddenChange}
           />
-          <Switch
-            label={EMOJI.gallery}
-            checked={gallery}
-            onCheckedChange={onGalleryChange}
-          />
+          <Switch label={EMOJI.gallery} checked={gallery} onCheckedChange={onGalleryChange} />
         </div>
       </div>
     </PaddedSurface>

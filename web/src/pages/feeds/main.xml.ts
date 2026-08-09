@@ -7,8 +7,7 @@ import { STANDARD_CONTENT_CACHE_CONTROL } from "../../util/Cache";
 
 export async function GET(context: APIContext) {
   const { entries, error } = await getLiveCollection("posts");
-  if (error || !entries)
-    return new Response("Failed to load posts", { status: 502 });
+  if (error || !entries) return new Response("Failed to load posts", { status: 502 });
 
   const posts = entries.map((e) => e.data);
   const response = await rss({
@@ -24,9 +23,6 @@ export async function GET(context: APIContext) {
       content: item.content_html,
     })),
   });
-  response.headers.set(
-    "Cache-Control",
-    STANDARD_CONTENT_CACHE_CONTROL,
-  );
+  response.headers.set("Cache-Control", STANDARD_CONTENT_CACHE_CONTROL);
   return response;
 }

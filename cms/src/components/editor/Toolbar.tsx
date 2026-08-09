@@ -30,11 +30,7 @@ const LIST_LABELS: Record<string, string> = {
   number: "OL",
 };
 
-function DecoratorButton({
-  schemaType,
-}: {
-  schemaType: ToolbarDecoratorSchemaType;
-}) {
+function DecoratorButton({ schemaType }: { schemaType: ToolbarDecoratorSchemaType }) {
   const button = useDecoratorButton({ schemaType });
   const isActive = button.snapshot.matches({ enabled: "active" });
   return (
@@ -47,11 +43,7 @@ function DecoratorButton({
   );
 }
 
-function ListToggleButton({
-  schemaType,
-}: {
-  schemaType: ToolbarListSchemaType;
-}) {
+function ListToggleButton({ schemaType }: { schemaType: ToolbarListSchemaType }) {
   const button = useListButton({ schemaType });
   const isActive = button.snapshot.matches({ enabled: "active" });
   return (
@@ -64,11 +56,7 @@ function ListToggleButton({
   );
 }
 
-function LinkButton({
-  schemaType,
-}: {
-  schemaType: ToolbarAnnotationSchemaType;
-}) {
+function LinkButton({ schemaType }: { schemaType: ToolbarAnnotationSchemaType }) {
   const button = useAnnotationButton({ schemaType });
   const isActive = button.snapshot.matches({ enabled: "active" });
   const isShowingDialog = button.snapshot.matches({
@@ -101,9 +89,7 @@ function LinkButton({
       >
         <Dialog className="p-8" size="sm">
           <div className="mb-4 flex items-start justify-between gap-4">
-            <Dialog.Title className="text-2xl font-semibold">
-              Add Link
-            </Dialog.Title>
+            <Dialog.Title className="text-2xl font-semibold">Add Link</Dialog.Title>
             <Dialog.Close
               aria-label="Close"
               render={(props) => (
@@ -151,19 +137,13 @@ function LinkButton({
   );
 }
 
-function StyleSelect({
-  schemaTypes,
-}: {
-  schemaTypes: ReadonlyArray<ToolbarStyleSchemaType>;
-}) {
+function StyleSelect({ schemaTypes }: { schemaTypes: ReadonlyArray<ToolbarStyleSchemaType> }) {
   const selector = useStyleSelector({ schemaTypes });
   return (
     <Select
       aria-label="Block style"
       value={selector.snapshot.context.activeStyle ?? "normal"}
-      onValueChange={(value) =>
-        selector.send({ type: "toggle", style: value as string })
-      }
+      onValueChange={(value) => selector.send({ type: "toggle", style: value as string })}
     >
       {schemaTypes.map((style) => (
         <Select.Option key={style.name} value={style.name}>
@@ -216,9 +196,7 @@ export function Toolbar() {
             <ListToggleButton key={list.name} schemaType={list} />
           ))}
         </div>
-        <div>
-          {schema.styles && <StyleSelect schemaTypes={schema.styles} />}
-        </div>
+        <div>{schema.styles && <StyleSelect schemaTypes={schema.styles} />}</div>
       </div>
       <div className="flex items-center gap-2">
         {schema.annotations?.map((ann) => (
@@ -226,11 +204,7 @@ export function Toolbar() {
         ))}
         <ImageInsertButton />
         <VideoInsertButton />
-        <BlockObjectInsertButton
-          name="code"
-          label="💻"
-          defaultValue={{ text: "" }}
-        />
+        <BlockObjectInsertButton name="code" label="💻" defaultValue={{ text: "" }} />
         <BlockObjectInsertButton name="line" label="➖" />
         <BlockObjectInsertButton name="break" label="✂️" />
       </div>

@@ -22,11 +22,8 @@ interface WebDbFile {
 }
 
 export default {
-  async scheduled(event, env, ctx): Promise<void> {
-    const [posts, files] = await Promise.all([
-      queryPosts(env.WEB_DB),
-      listAllFiles(env.WEB_DB),
-    ]);
+  async scheduled(event, env, _ctx): Promise<void> {
+    const [posts, files] = await Promise.all([queryPosts(env.WEB_DB), listAllFiles(env.WEB_DB)]);
 
     const contentHash = await sha256(JSON.stringify({ posts, files }));
 
@@ -54,9 +51,7 @@ export default {
       customMetadata: { contentHash },
     });
 
-    console.log(
-      `Backup saved: ${key} (${posts.length} posts, ${files.length} files)`,
-    );
+    console.log(`Backup saved: ${key} (${posts.length} posts, ${files.length} files)`);
   },
 } satisfies ExportedHandler<Env>;
 
@@ -71,9 +66,7 @@ async function queryPosts(db: D1Database): Promise<Post[]> {
 
 async function listAllFiles(db: D1Database): Promise<WebDbFile[]> {
   const result = await db
-    .prepare(
-      "SELECT key, type, year, optimized FROM files ORDER BY year DESC, key",
-    )
+    .prepare("SELECT key, type, year, optimized FROM files ORDER BY year DESC, key")
     .all<WebDbFile>();
   return result.results;
 }
@@ -92,9 +85,7 @@ async function getLatestBackupHash(bucket: R2Bucket): Promise<string | null> {
     return null;
   }
 
-  const latest = listed.objects
-    .sort((a, b) => a.key.localeCompare(b.key))
-    .at(-1)!;
+  const latest = listed.objects.sort((a, b) => a.key.localeCompare(b.key)).at(-1)!;
 
   const head = await bucket.head(latest.key);
   return head?.customMetadata?.contentHash ?? null;

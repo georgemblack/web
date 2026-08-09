@@ -1,11 +1,4 @@
-import {
-  Badge,
-  Breadcrumbs,
-  Button,
-  Input,
-  Select,
-  Switch,
-} from "@cloudflare/kumo";
+import { Badge, Breadcrumbs, Button, Input, Select, Switch } from "@cloudflare/kumo";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
@@ -29,11 +22,8 @@ function App() {
 
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
-      const matchesSearch = post.title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      const matchesStatus =
-        statusFilter === "all" || post.status === statusFilter;
+      const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = statusFilter === "all" || post.status === statusFilter;
       const matchesHidden = !showHiddenOnly || post.hidden;
       return matchesSearch && matchesStatus && matchesHidden;
     });
@@ -102,17 +92,11 @@ function App() {
               onValueChange={(status) => setStatusFilter(status || "all")}
             >
               {STATUS_OPTIONS.map((status) => (
-                <Select.Option value={status}>
-                  {status.toLowerCase()}
-                </Select.Option>
+                <Select.Option value={status}>{status.toLowerCase()}</Select.Option>
               ))}
             </Select>
             <div>
-              <Switch
-                label="Hidden"
-                checked={showHiddenOnly}
-                onCheckedChange={setShowHiddenOnly}
-              />
+              <Switch label="Hidden" checked={showHiddenOnly} onCheckedChange={setShowHiddenOnly} />
             </div>
           </div>
         </PaddedSurface>
@@ -130,11 +114,7 @@ function App() {
                     })}
                   </span>
                   <span>
-                    <Badge
-                      variant={
-                        post.status === "published" ? "primary" : "outline"
-                      }
-                    >
+                    <Badge variant={post.status === "published" ? "primary" : "outline"}>
                       {post.status}
                     </Badge>
                   </span>

@@ -21,8 +21,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   // Prefer the pre-processed object, fall back to the original.
   // `??` short-circuits, so the originals bucket is only hit on a miss.
-  const object =
-    (await env.WEB_FILES_CACHE.get(key)) ?? (await env.WEB_FILES.get(key));
+  const object = (await env.WEB_FILES_CACHE.get(key)) ?? (await env.WEB_FILES.get(key));
 
   if (!object) {
     return new Response("Not Found", {

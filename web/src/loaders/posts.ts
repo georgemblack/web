@@ -2,11 +2,7 @@ import type { LiveLoader } from "astro/loaders";
 import { z } from "astro/zod";
 import { env } from "cloudflare:workers";
 
-import {
-  getPublishedPostById,
-  getPublishedPostBySlug,
-  listPublishedPosts,
-} from "../data/posts";
+import { getPublishedPostById, getPublishedPostBySlug, listPublishedPosts } from "../data/posts";
 import type { PostData, PostRecord } from "../data/posts";
 import { slug as postSlug } from "../util/Format";
 
@@ -48,8 +44,7 @@ export function postsLoader(): LiveLoader<PostData, PostEntryFilter> {
         };
       } catch (error) {
         return {
-          error:
-            error instanceof Error ? error : new Error("Failed to load posts"),
+          error: error instanceof Error ? error : new Error("Failed to load posts"),
         };
       }
     },
@@ -75,8 +70,7 @@ export function postsLoader(): LiveLoader<PostData, PostEntryFilter> {
         };
       } catch (error) {
         return {
-          error:
-            error instanceof Error ? error : new Error("Failed to load post"),
+          error: error instanceof Error ? error : new Error("Failed to load post"),
         };
       }
     },

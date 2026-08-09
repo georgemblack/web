@@ -92,18 +92,11 @@ function NewFilePage() {
             </div>
             {fileType === "IMAGE" && (
               <div className="flex items-center gap-3">
-                <Switch
-                  label="Optimize"
-                  checked={optimize}
-                  onCheckedChange={setOptimize}
-                />
+                <Switch label="Optimize" checked={optimize} onCheckedChange={setOptimize} />
               </div>
             )}
             <div className="flex items-center gap-3">
-              <input
-                type="file"
-                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              />
+              <input type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
               <Button
                 variant="primary"
                 onClick={handleUpload}

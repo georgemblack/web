@@ -16,9 +16,7 @@ function NewOptimizedFilePage() {
   const router = useRouter();
 
   const [year, setYear] = useState(String(currentYear));
-  const [files, setFiles] = useState<
-    Array<{ key: string; optimized: boolean }>
-  >([]);
+  const [files, setFiles] = useState<Array<{ key: string; optimized: boolean }>>([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [selectedKey, setSelectedKey] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -26,7 +24,7 @@ function NewOptimizedFilePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadFiles(year);
+    void loadFiles(year);
   }, []);
 
   const loadFiles = async (selectedYear: string) => {
@@ -46,7 +44,7 @@ function NewOptimizedFilePage() {
   const handleYearChange = (v: string) => {
     const newYear = v || String(currentYear);
     setYear(newYear);
-    loadFiles(newYear);
+    void loadFiles(newYear);
   };
 
   const unoptimizedFiles = files.filter((f) => !f.optimized);
@@ -86,9 +84,7 @@ function NewOptimizedFilePage() {
               <Select
                 className="w-24"
                 value={year}
-                onValueChange={(v) =>
-                  handleYearChange(v || String(currentYear))
-                }
+                onValueChange={(v) => handleYearChange(v || String(currentYear))}
               >
                 {YEARS.map((y) => (
                   <Select.Option key={y} value={y}>
@@ -117,10 +113,7 @@ function NewOptimizedFilePage() {
               </Select>
             </div>
             <div className="flex items-center gap-3">
-              <input
-                type="file"
-                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              />
+              <input type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
               <Button
                 variant="primary"
                 onClick={handleUpload}

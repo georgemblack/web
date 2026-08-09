@@ -1,17 +1,5 @@
-import {
-  Badge,
-  Breadcrumbs,
-  Button,
-  Input,
-  Select,
-  Switch,
-} from "@cloudflare/kumo";
-import {
-  createFileRoute,
-  Link,
-  useNavigate,
-  useRouter,
-} from "@tanstack/react-router";
+import { Badge, Breadcrumbs, Button, Input, Select, Switch } from "@cloudflare/kumo";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 
 import PaddedSurface from "@/components/PaddedSurface";
@@ -22,11 +10,10 @@ const YEARS = Array.from({ length: 16 }, (_, i) => String(2015 + i));
 export const Route = createFileRoute("/files/")({
   component: FilesPage,
   validateSearch: (search: Record<string, unknown>) => ({
-    year: String(search.year ?? new Date().getFullYear()),
+    year: typeof search.year === "string" ? search.year : String(new Date().getFullYear()),
   }),
   loaderDeps: ({ search }) => ({ year: search.year }),
-  loader: async ({ deps }) =>
-    await listFiles({ data: { year: Number(deps.year) } }),
+  loader: async ({ deps }) => await listFiles({ data: { year: Number(deps.year) } }),
 });
 
 function FilesPage() {
@@ -40,9 +27,7 @@ function FilesPage() {
 
   const filteredFiles = useMemo(() => {
     return files.filter((f) => {
-      const matchesSearch = f.key
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+      const matchesSearch = f.key.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesFilter = !showUnoptimizedOnly || !f.optimized;
       return matchesSearch && matchesFilter;
     });

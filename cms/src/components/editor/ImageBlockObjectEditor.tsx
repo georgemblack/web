@@ -32,16 +32,10 @@ export function ImageBlockObjectEditor({
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <div className="truncate font-mono text-sm">
-          {current.key || "(no file selected)"}
-        </div>
-        {current.alt && (
-          <div className="truncate text-sm text-gray-600">{current.alt}</div>
-        )}
+        <div className="truncate font-mono text-sm">{current.key || "(no file selected)"}</div>
+        {current.alt && <div className="truncate text-sm text-gray-600">{current.alt}</div>}
         {current.caption && (
-          <div className="truncate text-sm text-gray-600 italic">
-            {current.caption}
-          </div>
+          <div className="truncate text-sm text-gray-600 italic">{current.caption}</div>
         )}
       </div>
       <Button variant="secondary" onClick={() => setDialogOpen(true)}>

@@ -65,9 +65,7 @@ function toPostRecord(row: PostRow): PostRecord {
   };
 }
 
-export async function listPublishedPosts(
-  db: D1Database,
-): Promise<PostRecord[]> {
+export async function listPublishedPosts(db: D1Database): Promise<PostRecord[]> {
   const result = await db
     .prepare(
       `SELECT ${POST_COLUMNS} FROM posts WHERE status = 'published' AND deleted = 0 ORDER BY published DESC`,
@@ -106,10 +104,7 @@ export async function getPublishedPostBySlug(
   return row ? toPostRecord(row) : null;
 }
 
-export async function getPublishedPostById(
-  db: D1Database,
-  id: string,
-): Promise<PostRecord | null> {
+export async function getPublishedPostById(db: D1Database, id: string): Promise<PostRecord | null> {
   const row = await db
     .prepare(
       `SELECT ${POST_COLUMNS} FROM posts WHERE id = ? AND status = 'published' AND deleted = 0`,

@@ -35,13 +35,9 @@ export function VideoBlockObjectEditor({
         🎬
       </div>
       <div className="min-w-0 flex-1">
-        <div className="truncate font-mono text-sm">
-          {current.key || "(no file selected)"}
-        </div>
+        <div className="truncate font-mono text-sm">{current.key || "(no file selected)"}</div>
         {current.caption && (
-          <div className="truncate text-sm text-gray-600 italic">
-            {current.caption}
-          </div>
+          <div className="truncate text-sm text-gray-600 italic">{current.caption}</div>
         )}
         {flags && <div className="truncate text-xs text-gray-500">{flags}</div>}
       </div>

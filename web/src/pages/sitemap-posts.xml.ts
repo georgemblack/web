@@ -25,8 +25,7 @@ function escapeXml(value: string): string {
 
 export async function GET(context: APIContext): Promise<Response> {
   const { entries, error } = await getLiveCollection("posts");
-  if (error || !entries)
-    return new Response("Failed to load posts", { status: 502 });
+  if (error || !entries) return new Response("Failed to load posts", { status: 502 });
 
   const site = context.site;
   if (!site) return new Response("Site URL is not configured", { status: 500 });
