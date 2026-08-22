@@ -14,7 +14,7 @@
     "check": "vp check"
   },
   "dependencies": {
-    "@cloudflare/kumo": "^2.9.2",
+    "@cloudflare/kumo": "^2.11.0",
     "@cloudflare/vite-plugin": "^1.33.2",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
@@ -28,7 +28,7 @@
     "@tanstack/react-router": "^1.170.23",
     "@tanstack/react-router-devtools": "^1.167.1",
     "@tanstack/react-router-ssr-query": "^1.167.1",
-    "@tanstack/react-start": "^1.168.40",
+    "@tanstack/react-start": "^1.168.48",
     "@tanstack/router-plugin": "^1.168.27",
     "@tiptap/extension-link": "^3.22.4",
     "@tiptap/react": "^3.22.4",

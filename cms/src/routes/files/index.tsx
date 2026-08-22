@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import PaddedSurface from "@/components/PaddedSurface";
 import { deleteFile, listFiles, toggleOptimize } from "@/data/files";
+import type { WebFile } from "@/data/types";
 
 const YEARS = Array.from({ length: 16 }, (_, i) => String(2015 + i));
 
@@ -26,7 +27,7 @@ function FilesPage() {
   const [showUnoptimizedOnly, setShowUnoptimizedOnly] = useState(false);
 
   const filteredFiles = useMemo(() => {
-    return files.filter((f) => {
+    return files.filter((f: WebFile) => {
       const matchesSearch = f.key.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesFilter = !showUnoptimizedOnly || !f.optimized;
       return matchesSearch && matchesFilter;
@@ -96,7 +97,7 @@ function FilesPage() {
           </div>
         </PaddedSurface>
         <div className="mt-4 flex flex-col gap-4">
-          {filteredFiles.map((f) => (
+          {filteredFiles.map((f: WebFile) => (
             <div className="flex items-center gap-3" key={f.key}>
               {f.type === "DOCUMENT" ? (
                 <div className="flex h-12 w-12 items-center justify-center rounded bg-gray-100 text-2xl">

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import PaddedSurface from "@/components/PaddedSurface";
 import { createPost, deletePost, listPosts } from "@/data/db";
-import { PostStatus } from "@/data/types";
+import type { PostListItem, PostStatus } from "@/data/types";
 
 const STATUS_OPTIONS: Array<PostStatus | "all"> = ["all", "draft", "published"];
 
@@ -21,7 +21,7 @@ function App() {
   const [showHiddenOnly, setShowHiddenOnly] = useState(false);
 
   const filteredPosts = useMemo(() => {
-    return posts.filter((post) => {
+    return posts.filter((post: PostListItem) => {
       const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesStatus = statusFilter === "all" || post.status === statusFilter;
       const matchesHidden = !showHiddenOnly || post.hidden;
@@ -101,7 +101,7 @@ function App() {
           </div>
         </PaddedSurface>
         <div className="mt-4 flex flex-col gap-6">
-          {filteredPosts.map((post) => (
+          {filteredPosts.map((post: PostListItem) => (
             <div className="flex items-center justify-between" key={post.id}>
               <Link to="/posts/$postId" params={{ postId: post.id }}>
                 <h2 className="font-bold">{post.title}</h2>
