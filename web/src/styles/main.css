@@ -320,16 +320,62 @@ footer {
 }
 
 .read-more-button p {
+  --read-more-glass: rgba(255, 255, 255, 0.34);
+
   display: inline-block;
   padding: 0.25em 1.25em;
   font-family: var(--font-family-display);
-  background-color: var(--line-separator-color);
+  color: var(--body-color);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--read-more-glass), white 45%),
+    var(--read-more-glass) 25%,
+    var(--read-more-glass) 70%,
+    color-mix(in oklab, var(--read-more-glass), white 35%)
+  );
   border-radius: 2.5em;
+  box-shadow:
+    -1px 0 0 rgba(0, 0, 0, 0.08),
+    1px 0 0 rgba(0, 0, 0, 0.08),
+    0 -1px 0 rgba(255, 255, 255, 0.55),
+    0 1px 0 rgba(0, 0, 0, 0.06),
+    inset 0 2px 2px -2px rgba(255, 255, 255, 0.9),
+    inset 0 -2px 2px -2px rgba(255, 255, 255, 0.65);
+  -webkit-backdrop-filter: saturate(150%) blur(6px);
+  backdrop-filter: saturate(150%) blur(6px);
+  transition:
+    background 0.2s ease-out,
+    color 0.2s ease-out,
+    scale 0.2s ease-out;
 }
 
 .read-more-button:hover p {
-  color: Canvas;
-  background-color: var(--link-hover-color);
+  --read-more-glass: color-mix(in oklab, var(--link-color), transparent 55%);
+
+  color: white;
+}
+
+.read-more-button:active p {
+  scale: 1.05;
+}
+
+.read-more-button:focus-visible p {
+  outline: 2px solid var(--link-color);
+  outline-offset: 3px;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  .read-more-button p {
+    --read-more-glass: rgba(255, 255, 255, 0.1);
+
+    box-shadow:
+      -1px 0 0 rgba(0, 0, 0, 0.2),
+      1px 0 0 rgba(0, 0, 0, 0.2),
+      0 -1px 0 rgba(255, 255, 255, 0.2),
+      0 1px 0 rgba(0, 0, 0, 0.15),
+      inset 0 2px 2px -2px rgba(255, 255, 255, 0.45),
+      inset 0 -2px 2px -2px rgba(255, 255, 255, 0.35);
+  }
 }
 
 .post-pagination {
