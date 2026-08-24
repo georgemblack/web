@@ -355,6 +355,10 @@ footer {
     scale 0.2s ease-out;
 }
 
+.read-more-button {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .read-more-button:active p {
   --read-more-glass: white;
 
