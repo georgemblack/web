@@ -65,6 +65,7 @@ export function MetadataSection({
               onClick={() => {
                 const generated = title
                   .toLowerCase()
+                  .replace(/[\u0027\u2019]/g, "")
                   .replace(/[^a-z0-9-]/g, "-")
                   .replace(/-+/g, "-")
                   .replace(/^-|-$/g, "");
