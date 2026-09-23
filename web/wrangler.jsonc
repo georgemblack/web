@@ -11,9 +11,35 @@
       "pattern": "george.black",
       "custom_domain": true,
     },
+    {
+      "pattern": "previews.george.black",
+      "custom_domain": true,
+      "previews_enabled": true,
+      "enabled": false,
+    },
   ],
   "preview_urls": false,
   "workers_dev": false,
+  "previews": {
+    "d1_databases": [
+      {
+        "binding": "WEB_DB",
+        "database_name": "web-staging",
+        "database_id": "5c3074de-26f0-4dec-8b18-896d1e7476e7",
+        "remote": true,
+      },
+    ],
+    "r2_buckets": [
+      {
+        "binding": "WEB_FILES",
+        "bucket_name": "web-files-staging",
+      },
+      {
+        "binding": "WEB_FILES_CACHE",
+        "bucket_name": "web-files-cache-staging",
+      },
+    ],
+  },
   "cache": {
     "enabled": true,
   },
