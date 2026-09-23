@@ -4,6 +4,33 @@
   "compatibility_date": "2025-09-02",
   "compatibility_flags": ["nodejs_compat"],
   "main": "@tanstack/react-start/server-entry",
+  "previews": {
+    "d1_databases": [
+      {
+        "binding": "WEB_DB",
+        "database_name": "web-staging",
+        "database_id": "5c3074de-26f0-4dec-8b18-896d1e7476e7",
+        "remote": true,
+      },
+    ],
+    "r2_buckets": [
+      {
+        "binding": "WEB_FILES",
+        "bucket_name": "web-files-staging",
+      },
+      {
+        "binding": "WEB_FILES_CACHE",
+        "bucket_name": "web-files-cache-staging",
+      },
+    ],
+    "images": {
+      "binding": "IMAGES",
+    },
+    "vars": {
+      "CF_ACCESS_TEAM_DOMAIN": "https://georgeblack.cloudflareaccess.com",
+      "CF_ACCESS_AUD": "062182c55c618311c41f164d20cc413d0637fc013d720108750a9e66155bd657",
+    },
+  },
   "d1_databases": [
     {
       "binding": "WEB_DB",

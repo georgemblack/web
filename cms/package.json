@@ -50,10 +50,10 @@
     "@vitejs/plugin-react": "^6.0.1",
     "jsdom": "^29.1.0",
     "vite": "catalog:",
+    "vite-plus": "catalog:",
     "vitest": "catalog:",
     "web-vitals": "^5.2.0",
-    "wrangler": "^4.85.0",
-    "vite-plus": "catalog:"
+    "wrangler": "^4.136.2"
   },
   "volta": {
     "node": "24.14.0"
