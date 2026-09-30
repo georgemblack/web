@@ -88,14 +88,26 @@ const convertSoftBreakToBreak = defineBehavior({
 // the outer element carries the editor's attributes and children, while
 // the visible content is non-editable and can be dragged to move the block.
 // Blocks with text fields turn dragging off so text inside them can be selected.
-function renderBlockObject(content: ReactNode, { draggable = true } = {}) {
-  return ({ attributes, children, readOnly }: BlockObjectRenderProps) => (
+function BlockObject({
+  attributes,
+  children,
+  readOnly,
+  content,
+  draggable = true,
+}: BlockObjectRenderProps & { content: ReactNode; draggable?: boolean }) {
+  return (
     <div {...attributes}>
       <div contentEditable={false} draggable={draggable && !readOnly}>
         {content}
       </div>
       {children}
     </div>
+  );
+}
+
+function MarkerBlock({ label }: { label: string }) {
+  return (
+    <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">{label}</div>
   );
 }
 
@@ -145,34 +157,39 @@ const nodes = [
   defineTextBlock({ type: "block", render: (props) => <TextBlock {...props} /> }),
   defineBlockObject({
     type: "image",
-    render: (props) =>
-      renderBlockObject(<ImageBlockObjectEditor value={props.node} path={props.path} />)(props),
+    render: (props) => (
+      <BlockObject
+        {...props}
+        content={<ImageBlockObjectEditor value={props.node} path={props.path} />}
+      />
+    ),
   }),
   defineBlockObject({
     type: "video",
-    render: (props) =>
-      renderBlockObject(<VideoBlockObjectEditor value={props.node} path={props.path} />)(props),
+    render: (props) => (
+      <BlockObject
+        {...props}
+        content={<VideoBlockObjectEditor value={props.node} path={props.path} />}
+      />
+    ),
   }),
   defineBlockObject({
     type: "code",
-    render: (props) =>
-      renderBlockObject(<CodeBlockObjectEditor value={props.node} path={props.path} />, {
-        draggable: false,
-      })(props),
+    render: (props) => (
+      <BlockObject
+        {...props}
+        draggable={false}
+        content={<CodeBlockObjectEditor value={props.node} path={props.path} />}
+      />
+    ),
   }),
   defineBlockObject({
     type: "line",
-    render: renderBlockObject(
-      <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">Line</div>,
-    ),
+    render: (props) => <BlockObject {...props} content={<MarkerBlock label="Line" />} />,
   }),
   defineBlockObject({
     type: "break",
-    render: renderBlockObject(
-      <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">
-        Preview break
-      </div>,
-    ),
+    render: (props) => <BlockObject {...props} content={<MarkerBlock label="Preview break" />} />,
   }),
   defineDecorator({ type: "strong", render: ({ children }) => <strong>{children}</strong> }),
   defineDecorator({ type: "em", render: ({ children }) => <em>{children}</em> }),

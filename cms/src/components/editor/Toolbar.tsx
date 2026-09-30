@@ -28,8 +28,6 @@ const DECORATOR_LABELS: Record<string, string> = {
 // Short labels for the style dropdown. The stored values (e.g. "normal") don't change.
 const STYLE_LABELS: Record<string, string> = {
   normal: "p",
-  h2: "h2",
-  h3: "h3",
   blockquote: "bq",
 };
 
@@ -201,7 +199,7 @@ export function Toolbar() {
   return (
     // Stays pinned to the top of the window while scrolling through long posts.
     // The negative margins stretch its background over the card's padding to its edges.
-    <div className="border-kumo-line bg-kumo-base sticky top-0 z-10 -mx-4 -mt-4 mb-3 flex flex-col gap-2 rounded-t-lg border-b px-4 py-4">
+    <div className="border-kumo-line bg-kumo-base sticky top-0 z-10 -mx-4 -mt-4 mb-3 flex flex-col gap-2 rounded-t-lg border-b px-4 py-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {schema.decorators?.map((dec) => (
