@@ -1,17 +1,24 @@
 import { Breadcrumbs, Button, Text } from "@cloudflare/kumo";
-import { defineSchema, EditorProvider, PortableTextEditable } from "@portabletext/editor";
+import {
+  defineAnnotation,
+  defineBlockObject,
+  defineDecorator,
+  defineSchema,
+  defineTextBlock,
+  EditorProvider,
+  PortableTextEditable,
+} from "@portabletext/editor";
 import type {
+  BlockObjectRenderProps,
   PortableTextBlock,
-  RenderAnnotationFunction,
-  RenderBlockFunction,
-  RenderDecoratorFunction,
-  RenderListItemFunction,
-  RenderStyleFunction,
+  TextBlockRenderProps,
 } from "@portabletext/editor";
 import { defineBehavior } from "@portabletext/editor/behaviors";
-import { BehaviorPlugin, EventListenerPlugin } from "@portabletext/editor/plugins";
+import { BehaviorPlugin, EventListenerPlugin, NodePlugin } from "@portabletext/editor/plugins";
+import { ListIndexProvider, useListIndex } from "@portabletext/plugin-list-index";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useCallback, useState } from "react";
+import type { ReactNode } from "react";
 
 import PaddedSurface from "@/components/PaddedSurface";
 import { CodeBlockObjectEditor } from "@/components/editor/CodeBlockObjectEditor";
@@ -76,72 +83,105 @@ const convertSoftBreakToBreak = defineBehavior({
   actions: [() => [{ type: "execute", event: { type: "insert.break" } }]],
 });
 
-const renderStyle: RenderStyleFunction = (props) => {
-  const tag = props.schemaType.value;
-  switch (tag) {
+// Wraps a block object's editing UI in the markup the editor expects:
+// the outer element carries the editor's attributes and children, while
+// the visible content is non-editable and can be dragged to move the block.
+// Blocks with text fields turn dragging off so text inside them can be selected.
+function renderBlockObject(content: ReactNode, { draggable = true } = {}) {
+  return ({ attributes, children, readOnly }: BlockObjectRenderProps) => (
+    <div {...attributes}>
+      <div contentEditable={false} draggable={draggable && !readOnly}>
+        {content}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function TextBlock({ attributes, children, node, path }: TextBlockRenderProps) {
+  const listIndex = useListIndex(path);
+
+  let content: ReactNode;
+  switch (node.style) {
     case "h2":
-      return <h2 className="text-xl font-bold">{props.children}</h2>;
+      content = <h2 className="text-xl font-bold">{children}</h2>;
+      break;
     case "h3":
-      return <h3 className="text-lg font-semibold">{props.children}</h3>;
+      content = <h3 className="text-lg font-semibold">{children}</h3>;
+      break;
     case "blockquote":
-      return (
+      content = (
         <blockquote className="border-l-4 border-gray-300 pl-4 text-gray-600 italic">
-          {props.children}
+          {children}
         </blockquote>
       );
+      break;
     default:
-      return <p>{props.children}</p>;
+      content = <p>{children}</p>;
   }
-};
 
-const renderDecorator: RenderDecoratorFunction = (props) => {
-  switch (props.value) {
-    case "strong":
-      return <strong>{props.children}</strong>;
-    case "em":
-      return <em>{props.children}</em>;
-    case "underline":
-      return <u>{props.children}</u>;
-    case "code":
-      return <code>{props.children}</code>;
-    default:
-      return <>{props.children}</>;
+  if (node.listItem) {
+    const marker = node.listItem === "number" ? `${listIndex ?? 1}.` : "•";
+    return (
+      <div
+        {...attributes}
+        data-list-item
+        className="flex gap-2"
+        style={{ paddingLeft: `${(node.level ?? 1) * 1.5}rem` }}
+      >
+        <span contentEditable={false} className="min-w-4 text-right select-none">
+          {marker}
+        </span>
+        <div className="flex-1">{content}</div>
+      </div>
+    );
   }
-};
 
-const renderAnnotation: RenderAnnotationFunction = (props) => {
-  if (props.schemaType.name === "link") {
-    return <span className="text-blue-600 underline">{props.children}</span>;
-  }
-  return <>{props.children}</>;
-};
+  return <div {...attributes}>{content}</div>;
+}
 
-const renderListItem: RenderListItemFunction = (props) => {
-  return <li className="ml-6">{props.children}</li>;
-};
-
-const renderBlock: RenderBlockFunction = (props) => {
-  switch (props.schemaType.name) {
-    case "image":
-      return <ImageBlockObjectEditor value={props.value} path={props.path} />;
-    case "video":
-      return <VideoBlockObjectEditor value={props.value} path={props.path} />;
-    case "line":
-      return (
-        <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">Line</div>
-      );
-    case "break":
-      return (
-        <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">
-          Preview break
-        </div>
-      );
-    case "code":
-      return <CodeBlockObjectEditor value={props.value} path={props.path} />;
-    default:
-      return <div>{props.children}</div>;
-  }
-};
+const nodes = [
+  defineTextBlock({ type: "block", render: (props) => <TextBlock {...props} /> }),
+  defineBlockObject({
+    type: "image",
+    render: (props) =>
+      renderBlockObject(<ImageBlockObjectEditor value={props.node} path={props.path} />)(props),
+  }),
+  defineBlockObject({
+    type: "video",
+    render: (props) =>
+      renderBlockObject(<VideoBlockObjectEditor value={props.node} path={props.path} />)(props),
+  }),
+  defineBlockObject({
+    type: "code",
+    render: (props) =>
+      renderBlockObject(<CodeBlockObjectEditor value={props.node} path={props.path} />, {
+        draggable: false,
+      })(props),
+  }),
+  defineBlockObject({
+    type: "line",
+    render: renderBlockObject(
+      <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">Line</div>,
+    ),
+  }),
+  defineBlockObject({
+    type: "break",
+    render: renderBlockObject(
+      <div className="my-2 rounded bg-gray-100 py-1 text-center text-sm text-gray-500">
+        Preview break
+      </div>,
+    ),
+  }),
+  defineDecorator({ type: "strong", render: ({ children }) => <strong>{children}</strong> }),
+  defineDecorator({ type: "em", render: ({ children }) => <em>{children}</em> }),
+  defineDecorator({ type: "underline", render: ({ children }) => <u>{children}</u> }),
+  defineDecorator({ type: "code", render: ({ children }) => <code>{children}</code> }),
+  defineAnnotation({
+    type: "link",
+    render: ({ children }) => <span className="text-blue-600 underline">{children}</span>,
+  }),
+];
 
 function RouteComponent() {
   const { post, files } = Route.useLoaderData();
@@ -289,15 +329,11 @@ function PostEditor({ post, files }: PostEditorProps) {
             >
               <EventListenerPlugin on={handleMutation} />
               <BehaviorPlugin behaviors={[convertSoftBreakToBreak]} />
+              <NodePlugin nodes={nodes} />
               <Toolbar />
-              <PortableTextEditable
-                className="min-h-64 [&_ol]:list-decimal [&_ul]:list-disc [&>*+*]:mt-4"
-                renderStyle={renderStyle}
-                renderBlock={renderBlock}
-                renderDecorator={renderDecorator}
-                renderAnnotation={renderAnnotation}
-                renderListItem={renderListItem}
-              />
+              <ListIndexProvider>
+                <PortableTextEditable className="min-h-64 [&>*+*]:mt-4 [&>[data-list-item]+[data-list-item]]:mt-1" />
+              </ListIndexProvider>
             </EditorProvider>
           </FilesContext.Provider>
         </PaddedSurface>
