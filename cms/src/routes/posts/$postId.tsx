@@ -25,6 +25,7 @@ import { CodeBlockObjectEditor } from "@/components/editor/CodeBlockObjectEditor
 import { FilesContext } from "@/components/editor/FilesContext";
 import { ImageBlockObjectEditor } from "@/components/editor/ImageBlockObjectEditor";
 import { MetadataSection } from "@/components/editor/MetadataSection";
+import { ShortcutPlugins } from "@/components/editor/ShortcutPlugins";
 import { Toolbar } from "@/components/editor/Toolbar";
 import { VideoBlockObjectEditor } from "@/components/editor/VideoBlockObjectEditor";
 import { getPost, updatePost } from "@/data/db";
@@ -330,6 +331,7 @@ function PostEditor({ post, files }: PostEditorProps) {
               <EventListenerPlugin on={handleMutation} />
               <BehaviorPlugin behaviors={[convertSoftBreakToBreak]} />
               <NodePlugin nodes={nodes} />
+              <ShortcutPlugins />
               <Toolbar />
               <ListIndexProvider>
                 <PortableTextEditable className="min-h-64 [&>*+*]:mt-4 [&>[data-list-item]+[data-list-item]]:mt-1" />
