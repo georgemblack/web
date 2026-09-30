@@ -14,7 +14,7 @@ When making code changes, follow these rules:
 
 1. Use `volta` to manage node versions, `pnpm` for package management.
 2. Validate code changes by running `pnpm run dryrun` and `pnpm run check`.
-3. Use `pnpm run check -- --fix` to apply formatting and safe lint fixes.
+3. Use `pnpm run check --fix` to apply formatting and safe lint fixes.
 
 ## Running Commands
 
