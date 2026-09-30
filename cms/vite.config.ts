@@ -12,10 +12,10 @@ const config = defineConfig({
     importOrderSeparation: true,
     sortPackageJson: false,
     sortTailwindcss: {},
-    ignorePatterns: ["*.gen.ts", "pnpm-lock.yaml", "worker-configuration.d.ts"],
+    ignorePatterns: ["*.gen.ts", "pnpm-lock.yaml", ".cloudflare/**"],
   },
   lint: {
-    ignorePatterns: ["*.gen.ts", "worker-configuration.d.ts"],
+    ignorePatterns: ["*.gen.ts", ".cloudflare/**"],
     options: { typeAware: true, typeCheck: true },
   },
   test: { passWithNoTests: true },
@@ -29,7 +29,11 @@ const config = defineConfig({
 
     return [
       devtools(),
-      cloudflare({ viteEnvironment: { name: "ssr" } }),
+      cloudflare({
+        viteEnvironment: { name: "ssr" },
+        // Read cloudflare.config.ts and write build output for the cf CLI.
+        experimental: { newConfig: { cfBuildOutput: true, types: { generate: false } } },
+      }),
       tailwindcss(),
       tanstackStart(),
       viteReact(),
