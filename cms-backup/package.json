@@ -11,8 +11,8 @@
   "devDependencies": {
     "@types/node": "^25.6.0",
     "vite": "catalog:",
-    "wrangler": "^4.85.0",
-    "vite-plus": "catalog:"
+    "vite-plus": "catalog:",
+    "wrangler": "^4.143.0"
   },
   "volta": {
     "node": "24.14.0"

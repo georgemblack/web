@@ -9,7 +9,7 @@
     "test": "vp test run",
     "deploy": "vp build && wrangler deploy",
     "dryrun": "vp build && wrangler deploy --dry-run",
-    "preview": "vp build && vp preview",
+    "preview": "vp build && wrangler preview",
     "typegen": "wrangler types",
     "check": "vp check"
   },
@@ -53,7 +53,7 @@
     "vite-plus": "catalog:",
     "vitest": "catalog:",
     "web-vitals": "^5.2.0",
-    "wrangler": "^4.136.2"
+    "wrangler": "^4.143.0"
   },
   "volta": {
     "node": "24.14.0"

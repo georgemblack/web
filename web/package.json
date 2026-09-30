@@ -6,6 +6,7 @@
     "build": "astro check && astro build",
     "dryrun": "astro build && wrangler deploy --dry-run",
     "deploy": "wrangler deploy",
+    "preview": "wrangler preview",
     "typegen": "wrangler types",
     "check": "vp check"
   },
@@ -23,7 +24,7 @@
   "devDependencies": {
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "wrangler": "^4.136.2"
+    "wrangler": "^4.143.0"
   },
   "devEngines": {
     "packageManager": {
