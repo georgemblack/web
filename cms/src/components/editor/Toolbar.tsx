@@ -16,7 +16,6 @@ import type {
 import { useState } from "react";
 
 import { ImageInsertButton } from "./ImageInsertButton";
-import { LinkPopover } from "./LinkPopover";
 import { VideoInsertButton } from "./VideoInsertButton";
 
 const DECORATOR_LABELS: Record<string, string> = {
@@ -218,7 +217,6 @@ export function Toolbar() {
         {schema.annotations?.map((ann) => (
           <LinkButton key={ann.name} schemaType={ann} />
         ))}
-        {schema.annotations && <LinkPopover schemaTypes={schema.annotations} />}
         <ImageInsertButton />
         <VideoInsertButton />
         <BlockObjectInsertButton name="code" label="💻" defaultValue={{ text: "" }} />
