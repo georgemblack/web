@@ -25,6 +25,12 @@ const DECORATOR_LABELS: Record<string, string> = {
   code: "</>",
 };
 
+// Short labels for the style dropdown. The stored values (e.g. "normal") don't change.
+const STYLE_LABELS: Record<string, string> = {
+  normal: "p",
+  blockquote: "bq",
+};
+
 const LIST_LABELS: Record<string, string> = {
   bullet: "UL",
   number: "OL",
@@ -139,15 +145,20 @@ function LinkButton({ schemaType }: { schemaType: ToolbarAnnotationSchemaType })
 
 function StyleSelect({ schemaTypes }: { schemaTypes: ReadonlyArray<ToolbarStyleSchemaType> }) {
   const selector = useStyleSelector({ schemaTypes });
+  const items = schemaTypes.map((style) => ({
+    value: style.name,
+    label: STYLE_LABELS[style.name] ?? style.name,
+  }));
   return (
     <Select
       aria-label="Block style"
+      items={items}
       value={selector.snapshot.context.activeStyle ?? "normal"}
       onValueChange={(value) => selector.send({ type: "toggle", style: value as string })}
     >
-      {schemaTypes.map((style) => (
-        <Select.Option key={style.name} value={style.name}>
-          {style.name}
+      {items.map((item) => (
+        <Select.Option key={item.value} value={item.value}>
+          {item.label}
         </Select.Option>
       ))}
     </Select>
@@ -186,7 +197,9 @@ function BlockObjectInsertButton({
 export function Toolbar() {
   const schema = useToolbarSchema({});
   return (
-    <div className="mb-3 flex flex-col gap-2">
+    // Stays pinned to the top of the window while scrolling through long posts.
+    // The negative margins stretch its background over the card's padding to its edges.
+    <div className="border-kumo-line bg-kumo-base sticky top-0 z-10 -mx-4 -mt-4 mb-3 flex flex-col gap-2 rounded-t-lg border-b px-4 py-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {schema.decorators?.map((dec) => (
