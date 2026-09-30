@@ -25,6 +25,14 @@ const DECORATOR_LABELS: Record<string, string> = {
   code: "</>",
 };
 
+// Short labels for the style dropdown. The stored values (e.g. "normal") don't change.
+const STYLE_LABELS: Record<string, string> = {
+  normal: "p",
+  h2: "h2",
+  h3: "h3",
+  blockquote: "bq",
+};
+
 const LIST_LABELS: Record<string, string> = {
   bullet: "UL",
   number: "OL",
@@ -139,15 +147,20 @@ function LinkButton({ schemaType }: { schemaType: ToolbarAnnotationSchemaType })
 
 function StyleSelect({ schemaTypes }: { schemaTypes: ReadonlyArray<ToolbarStyleSchemaType> }) {
   const selector = useStyleSelector({ schemaTypes });
+  const items = schemaTypes.map((style) => ({
+    value: style.name,
+    label: STYLE_LABELS[style.name] ?? style.name,
+  }));
   return (
     <Select
       aria-label="Block style"
+      items={items}
       value={selector.snapshot.context.activeStyle ?? "normal"}
       onValueChange={(value) => selector.send({ type: "toggle", style: value as string })}
     >
-      {schemaTypes.map((style) => (
-        <Select.Option key={style.name} value={style.name}>
-          {style.name}
+      {items.map((item) => (
+        <Select.Option key={item.value} value={item.value}>
+          {item.label}
         </Select.Option>
       ))}
     </Select>
