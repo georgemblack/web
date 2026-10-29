@@ -8,7 +8,7 @@ interface Props {
 
 const { title, ogImage } = Astro.props;
 const pageTitle = title ? `${title} | George Black` : `George Black`;
-const ogImageUrl = ogImage || "https://george.black/images/profile.avif";
+const ogImageUrl = new URL(ogImage || "/images/profile.avif", Astro.site).href;
 ---
 
 <head>
