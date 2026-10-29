@@ -1,8 +1,8 @@
 const RECENT_POST_AGE_MS = 24 * 60 * 60 * 1000;
 
 // These directives include the fresh and stale periods, so their combined
-// lifetime is one hour and twelve hours respectively.
-export const RECENT_CONTENT_CACHE_CONTROL = "public, s-maxage=600, stale-while-revalidate=3000";
+// lifetime is 55 minutes and twelve hours respectively.
+export const RECENT_CONTENT_CACHE_CONTROL = "public, s-maxage=300, stale-while-revalidate=3000";
 export const STANDARD_CONTENT_CACHE_CONTROL = "public, s-maxage=3600, stale-while-revalidate=39600";
 export const IMAGE_CACHE_CONTROL = "public, max-age=604800";
 
