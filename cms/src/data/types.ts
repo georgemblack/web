@@ -55,7 +55,7 @@ export type FileType = "IMAGE" | "VIDEO" | "DOCUMENT";
 
 export interface ListFilesFilters {
   year: number;
-  type?: FileType;
+  type?: FileType | FileType[];
 }
 
 export interface WebFile {

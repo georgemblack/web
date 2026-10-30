@@ -175,8 +175,10 @@ export async function listFiles(db: D1Database, filters: ListFilesFilters): Prom
   const bindings: (string | number)[] = [filters.year];
 
   if (filters.type !== undefined) {
-    query += " AND type = ?";
-    bindings.push(filters.type);
+    const types = Array.isArray(filters.type) ? filters.type : [filters.type];
+    if (types.length === 0) return [];
+    query += ` AND type IN (${types.map(() => "?").join(", ")})`;
+    bindings.push(...types);
   }
 
   query += " ORDER BY key";

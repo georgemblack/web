@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FilesIndexRouteImport } from './routes/files/index'
+import { Route as ImagesIndexRouteImport } from './routes/images/index'
 import { Route as PostsPostIdRouteImport } from './routes/posts/$postId'
 import { Route as FilesNewIndexRouteImport } from './routes/files/new/index'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const FilesIndexRoute = FilesIndexRouteImport.update({
   id: '/files/',
   path: '/files/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImagesIndexRoute = ImagesIndexRouteImport.update({
+  id: '/images/',
+  path: '/images/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PostsPostIdRoute = PostsPostIdRouteImport.update({
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/files/': typeof FilesIndexRoute
+  '/images/': typeof ImagesIndexRoute
   '/files/new/': typeof FilesNewIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/files': typeof FilesIndexRoute
+  '/images': typeof ImagesIndexRoute
   '/files/new': typeof FilesNewIndexRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,23 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/files/': typeof FilesIndexRoute
+  '/images/': typeof ImagesIndexRoute
   '/files/new/': typeof FilesNewIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/posts/$postId' | '/files/' | '/files/new/'
+  fullPaths: '/' | '/posts/$postId' | '/files/' | '/images/' | '/files/new/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/posts/$postId' | '/files' | '/files/new'
-  id: '__root__' | '/' | '/posts/$postId' | '/files/' | '/files/new/'
+  to: '/' | '/posts/$postId' | '/files' | '/images' | '/files/new'
+  id:
+    '__root__' | '/' | '/posts/$postId' | '/files/' | '/images/' | '/files/new/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PostsPostIdRoute: typeof PostsPostIdRoute
   FilesIndexRoute: typeof FilesIndexRoute
+  ImagesIndexRoute: typeof ImagesIndexRoute
   FilesNewIndexRoute: typeof FilesNewIndexRoute
 }
 
@@ -83,6 +94,13 @@ declare module '@tanstack/react-router' {
       path: '/files'
       fullPath: '/files/'
       preLoaderRoute: typeof FilesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/images/': {
+      id: '/images/'
+      path: '/images'
+      fullPath: '/images/'
+      preLoaderRoute: typeof ImagesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/posts/$postId': {
@@ -106,6 +124,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PostsPostIdRoute: PostsPostIdRoute,
   FilesIndexRoute: FilesIndexRoute,
+  ImagesIndexRoute: ImagesIndexRoute,
   FilesNewIndexRoute: FilesNewIndexRoute,
 }
 export const routeTree = rootRouteImport
