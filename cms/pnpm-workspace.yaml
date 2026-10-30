@@ -5,6 +5,8 @@ catalog:
   vite: npm:@voidzero-dev/vite-plus-core@0.2.8
   vitest: 4.1.10
   vite-plus: 0.2.8
+minimumReleaseAgeExclude:
+  - cf@1.0.0-beta.26
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
