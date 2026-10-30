@@ -3,7 +3,7 @@
 // Runtime types generated with workerd@1.20260702.1 2026-01-15 nodejs_compat
 interface __BaseEnv_Env {
 	WEB_FILES: R2Bucket;
-	WEB_FILES_CACHE: R2Bucket;
+	IMAGES: ImagesBinding;
 	WEB_DB: D1Database;
 }
 declare namespace Cloudflare {

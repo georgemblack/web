@@ -13,7 +13,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as FilesIndexRouteImport } from './routes/files/index'
 import { Route as PostsPostIdRouteImport } from './routes/posts/$postId'
 import { Route as FilesNewIndexRouteImport } from './routes/files/new/index'
-import { Route as FilesNewOptimizedRouteImport } from './routes/files/new/optimized'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -35,24 +34,17 @@ const FilesNewIndexRoute = FilesNewIndexRouteImport.update({
   path: '/files/new/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FilesNewOptimizedRoute = FilesNewOptimizedRouteImport.update({
-  id: '/files/new/optimized',
-  path: '/files/new/optimized',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/files/': typeof FilesIndexRoute
-  '/files/new/optimized': typeof FilesNewOptimizedRoute
   '/files/new/': typeof FilesNewIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/files': typeof FilesIndexRoute
-  '/files/new/optimized': typeof FilesNewOptimizedRoute
   '/files/new': typeof FilesNewIndexRoute
 }
 export interface FileRoutesById {
@@ -60,29 +52,20 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/posts/$postId': typeof PostsPostIdRoute
   '/files/': typeof FilesIndexRoute
-  '/files/new/optimized': typeof FilesNewOptimizedRoute
   '/files/new/': typeof FilesNewIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    '/' | '/posts/$postId' | '/files/' | '/files/new/optimized' | '/files/new/'
+  fullPaths: '/' | '/posts/$postId' | '/files/' | '/files/new/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/posts/$postId' | '/files' | '/files/new/optimized' | '/files/new'
-  id:
-    | '__root__'
-    | '/'
-    | '/posts/$postId'
-    | '/files/'
-    | '/files/new/optimized'
-    | '/files/new/'
+  to: '/' | '/posts/$postId' | '/files' | '/files/new'
+  id: '__root__' | '/' | '/posts/$postId' | '/files/' | '/files/new/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PostsPostIdRoute: typeof PostsPostIdRoute
   FilesIndexRoute: typeof FilesIndexRoute
-  FilesNewOptimizedRoute: typeof FilesNewOptimizedRoute
   FilesNewIndexRoute: typeof FilesNewIndexRoute
 }
 
@@ -116,13 +99,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FilesNewIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/files/new/optimized': {
-      id: '/files/new/optimized'
-      path: '/files/new/optimized'
-      fullPath: '/files/new/optimized'
-      preLoaderRoute: typeof FilesNewOptimizedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -130,7 +106,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PostsPostIdRoute: PostsPostIdRoute,
   FilesIndexRoute: FilesIndexRoute,
-  FilesNewOptimizedRoute: FilesNewOptimizedRoute,
   FilesNewIndexRoute: FilesNewIndexRoute,
 }
 export const routeTree = rootRouteImport

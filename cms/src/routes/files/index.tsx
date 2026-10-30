@@ -89,7 +89,7 @@ function FilesPage() {
             </Select>
             <div>
               <Switch
-                label="Unoptimized"
+                label="Optimization disabled"
                 checked={showUnoptimizedOnly}
                 onCheckedChange={setShowUnoptimizedOnly}
               />
@@ -114,7 +114,7 @@ function FilesPage() {
                 <div className="truncate font-mono text-sm">{f.key}</div>
                 {f.optimize && (
                   <Badge variant="primary" className="mt-1">
-                    optimized
+                    optimization enabled
                   </Badge>
                 )}
               </div>
@@ -123,6 +123,7 @@ function FilesPage() {
                   variant="secondary"
                   shape="square"
                   aria-label="Toggle optimize"
+                  disabled={f.type !== "IMAGE"}
                   onClick={() => handleToggleOptimize(f.key)}
                 >
                   🐳

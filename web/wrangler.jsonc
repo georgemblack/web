@@ -35,11 +35,10 @@
         "binding": "WEB_FILES",
         "bucket_name": "web-files-staging",
       },
-      {
-        "binding": "WEB_FILES_CACHE",
-        "bucket_name": "web-files-cache-staging",
-      },
     ],
+  },
+  "images": {
+    "binding": "IMAGES",
   },
   "cache": {
     "enabled": true,
@@ -56,10 +55,6 @@
     {
       "binding": "WEB_FILES",
       "bucket_name": "web-files",
-    },
-    {
-      "binding": "WEB_FILES_CACHE",
-      "bucket_name": "web-files-cache",
     },
   ],
 }

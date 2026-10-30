@@ -205,16 +205,15 @@ export async function createFile(
   return { key, type, year, optimize };
 }
 
-export async function updateFileOptimize(
-  db: D1Database,
-  key: string,
-  optimize: boolean,
-): Promise<boolean> {
-  await db
-    .prepare("UPDATE files SET optimize = ? WHERE key = ?")
-    .bind(optimize ? 1 : 0, key)
-    .run();
-  return true;
+export async function toggleFileOptimize(db: D1Database, key: string): Promise<boolean> {
+  const file = await db
+    .prepare(
+      "UPDATE files SET optimize = CASE WHEN optimize = 1 THEN 0 ELSE 1 END WHERE key = ? AND type = 'IMAGE' RETURNING optimize",
+    )
+    .bind(key)
+    .first<{ optimize: number }>();
+  if (!file) throw new Error("Image not found");
+  return file.optimize === 1;
 }
 
 export async function deleteFile(db: D1Database, key: string): Promise<boolean> {

@@ -35,10 +35,6 @@ export default defineConfig((ctx) => {
         WEB_FILES: bindings.r2({
           name: `web-files${suffix}`,
         }),
-        WEB_FILES_CACHE: bindings.r2({
-          name: `web-files-cache${suffix}`,
-        }),
-        IMAGES: bindings.images({}),
       },
     },
   };
