@@ -69,8 +69,8 @@ export const toggleOptimize = createServerFn({ method: "POST" })
     const exists = await env.WEB_FILES_CACHE.head(key);
     if (exists) {
       await env.WEB_FILES_CACHE.delete(key);
-      await queries.updateFileOptimized(env.WEB_DB, key, false);
-      return { optimized: false };
+      await queries.updateFileOptimize(env.WEB_DB, key, false);
+      return { optimize: false };
     }
 
     const original = await env.WEB_FILES.get(key);
@@ -89,9 +89,9 @@ export const toggleOptimize = createServerFn({ method: "POST" })
       },
     });
 
-    await queries.updateFileOptimized(env.WEB_DB, key, true);
+    await queries.updateFileOptimize(env.WEB_DB, key, true);
 
-    return { optimized: true };
+    return { optimize: true };
   });
 
 export const uploadOptimizedFile = createServerFn({ method: "POST" })
@@ -115,7 +115,7 @@ export const uploadOptimizedFile = createServerFn({ method: "POST" })
       },
     });
 
-    await queries.updateFileOptimized(env.WEB_DB, key, true);
+    await queries.updateFileOptimize(env.WEB_DB, key, true);
 
     return { key };
   });

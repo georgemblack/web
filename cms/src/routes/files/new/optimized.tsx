@@ -16,7 +16,7 @@ function NewOptimizedFilePage() {
   const router = useRouter();
 
   const [year, setYear] = useState(String(currentYear));
-  const [files, setFiles] = useState<Array<{ key: string; optimized: boolean }>>([]);
+  const [files, setFiles] = useState<Array<{ key: string; optimize: boolean }>>([]);
   const [loadingFiles, setLoadingFiles] = useState(false);
   const [selectedKey, setSelectedKey] = useState("");
   const [file, setFile] = useState<File | null>(null);
@@ -47,7 +47,7 @@ function NewOptimizedFilePage() {
     void loadFiles(newYear);
   };
 
-  const unoptimizedFiles = files.filter((f) => !f.optimized);
+  const unoptimizedFiles = files.filter((f) => !f.optimize);
 
   const handleUpload = async () => {
     if (!file || !selectedKey) return;

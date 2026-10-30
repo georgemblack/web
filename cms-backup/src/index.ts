@@ -18,7 +18,7 @@ interface WebDbFile {
   key: string;
   type: string;
   year: number;
-  optimized: number;
+  optimize: number;
 }
 
 export default {
@@ -38,7 +38,7 @@ export default {
     const key = `backups/${now.toISOString().replace(/[:.]/g, "-")}.json`;
 
     const backup = {
-      version: 2,
+      version: 3,
       created: now.toISOString(),
       postCount: posts.length,
       fileCount: files.length,
@@ -66,7 +66,7 @@ async function queryPosts(db: D1Database): Promise<Post[]> {
 
 async function listAllFiles(db: D1Database): Promise<WebDbFile[]> {
   const result = await db
-    .prepare("SELECT key, type, year, optimized FROM files ORDER BY year DESC, key")
+    .prepare("SELECT key, type, year, optimize FROM files ORDER BY year DESC, key")
     .all<WebDbFile>();
   return result.results;
 }

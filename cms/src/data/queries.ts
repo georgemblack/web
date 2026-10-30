@@ -171,7 +171,7 @@ export async function deletePost(db: D1Database, id: string): Promise<boolean> {
 }
 
 export async function listFiles(db: D1Database, filters: ListFilesFilters): Promise<WebFile[]> {
-  let query = "SELECT key, type, year, optimized FROM files WHERE year = ?";
+  let query = "SELECT key, type, year, optimize FROM files WHERE year = ?";
   const bindings: (string | number)[] = [filters.year];
 
   if (filters.type !== undefined) {
@@ -184,10 +184,10 @@ export async function listFiles(db: D1Database, filters: ListFilesFilters): Prom
   const result = await db
     .prepare(query)
     .bind(...bindings)
-    .all<{ key: string; type: FileType; year: number; optimized: number }>();
+    .all<{ key: string; type: FileType; year: number; optimize: number }>();
   return result.results.map((row) => ({
     ...row,
-    optimized: row.optimized === 1,
+    optimize: row.optimize === 1,
   }));
 }
 
@@ -196,23 +196,23 @@ export async function createFile(
   key: string,
   type: FileType,
   year: number,
-  optimized: boolean,
+  optimize: boolean,
 ): Promise<WebFile> {
   await db
-    .prepare("INSERT INTO files (key, type, year, optimized) VALUES (?, ?, ?, ?)")
-    .bind(key, type, year, optimized ? 1 : 0)
+    .prepare("INSERT INTO files (key, type, year, optimize) VALUES (?, ?, ?, ?)")
+    .bind(key, type, year, optimize ? 1 : 0)
     .run();
-  return { key, type, year, optimized };
+  return { key, type, year, optimize };
 }
 
-export async function updateFileOptimized(
+export async function updateFileOptimize(
   db: D1Database,
   key: string,
-  optimized: boolean,
+  optimize: boolean,
 ): Promise<boolean> {
   await db
-    .prepare("UPDATE files SET optimized = ? WHERE key = ?")
-    .bind(optimized ? 1 : 0, key)
+    .prepare("UPDATE files SET optimize = ? WHERE key = ?")
+    .bind(optimize ? 1 : 0, key)
     .run();
   return true;
 }

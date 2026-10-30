@@ -29,7 +29,7 @@ function FilesPage() {
   const filteredFiles = useMemo(() => {
     return files.filter((f: WebFile) => {
       const matchesSearch = f.key.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesFilter = !showUnoptimizedOnly || !f.optimized;
+      const matchesFilter = !showUnoptimizedOnly || !f.optimize;
       return matchesSearch && matchesFilter;
     });
   }, [files, searchQuery, showUnoptimizedOnly]);
@@ -112,7 +112,7 @@ function FilesPage() {
               )}
               <div className="min-w-0 flex-1">
                 <div className="truncate font-mono text-sm">{f.key}</div>
-                {f.optimized && (
+                {f.optimize && (
                   <Badge variant="primary" className="mt-1">
                     optimized
                   </Badge>

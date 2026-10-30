@@ -62,7 +62,7 @@ export interface WebFile {
   key: string;
   type: FileType;
   year: number;
-  optimized: boolean;
+  optimize: boolean;
 }
 
 // Zod schemas for DB inputs
