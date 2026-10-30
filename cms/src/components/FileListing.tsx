@@ -21,7 +21,7 @@ export default function FileListing({ files, year, page }: FileListingProps) {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
-  const [copyMessage, setCopyMessage] = useState("");
+  const [copyError, setCopyError] = useState("");
   const [showUnoptimizedOnly, setShowUnoptimizedOnly] = useState(false);
 
   const filteredFiles = useMemo(() => {
@@ -43,10 +43,10 @@ export default function FileListing({ files, year, page }: FileListingProps) {
       const path = key.split("/").map(encodeURIComponent).join("/");
       await navigator.clipboard.writeText(`https://george.black/files/${path}`);
       setCopiedKey(key);
-      setCopyMessage(`Copied URL for ${key}`);
+      setCopyError("");
     } catch {
       setCopiedKey(null);
-      setCopyMessage("Could not copy the URL. Please try again.");
+      setCopyError("Could not copy the URL. Please try again.");
     }
   };
 
@@ -114,9 +114,9 @@ export default function FileListing({ files, year, page }: FileListingProps) {
             </div>
           )}
         </PaddedSurface>
-        {!isImages && (
-          <p role="status" className="mt-2 text-sm">
-            {copyMessage}
+        {!isImages && copyError && (
+          <p role="alert" className="mt-2 text-sm">
+            {copyError}
           </p>
         )}
         <div className="mt-4 flex flex-col gap-4">

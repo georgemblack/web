@@ -295,7 +295,7 @@ footer {
    Homepage
    ========================================================================== */
 .posts article:not(:first-child) {
-  margin-top: 4em;
+  margin-top: 5em;
 }
 
 .image-grid {
