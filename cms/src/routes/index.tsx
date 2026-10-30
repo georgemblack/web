@@ -69,7 +69,7 @@ function App() {
           <Link to="/images" search={{ year: String(new Date().getFullYear()) }}>
             <Button variant="secondary">Images</Button>
           </Link>
-          <Link to="/files" search={{ year: String(new Date().getFullYear()) }}>
+          <Link to="/files">
             <Button variant="secondary">Files</Button>
           </Link>
           <Button variant="primary" onClick={handleCreatePost}>

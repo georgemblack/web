@@ -171,16 +171,23 @@ export async function deletePost(db: D1Database, id: string): Promise<boolean> {
 }
 
 export async function listFiles(db: D1Database, filters: ListFilesFilters): Promise<WebFile[]> {
-  let query = "SELECT key, type, year, optimize FROM files WHERE year = ?";
-  const bindings: (string | number)[] = [filters.year];
+  let query = "SELECT key, type, year, optimize FROM files";
+  const conditions: string[] = [];
+  const bindings: (string | number)[] = [];
+
+  if (filters.year !== undefined) {
+    conditions.push("year = ?");
+    bindings.push(filters.year);
+  }
 
   if (filters.type !== undefined) {
     const types = Array.isArray(filters.type) ? filters.type : [filters.type];
     if (types.length === 0) return [];
-    query += ` AND type IN (${types.map(() => "?").join(", ")})`;
+    conditions.push(`type IN (${types.map(() => "?").join(", ")})`);
     bindings.push(...types);
   }
 
+  if (conditions.length > 0) query += ` WHERE ${conditions.join(" AND ")}`;
   query += " ORDER BY key";
 
   const result = await db

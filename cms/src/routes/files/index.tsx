@@ -5,16 +5,10 @@ import { listFiles } from "@/data/files";
 
 export const Route = createFileRoute("/files/")({
   component: FilesPage,
-  validateSearch: (search: Record<string, unknown>) => ({
-    year: typeof search.year === "string" ? search.year : String(new Date().getFullYear()),
-  }),
-  loaderDeps: ({ search }) => ({ year: search.year }),
-  loader: async ({ deps }) =>
-    await listFiles({ data: { year: Number(deps.year), type: "DOCUMENT" } }),
+  loader: async () => await listFiles({ data: { type: "DOCUMENT" } }),
 });
 
 function FilesPage() {
   const files = Route.useLoaderData();
-  const { year } = Route.useSearch();
-  return <FileListing files={files} year={year} page="files" />;
+  return <FileListing files={files} page="files" />;
 }
