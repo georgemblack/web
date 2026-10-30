@@ -8,6 +8,10 @@ export default defineConfig({
   // Render pages on-demand in the Cloudflare Worker instead of building static files.
   output: "server",
   session: false,
+  redirects: {
+    "/home": "/blog",
+    "/home/[page]": "/blog/[page]",
+  },
   adapter: cloudflare(),
   integrations: [
     sitemap({

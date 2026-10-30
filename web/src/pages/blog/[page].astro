@@ -35,7 +35,7 @@ Astro.response.headers.set(
 Astro.response.headers.set("Cache-Tag", POST_LISTS_CACHE_TAG);
 ---
 
-<Page title={`Home - Page ${page}`}>
+<Page title={`Blog - Page ${page}`}>
   <PostList posts={selected} />
   <PostPagination page={page} hasOlderPosts={results.length > PAGE_SIZE} />
 </Page>

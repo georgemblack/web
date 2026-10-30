@@ -176,8 +176,7 @@ header h1 a:hover {
   color: var(--header-color);
 }
 
-header nav,
-.root-nav {
+header nav {
   font-size: 1.5em;
   font-family: var(--font-family-rounded);
   font-weight: var(--font-weight-extreme);
