@@ -4,13 +4,16 @@ import PostList from "../../components/PostList.astro";
 import PostPagination from "../../components/PostPagination.astro";
 import { listVisiblePublishedPosts } from "../../data/posts";
 import Page from "../../layouts/Page.astro";
-import { cacheControlForPost } from "../../util/Cache";
+import { STANDARD_CONTENT_CACHE_CONTROL, POST_LISTS_CACHE_TAG } from "../../util/Cache";
 
 const PAGE_SIZE = 20;
 const page = Number(Astro.params.page);
 
 if (!Number.isSafeInteger(page) || page < 1)
-  return new Response("Not found", { status: 404 });
+  return new Response("Not found", {
+    status: 404,
+    headers: { "Cache-Control": "no-store" },
+  });
 
 const results = await listVisiblePublishedPosts(
   env.WEB_DB,
@@ -19,12 +22,17 @@ const results = await listVisiblePublishedPosts(
 );
 const selected = results.slice(0, PAGE_SIZE).map((post) => post.data);
 
-if (selected.length === 0) return new Response("Not found", { status: 404 });
+if (selected.length === 0)
+  return new Response("Not found", {
+    status: 404,
+    headers: { "Cache-Control": "no-store" },
+  });
 
 Astro.response.headers.set(
   "Cache-Control",
-  cacheControlForPost(selected[0].published),
+  STANDARD_CONTENT_CACHE_CONTROL,
 );
+Astro.response.headers.set("Cache-Tag", POST_LISTS_CACHE_TAG);
 ---
 
 <Page title={`Home - Page ${page}`}>

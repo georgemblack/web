@@ -3,7 +3,7 @@ import type { APIContext } from "astro";
 import { getLiveCollection } from "astro:content";
 
 import { url } from "../../util/Format";
-import { STANDARD_CONTENT_CACHE_CONTROL } from "../../util/Cache";
+import { STANDARD_CONTENT_CACHE_CONTROL, POST_LISTS_CACHE_TAG } from "../../util/Cache";
 
 export async function GET(context: APIContext) {
   const { entries, error } = await getLiveCollection("posts");
@@ -24,5 +24,6 @@ export async function GET(context: APIContext) {
     })),
   });
   response.headers.set("Cache-Control", STANDARD_CONTENT_CACHE_CONTROL);
+  response.headers.set("Cache-Tag", POST_LISTS_CACHE_TAG);
   return response;
 }

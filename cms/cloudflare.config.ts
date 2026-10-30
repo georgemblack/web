@@ -19,6 +19,8 @@ export default defineConfig((ctx) => {
         enabled: true,
       },
       env: {
+        // CMS previews write staging data and must not purge production caches.
+        ...(ctx.isPreview ? {} : { WEB: bindings.worker({ worker: "web" }) }),
         CF_ACCESS_TEAM_DOMAIN: bindings.text("https://georgeblack.cloudflareaccess.com"),
         CF_ACCESS_AUD: bindings.text(
           "062182c55c618311c41f164d20cc413d0637fc013d720108750a9e66155bd657",

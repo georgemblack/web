@@ -1,7 +1,7 @@
 import type { APIContext } from "astro";
 import { getLiveCollection } from "astro:content";
 
-import { STANDARD_CONTENT_CACHE_CONTROL } from "../util/Cache";
+import { STANDARD_CONTENT_CACHE_CONTROL, POST_LISTS_CACHE_TAG } from "../util/Cache";
 import { slug } from "../util/Format";
 
 function escapeXml(value: string): string {
@@ -44,6 +44,7 @@ export async function GET(context: APIContext): Promise<Response> {
   return new Response(body, {
     headers: {
       "Cache-Control": STANDARD_CONTENT_CACHE_CONTROL,
+      "Cache-Tag": POST_LISTS_CACHE_TAG,
       "Content-Type": "application/xml; charset=utf-8",
     },
   });
