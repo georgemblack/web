@@ -1,7 +1,7 @@
 ---
 import { getLiveEntry } from "astro:content";
 import Post from "../layouts/Post.astro";
-import { STANDARD_CONTENT_CACHE_CONTROL, postCacheTag } from "../util/Cache";
+import { HTML_CACHE_CONTROL, postCacheTag } from "../util/Cache";
 
 const { slug } = Astro.params;
 const { entry, error } = await getLiveEntry("posts", { slug: slug ?? "" });
@@ -25,7 +25,7 @@ const post = entry.data;
 
 Astro.response.headers.set(
   "Cache-Control",
-  STANDARD_CONTENT_CACHE_CONTROL,
+  HTML_CACHE_CONTROL,
 );
 Astro.response.headers.set("Cache-Tag", postCacheTag(entry.id));
 ---

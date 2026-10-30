@@ -1,6 +1,10 @@
-import { IMAGE_CACHE_CONTROL } from "../util/Cache";
+import { FILE_CACHE_CONTROL, FILE_NOT_FOUND_CACHE_CONTROL } from "../util/Cache";
 
-// Workers Cache serves hits before this handler runs. Only misses read D1/R2.
+interface FileRow {
+  type: string;
+  optimize: number;
+}
+
 export async function serveFile(request: Request, env: Env): Promise<Response> {
   if (request.method !== "GET" && request.method !== "HEAD") {
     return new Response("Method Not Allowed", { status: 405, headers: { Allow: "GET, HEAD" } });
@@ -14,22 +18,20 @@ export async function serveFile(request: Request, env: Env): Promise<Response> {
   }
 
   const [file, object] = await Promise.all([
-    env.WEB_DB.prepare("SELECT type, optimize FROM files WHERE key = ?")
-      .bind(key)
-      .first<{ type: string; optimize: number }>(),
+    env.WEB_DB.prepare("SELECT type, optimize FROM files WHERE key = ?").bind(key).first<FileRow>(),
     env.WEB_FILES.get(key),
   ]);
 
   const headers = new Headers({
-    "Cache-Control": IMAGE_CACHE_CONTROL,
+    "Cache-Control": FILE_CACHE_CONTROL,
   });
   if (!object) {
-    headers.set("Cache-Control", "public, s-maxage=3600");
+    headers.set("Cache-Control", FILE_NOT_FOUND_CACHE_CONTROL);
     return new Response(request.method === "HEAD" ? null : "Not Found", { status: 404, headers });
   }
 
   object.writeHttpMetadata(headers);
-  headers.set("Cache-Control", IMAGE_CACHE_CONTROL);
+  headers.set("Cache-Control", FILE_CACHE_CONTROL);
 
   if (file?.type === "IMAGE" && file.optimize === 1) {
     try {

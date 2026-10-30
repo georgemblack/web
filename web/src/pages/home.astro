@@ -5,7 +5,7 @@ import PostPagination from "../components/PostPagination.astro";
 import { listVisiblePublishedPosts } from "../data/posts";
 import Page from "../layouts/Page.astro";
 import {
-  STANDARD_CONTENT_CACHE_CONTROL,
+  HTML_CACHE_CONTROL,
   POST_LISTS_CACHE_TAG,
 } from "../util/Cache";
 
@@ -16,7 +16,7 @@ const hasOlderPosts = results.length > PAGE_SIZE;
 
 Astro.response.headers.set(
   "Cache-Control",
-  STANDARD_CONTENT_CACHE_CONTROL,
+  HTML_CACHE_CONTROL,
 );
 Astro.response.headers.set("Cache-Tag", POST_LISTS_CACHE_TAG);
 ---

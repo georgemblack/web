@@ -4,7 +4,7 @@ import PostList from "../../components/PostList.astro";
 import PostPagination from "../../components/PostPagination.astro";
 import { listVisiblePublishedPosts } from "../../data/posts";
 import Page from "../../layouts/Page.astro";
-import { STANDARD_CONTENT_CACHE_CONTROL, POST_LISTS_CACHE_TAG } from "../../util/Cache";
+import { HTML_CACHE_CONTROL, POST_LISTS_CACHE_TAG } from "../../util/Cache";
 
 const PAGE_SIZE = 20;
 const page = Number(Astro.params.page);
@@ -30,7 +30,7 @@ if (selected.length === 0)
 
 Astro.response.headers.set(
   "Cache-Control",
-  STANDARD_CONTENT_CACHE_CONTROL,
+  HTML_CACHE_CONTROL,
 );
 Astro.response.headers.set("Cache-Tag", POST_LISTS_CACHE_TAG);
 ---
