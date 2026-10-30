@@ -9,8 +9,7 @@ export const Route = createFileRoute("/images/")({
     year: typeof search.year === "string" ? search.year : String(new Date().getFullYear()),
   }),
   loaderDeps: ({ search }) => ({ year: search.year }),
-  loader: async ({ deps }) =>
-    await listFiles({ data: { year: Number(deps.year), type: ["IMAGE", "VIDEO"] } }),
+  loader: ({ deps }) => listFiles({ data: { year: Number(deps.year), type: ["IMAGE", "VIDEO"] } }),
 });
 
 function ImagesPage() {

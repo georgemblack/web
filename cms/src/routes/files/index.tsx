@@ -5,7 +5,7 @@ import { listFiles } from "@/data/files";
 
 export const Route = createFileRoute("/files/")({
   component: FilesPage,
-  loader: async () => await listFiles({ data: { type: "DOCUMENT" } }),
+  loader: () => listFiles({ data: { type: "DOCUMENT" } }),
 });
 
 function FilesPage() {

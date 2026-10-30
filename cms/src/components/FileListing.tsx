@@ -25,8 +25,9 @@ export default function FileListing({ files, year, page }: FileListingProps) {
   const [showUnoptimizedOnly, setShowUnoptimizedOnly] = useState(false);
 
   const filteredFiles = useMemo(() => {
-    return files.filter((f: WebFile) => {
-      const matchesSearch = f.key.toLowerCase().includes(searchQuery.toLowerCase());
+    const query = searchQuery.toLowerCase();
+    return files.filter((f) => {
+      const matchesSearch = f.key.toLowerCase().includes(query);
       const matchesFilter = !isImages || !showUnoptimizedOnly || !f.optimize;
       return matchesSearch && matchesFilter;
     });
@@ -80,15 +81,13 @@ export default function FileListing({ files, year, page }: FileListingProps) {
       </div>
       <div className="mt-4">
         <PaddedSurface>
-          <div>
-            <Input
-              className="w-full"
-              placeholder="Search..."
-              aria-label="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+          <Input
+            className="w-full"
+            placeholder="Search..."
+            aria-label="Search..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
           {isImages && (
             <div className="mt-4 flex items-center gap-3">
               <Select
@@ -107,13 +106,11 @@ export default function FileListing({ files, year, page }: FileListingProps) {
                   </Select.Option>
                 ))}
               </Select>
-              <div>
-                <Switch
-                  label="Optimization disabled"
-                  checked={showUnoptimizedOnly}
-                  onCheckedChange={setShowUnoptimizedOnly}
-                />
-              </div>
+              <Switch
+                label="Optimization disabled"
+                checked={showUnoptimizedOnly}
+                onCheckedChange={setShowUnoptimizedOnly}
+              />
             </div>
           )}
         </PaddedSurface>
@@ -123,7 +120,7 @@ export default function FileListing({ files, year, page }: FileListingProps) {
           </p>
         )}
         <div className="mt-4 flex flex-col gap-4">
-          {filteredFiles.map((f: WebFile) => (
+          {filteredFiles.map((f) => (
             <div className="flex items-center gap-3" key={f.key}>
               {isImages &&
                 (f.type === "VIDEO" ? (
@@ -142,11 +139,9 @@ export default function FileListing({ files, year, page }: FileListingProps) {
                     alt=""
                   />
                 ))}
-              <div className="min-w-0 flex-1">
-                <div className="truncate font-mono text-sm">{f.key}</div>
-              </div>
+              <div className="min-w-0 flex-1 truncate font-mono text-sm">{f.key}</div>
               <div className="flex gap-1">
-                {isImages && (
+                {isImages ? (
                   <Button
                     variant="secondary"
                     shape="square"
@@ -156,8 +151,7 @@ export default function FileListing({ files, year, page }: FileListingProps) {
                   >
                     🐳
                   </Button>
-                )}
-                {!isImages && (
+                ) : (
                   <Button
                     variant="secondary"
                     shape="square"

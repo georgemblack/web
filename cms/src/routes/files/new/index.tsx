@@ -35,7 +35,7 @@ function NewFilePage() {
       data.set("year", year);
       data.set("optimize", optimize ? "true" : "false");
       await uploadFile({ data });
-      await router.navigate({ to: "/files", search: { year } });
+      await router.navigate({ to: "/files" });
     } finally {
       setUploading(false);
     }
