@@ -12,6 +12,10 @@ export default defineConfig({
     "/home": "/blog",
     "/home/[page]": "/blog/[page]",
   },
+  // Fetch internal pages in the background when a reader hovers over a link,
+  // so they load faster on click. Only links marked with `data-astro-prefetch`
+  // are prefetched, which keeps links inside post content (like /files/*) out.
+  prefetch: true,
   adapter: cloudflare(),
   integrations: [
     sitemap({

@@ -15,7 +15,7 @@ const { posts } = Astro.props;
     posts.map((item) => (
       <article>
         <h1>
-          <a href={url(item)}>{item.title}</a>
+          <a href={url(item)} data-astro-prefetch>{item.title}</a>
         </h1>
         <p class="subtitle">
           {item.external_link && <LinkIcon />}
@@ -26,14 +26,14 @@ const { posts } = Astro.props;
         {item.gallery && (
           <div class="image-grid">
             {images(item).map((image) => (
-              <a href={url(item)}>
+              <a href={url(item)} data-astro-prefetch>
                 <img src={image.src} alt={image.alt} />
               </a>
             ))}
           </div>
         )}
         {readMore(item) && (
-          <a class="read-more-button" href={url(item)}>
+          <a class="read-more-button" href={url(item)} data-astro-prefetch>
             <p>Read More &#8594;</p>
           </a>
         )}

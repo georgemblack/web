@@ -45,7 +45,7 @@ posts.forEach((post) => {
               {years[year].map((item: Post) => {
                 return (
                   <li>
-                    <a href={`/${slug(item)}`}>
+                    <a href={`/${slug(item)}`} data-astro-prefetch>
                       {item.external_link && <LinkIcon />}
                       {item.external_link && " "}
                       {item.title}

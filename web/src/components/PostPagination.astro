@@ -10,6 +10,6 @@ const olderHref = `/blog/${page + 1}`;
 ---
 
 <nav class="post-pagination" aria-label="Post pagination">
-  {page > 1 && <a href={newerHref}>⬅️ Newer posts</a>}
-  {hasOlderPosts && <a href={olderHref}>Older posts ➡️</a>}
+  {page > 1 && <a href={newerHref} data-astro-prefetch>⬅️ Newer posts</a>}
+  {hasOlderPosts && <a href={olderHref} data-astro-prefetch>Older posts ➡️</a>}
 </nav>
